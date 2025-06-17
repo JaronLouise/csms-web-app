@@ -141,22 +141,22 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 👥 Team
 
-Arquillo, Jaron Louise - Developer
-Recto, Nerine Rossette - Developer
-Dr. Anton Louise P. De Ocampo - OJT Supervisor
+- Arquillo, Jaron Louise - Developer
+- Recto, Nerine Rossette - Developer
+- Dr. Anton Louise P. De Ocampo - OJT Supervisor
 
-Course: CS 3202
-Program: On-the-job Training Laboratory Activity
-Duration: July 2025
+- Course: CS 3202
+- Program: On-the-job Training Laboratory Activity
+- Duration: July 2025
 
 ---
 
 ## 🙏 Acknowledgments
 
-CS 3202 Course
-On-the-job Training Program
-Sustainable Energy Solutions Community
-Open Source Contributors
+- CS 3202 Course
+- On-the-job Training Program
+- Sustainable Energy Solutions Community
+- Open Source Contributors
 
 ---
 
