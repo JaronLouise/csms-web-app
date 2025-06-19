@@ -1,4 +1,4 @@
-# 🌞 CSMS - Collapsible Solar Power Station Management System
+# 🌞 CSPS - Collapsible Solar Power Station Management System
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)  
 [![Node.js](https://img.shields.io/badge/Node.js-18.x-green.svg)](https://nodejs.org/)  
