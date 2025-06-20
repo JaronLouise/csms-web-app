@@ -71,18 +71,33 @@ exports.updateUserProfile = async (req, res) => {
 
     if (!user) return res.status(404).json({ message: 'User not found' });
 
+    // Check if email is being changed and if it's already taken
+    if (req.body.email && req.body.email !== user.email) {
+      const existingUser = await User.findOne({ email: req.body.email });
+      if (existingUser) {
+        return res.status(400).json({ message: 'Email already registered' });
+      }
+    }
+
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
 
-    user.profile = {
-      phone: req.body.phone || user.profile.phone,
-      address: {
-        street: req.body.address?.street || user.profile.address?.street,
-        city: req.body.address?.city || user.profile.address?.city,
-        state: req.body.address?.state || user.profile.address?.state,
-        zipCode: req.body.address?.zipCode || user.profile.address?.zipCode
-      }
-    };
+    // Initialize profile if it doesn't exist
+    if (!user.profile) {
+      user.profile = {};
+    }
+
+    user.profile.phone = req.body.phone || user.profile.phone || '';
+
+    // Initialize address if it doesn't exist
+    if (!user.profile.address) {
+      user.profile.address = {};
+    }
+
+    user.profile.address.street = req.body.address?.street || user.profile.address.street || '';
+    user.profile.address.city = req.body.address?.city || user.profile.address.city || '';
+    user.profile.address.state = req.body.address?.state || user.profile.address.state || '';
+    user.profile.address.zipCode = req.body.address?.zipCode || user.profile.address.zipCode || '';
 
     const updated = await user.save();
     res.json({
@@ -96,6 +111,7 @@ exports.updateUserProfile = async (req, res) => {
       }
     });
   } catch (err) {
+    console.error('Profile update error:', err);
     res.status(500).json({ message: 'Failed to update profile' });
   }
 };
