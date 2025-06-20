@@ -97,3 +97,22 @@ exports.updateOrderStatus = async (req, res) => {
     res.status(500).json({ message: 'Failed to update order status' });
   }
 };
+
+// Client: Cancel order if not shipped or delivered
+exports.cancelOrder = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order) return res.status(404).json({ message: 'Order not found' });
+    if (order.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: 'Not authorized' });
+    }
+    if (["shipped", "delivered", "cancelled"].includes(order.status)) {
+      return res.status(400).json({ message: `Order cannot be cancelled when status is '${order.status}'.` });
+    }
+    order.status = 'cancelled';
+    await order.save();
+    res.json(order);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to cancel order' });
+  }
+};

@@ -13,4 +13,9 @@ export const getMyOrders = async () => {
 export const getOrderById = async (orderId) => {
   const res = await api.get(`/orders/${orderId}`);
   return res.data;
+};
+
+export const cancelOrder = async (orderId) => {
+  const res = await api.put(`/orders/${orderId}/cancel`);
+  return res.data;
 }; 

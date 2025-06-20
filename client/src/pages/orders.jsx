@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getMyOrders } from '../services/orderService';
+import { getMyOrders, cancelOrder } from '../services/orderService';
 import { useAuth } from '../context/AuthContext';
 
 const Orders = () => {
@@ -23,6 +23,17 @@ const Orders = () => {
 
     fetchOrders();
   }, []);
+
+  const handleCancel = async (orderId) => {
+    if (!window.confirm('Are you sure you want to cancel this order?')) return;
+    try {
+      await cancelOrder(orderId);
+      setOrders(orders => orders.map(order => order._id === orderId ? { ...order, status: 'cancelled' } : order));
+      alert('Order cancelled successfully.');
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to cancel order.');
+    }
+  };
 
   if (loading) {
     return <div>Loading orders...</div>;
@@ -69,6 +80,12 @@ const Orders = () => {
                   <h4>Notes:</h4>
                   <p>{order.notes}</p>
                 </div>
+              )}
+
+              {['pending', 'confirmed', 'processing'].includes(order.status) && (
+                <button onClick={() => handleCancel(order._id)} style={{ color: 'white', background: '#dc3545', border: 'none', borderRadius: '4px', padding: '6px 16px', marginTop: '10px', cursor: 'pointer' }}>
+                  Cancel Order
+                </button>
               )}
             </div>
           ))}

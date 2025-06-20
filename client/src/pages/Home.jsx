@@ -4,7 +4,7 @@ const Home = () => {
   return (
     <div style={{ maxWidth: '900px', margin: '0 auto', padding: '40px 20px', textAlign: 'center' }}>
       <section style={{ marginBottom: '40px' }}>
-        <h1 style={{ fontSize: '2.5rem', marginBottom: '20px' }}>Welcome to CSPS</h1>
+        <h1 style={{ fontSize: '2.5rem', marginBottom: '20px' }}>Welcome to RESET Corp.</h1>
         <p style={{ fontSize: '1.2rem', marginBottom: '30px' }}>
           Your one-stop shop for sustainable energy solutions. Browse, customize, and purchase solar panels, wind turbines, and more!
         </p>
