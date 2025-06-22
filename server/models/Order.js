@@ -8,24 +8,35 @@ const orderSchema = new mongoose.Schema(
         product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
         quantity: { type: Number, required: true },
         price: { type: Number, required: true },
-        customizations: [
-          {
-            option: String,
-            value: String
-          }
-        ]
+        name: { type: String, required: true },
+        image: { type: String }
       }
     ],
     totalAmount: { type: Number, required: true },
     status: {
       type: String,
-      enum: ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'],
+      enum: ['pending', 'processing', 'ready_for_pickup', 'completed', 'cancelled'],
       default: 'pending'
     },
-    shippingAddress: {
-      street: String,
-      city: String,
-      zipCode: String
+    shippingMethod: {
+      type: String,
+      enum: ['pickup'],
+      default: 'pickup'
+    },
+    paymentMethod: {
+      type: String,
+      enum: ['cash_on_pickup'],
+      default: 'cash_on_pickup'
+    },
+    billingAddress: {
+      firstName: { type: String, required: true },
+      lastName: { type: String, required: true },
+      address: { type: String, required: true },
+      apartment: { type: String },
+      postalCode: { type: String, required: true },
+      city: { type: String, required: true },
+      region: { type: String, required: true },
+      phone: { type: String }
     },
     notes: String,
     orderDate: { type: Date, default: Date.now },

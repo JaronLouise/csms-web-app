@@ -1,20 +1,33 @@
 const Order = require('../models/Order');
 const User = require('../models/User');
 const emailService = require('../services/emailService');
+const Cart = require('../models/Cart');
 
 // Create new order
 exports.createOrder = async (req, res) => {
   try {
-    const { items, shippingAddress, notes } = req.body;
+    const { billingAddress, notes } = req.body;
+    const cart = await Cart.findOne({ user: req.user._id });
 
-    const totalAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    if (!cart || cart.items.length === 0) {
+      return res.status(400).json({ message: 'Cart is empty' });
+    }
+
+    const orderItems = cart.items.map(item => ({
+      product: item.product,
+      quantity: item.quantity,
+      price: item.price,
+      name: item.name,
+      image: item.image,
+    }));
 
     const order = await Order.create({
       user: req.user._id,
-      items,
-      shippingAddress,
+      items: orderItems,
+      totalAmount: cart.totalAmount,
+      billingAddress,
       notes,
-      totalAmount
+      // paymentMethod and shippingMethod will use defaults from schema
     });
 
     // Send confirmation email to user
@@ -26,10 +39,23 @@ exports.createOrder = async (req, res) => {
       // Don't fail the order creation if email fails
     }
 
+    // Clear user's cart after order is created
+    cart.items = [];
+    await cart.save();
+
     res.status(201).json(order);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Order failed', error: err });
+    console.error('Order creation error:', err); // This log is for you on the server
+    
+    // Check for Mongoose validation error and send specific details
+    if (err.name === 'ValidationError') {
+      // Extract validation messages
+      const errors = Object.values(err.errors).map(el => el.message);
+      return res.status(400).json({ message: `Validation failed: ${errors.join(', ')}`, errors });
+    }
+
+    // For other types of errors, send a generic 500
+    res.status(500).json({ message: 'Order creation failed due to a server error.', error: err.message });
   }
 };
 
@@ -106,7 +132,7 @@ exports.cancelOrder = async (req, res) => {
     if (order.user.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: 'Not authorized' });
     }
-    if (["shipped", "delivered", "cancelled"].includes(order.status)) {
+    if (["ready_for_pickup", "completed", "cancelled"].includes(order.status)) {
       return res.status(400).json({ message: `Order cannot be cancelled when status is '${order.status}'.` });
     }
     
