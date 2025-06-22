@@ -1,6 +1,14 @@
 const Cart = require('../models/Cart');
 const Product = require('../models/Product');
 
+// Helper function to get product ID from item (handles both populated and unpopulated)
+const getProductId = (item) => {
+  if (typeof item.product === 'object' && item.product._id) {
+    return item.product._id.toString();
+  }
+  return item.product.toString();
+};
+
 // Get user's cart
 exports.getCart = async (req, res) => {
   try {
@@ -45,7 +53,7 @@ exports.addToCart = async (req, res) => {
 
     // Check if product already exists in cart
     const existingItem = cart.items.find(item => 
-      item.product.toString() === productId
+      getProductId(item) === productId
     );
 
     if (existingItem) {
@@ -88,7 +96,7 @@ exports.updateCartItem = async (req, res) => {
     }
 
     const item = cart.items.find(item => 
-      item.product.toString() === productId
+      getProductId(item) === productId
     );
 
     if (!item) {
@@ -117,7 +125,7 @@ exports.removeFromCart = async (req, res) => {
     }
 
     cart.items = cart.items.filter(item => 
-      item.product.toString() !== productId
+      getProductId(item) !== productId
     );
 
     await cart.save();

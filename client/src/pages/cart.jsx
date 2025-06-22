@@ -7,7 +7,20 @@ const Cart = () => {
 
   const handleQuantityChange = (productId, newQuantity) => {
     if (newQuantity < 1) return;
-    updateQuantity(productId, newQuantity);
+    
+    // Handle both string and object product references
+    const actualProductId = typeof productId === 'object' ? productId._id : productId;
+    console.log('Updating quantity for product:', actualProductId, 'to:', newQuantity);
+    
+    updateQuantity(actualProductId, newQuantity);
+  };
+
+  const handleRemoveItem = (productId) => {
+    // Handle both string and object product references
+    const actualProductId = typeof productId === 'object' ? productId._id : productId;
+    console.log('Removing product:', actualProductId);
+    
+    removeFromCart(actualProductId);
   };
 
   if (loading) {
@@ -73,7 +86,7 @@ const Cart = () => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                     <button 
-                      onClick={() => handleQuantityChange(item._id, item.quantity - 1)}
+                      onClick={() => handleQuantityChange(item.product, item.quantity - 1)}
                       disabled={item.quantity <= 1}
                       style={{
                         padding: '5px 10px',
@@ -88,7 +101,7 @@ const Cart = () => {
                     </button>
                     <span style={{ padding: '0 10px' }}>{item.quantity}</span>
                     <button 
-                      onClick={() => handleQuantityChange(item._id, item.quantity + 1)}
+                      onClick={() => handleQuantityChange(item.product, item.quantity + 1)}
                       style={{
                         padding: '5px 10px',
                         background: '#007bff',
@@ -109,7 +122,7 @@ const Cart = () => {
                   </div>
                   
                   <button 
-                    onClick={() => removeFromCart(item._id)}
+                    onClick={() => handleRemoveItem(item.product)}
                     style={{
                       padding: '5px 10px',
                       background: '#dc3545',
