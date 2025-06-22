@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Profile = () => {
@@ -268,6 +269,28 @@ const Profile = () => {
         <p><strong>Role:</strong> {user.role}</p>
         <p><strong>Member since:</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
       </div>
+
+      {/* Orders section for non-admin users */}
+      {user.role !== 'admin' && (
+        <div style={{ marginTop: '30px', backgroundColor: '#f9f9f9', padding: '20px', borderRadius: '8px' }}>
+          <h3 style={{ borderBottom: '2px solid #007bff', paddingBottom: '5px' }}>My Orders</h3>
+          <p style={{ marginBottom: '15px' }}>View and manage your order history.</p>
+          <Link 
+            to="/orders"
+            style={{
+              backgroundColor: '#17a2b8',
+              color: 'white',
+              padding: '10px 20px',
+              textDecoration: 'none',
+              borderRadius: '4px',
+              display: 'inline-block',
+              fontSize: '16px'
+            }}
+          >
+            View Orders
+          </Link>
+        </div>
+      )}
     </div>
   );
 };

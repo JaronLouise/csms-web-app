@@ -13,6 +13,9 @@ const categoryRoutes = require('./routes/categories');
 const orderRoutes = require('./routes/orders');
 const uploadRoutes = require('./routes/upload'); 
 const adminRoutes = require('./routes/admin');
+const serviceRoutes = require('./routes/services');
+const emailRoutes = require('./routes/emails');
+const cartRoutes = require('./routes/cart');
 
 const app = express();
 
@@ -43,6 +46,9 @@ app.use('/api/products', productRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/upload', uploadRoutes); 
+app.use('/api/services', serviceRoutes);
+app.use('/api/emails', emailRoutes);
+app.use('/api/cart', cartRoutes);
 
 // Serve static files with CORS headers
 app.use('/uploads', (req, res, next) => {

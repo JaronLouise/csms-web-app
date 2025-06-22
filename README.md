@@ -1,4 +1,4 @@
-# 🌞 CSMS - Collapsible Solar Power Station Management System
+# 🌞 RESET Corp. - Renewable Energy and Sustainable Emerging Technologies Corporation
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)  
 [![Node.js](https://img.shields.io/badge/Node.js-18.x-green.svg)](https://nodejs.org/)  
@@ -8,7 +8,7 @@
 
 ## 📘 About The Project
 
-**CSMS** is a full-stack, web-based e-commerce platform promoting sustainable energy solutions. Users can browse, customize, and purchase solar panels, wind turbines, and other eco-friendly products, while administrators manage products and orders via an intuitive dashboard.
+**RESET Corp.** is a full-stack, web-based e-commerce platform for renewable energy solutions and sustainable emerging technologies. Users can browse, customize, and purchase solar panels, wind turbines, and other eco-friendly products, while administrators manage products and orders via an intuitive dashboard.
 
 ---
 
@@ -54,8 +54,8 @@ Before running this project, make sure you have:
 ## 🛠️ Installation & Setup
 1. Clone the repository
 ```
-git clone https://github.com/your-username/csms-web-app.git
-cd csms-web-app
+git clone https://github.com/your-username/resetcorp-web-app.git
+cd resetcorp-web-app
 ```
 
 2. Install dependencies
@@ -155,7 +155,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 - CS 3202 Course
 - On-the-job Training Program
-- Sustainable Energy Solutions Community
+- Renewable Energy and Sustainable Technologies Community
 - Open Source Contributors
 
 ---
@@ -170,6 +170,6 @@ If you have any questions or need help with setup, please:
 
 ---
 
-Made with ❤️ for sustainable energy solutions
+Made with ❤️ for renewable energy and sustainable technologies
 Document Version: 1.0
 Last Updated: June 16, 2025

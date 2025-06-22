@@ -1,5 +1,6 @@
 const Order = require('../models/Order');
-const sendEmail = require('../utils/sendEmail');
+const User = require('../models/User');
+const emailService = require('../services/emailService');
 
 // Create new order
 exports.createOrder = async (req, res) => {
@@ -17,27 +18,13 @@ exports.createOrder = async (req, res) => {
     });
 
     // Send confirmation email to user
-    const userEmail = req.user.email;
-    const orderSummary = items.map(item =>
-      `<li>${item.quantity} x ${item.product} — ₱${item.price}</li>`
-    ).join('');
-
-    const emailBody = `
-      <h2>Order Confirmation</h2>
-      <p>Thank you for your order!</p>
-      <p><strong>Total:</strong> ₱${totalAmount}</p>
-      <ul>${orderSummary}</ul>
-      <p>We'll contact you soon regarding delivery and payment.</p>
-    `;
-
-    await sendEmail(userEmail, 'Your CSPS Order Confirmation', emailBody);
-
-    // Optional: notify admin
-    await sendEmail(
-      process.env.EMAIL_FROM,
-      'New Order Received',
-      `<p>A new order has been placed by ${req.user.name} (${req.user.email}).</p>`
-    );
+    try {
+      await emailService.sendOrderConfirmation(order, req.user);
+      console.log('Order confirmation email sent successfully');
+    } catch (emailError) {
+      console.error('Failed to send order confirmation email:', emailError);
+      // Don't fail the order creation if email fails
+    }
 
     res.status(201).json(order);
   } catch (err) {
@@ -89,8 +76,21 @@ exports.updateOrderStatus = async (req, res) => {
     const order = await Order.findById(req.params.id);
     if (!order) return res.status(404).json({ message: 'Order not found' });
 
+    const previousStatus = order.status;
     order.status = req.body.status || order.status;
     await order.save();
+
+    // Send status update email to user
+    try {
+      const user = await User.findById(order.user);
+      if (user) {
+        await emailService.sendOrderStatusUpdate(order, user, previousStatus);
+        console.log('Order status update email sent successfully');
+      }
+    } catch (emailError) {
+      console.error('Failed to send order status update email:', emailError);
+      // Don't fail the status update if email fails
+    }
 
     res.json(order);
   } catch (err) {
@@ -109,8 +109,20 @@ exports.cancelOrder = async (req, res) => {
     if (["shipped", "delivered", "cancelled"].includes(order.status)) {
       return res.status(400).json({ message: `Order cannot be cancelled when status is '${order.status}'.` });
     }
+    
+    const previousStatus = order.status;
     order.status = 'cancelled';
     await order.save();
+
+    // Send cancellation email to user
+    try {
+      await emailService.sendOrderStatusUpdate(order, req.user, previousStatus);
+      console.log('Order cancellation email sent successfully');
+    } catch (emailError) {
+      console.error('Failed to send order cancellation email:', emailError);
+      // Don't fail the cancellation if email fails
+    }
+
     res.json(order);
   } catch (err) {
     res.status(500).json({ message: 'Failed to cancel order' });

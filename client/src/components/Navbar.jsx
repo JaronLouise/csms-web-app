@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
+  const { getCartItemCount } = useCart();
+  const cartItemCount = getCartItemCount();
 
   return (
     <nav>
@@ -12,6 +15,12 @@ const Navbar = () => {
         </li>
         <li>
           <Link to="/products">Products</Link>
+        </li>
+        <li>
+          <Link to="/services">Services</Link>
+        </li>
+        <li>
+          <Link to="/contact">Contact</Link>
         </li>
         {user ? (
           <>
@@ -23,14 +32,11 @@ const Navbar = () => {
                 <Link to="/admin">Admin Dashboard</Link>
               </li>
             ) : (
-              <>
-                <li>
-                  <Link to="/cart">Cart</Link>
-                </li>
-                <li>
-                  <Link to="/orders">Orders</Link>
-                </li>
-              </>
+              <li>
+                <Link to="/cart">
+                  Cart {cartItemCount > 0 && `(${cartItemCount})`}
+                </Link>
+              </li>
             )}
             <li>
               <Link to="/profile">Profile</Link>
@@ -48,7 +54,9 @@ const Navbar = () => {
               <Link to="/register">Register</Link>
             </li>
             <li>
-              <Link to="/cart">Cart</Link>
+              <Link to="/cart">
+                Cart {cartItemCount > 0 && `(${cartItemCount})`}
+              </Link>
             </li>
           </>
         )}
