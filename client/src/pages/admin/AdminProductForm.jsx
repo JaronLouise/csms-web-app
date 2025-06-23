@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createProduct, updateProduct, getProductById } from '../../services/adminService';
 import { getCategories, createCategory } from '../../services/categoryService';
+import uploadService from '../../services/uploadService';
 
 const AdminProductForm = () => {
   const [name, setName] = useState('');
@@ -9,7 +10,9 @@ const AdminProductForm = () => {
   const [price, setPrice] = useState('');
   const [category, setCategory] = useState('');
   const [stock, setStock] = useState(0);
-  const [image, setImage] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
+  const [uploadingImage, setUploadingImage] = useState(false);
   
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -41,6 +44,11 @@ const AdminProductForm = () => {
           setPrice(product.price);
           setCategory(product.category._id);
           setStock(product.stock);
+          
+          // Set image preview if product has images
+          if (product.images && product.images.length > 0) {
+            setImagePreview(product.images[0].url);
+          }
         })
         .catch((err) => {
           console.error('Error loading product:', err);
@@ -51,6 +59,34 @@ const AdminProductForm = () => {
       console.log('Creating new product');
     }
   }, [id]);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleImageUpload = async () => {
+    if (!imageFile) return null;
+
+    setUploadingImage(true);
+    try {
+      const result = await uploadService.uploadImage(imageFile, 'products');
+      setUploadingImage(false);
+      return result.data;
+    } catch (error) {
+      setUploadingImage(false);
+      throw new Error('Failed to upload image: ' + error.message);
+    }
+  };
 
   const handleCategoryChange = (e) => {
     const value = e.target.value;
@@ -112,31 +148,41 @@ const AdminProductForm = () => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append('name', name.trim());
-    formData.append('description', description.trim());
-    formData.append('price', price);
-    formData.append('category', category);
-    formData.append('stock', stock);
-    if (image) {
-      formData.append('image', image);
-    }
-
     try {
+      let imageData = null;
+      
+      // Upload image if a new one is selected
+      if (imageFile) {
+        imageData = await handleImageUpload();
+      }
+
+      const productData = {
+        name: name.trim(),
+        description: description.trim(),
+        price: Number(price),
+        category: category,
+        stock: Number(stock)
+      };
+
+      // Add image data if uploaded
+      if (imageData) {
+        productData.imageData = JSON.stringify(imageData);
+      }
+
       if (id) {
         console.log('Updating product:', id);
-        await updateProduct(id, formData);
+        await updateProduct(id, productData);
         console.log('Product updated successfully');
         navigate('/admin/products');
       } else {
         console.log('Creating new product');
-        await createProduct(formData);
+        await createProduct(productData);
         console.log('Product created successfully');
         navigate('/admin/products');
       }
     } catch (err) {
-      console.error('Operation failed:', err.response?.data?.message || err.message);
-      setError(err.response?.data?.message || 'The operation failed. Please check the fields.');
+      console.error('Operation failed:', err.message);
+      setError(err.message || 'The operation failed. Please check the fields.');
       setLoading(false);
     }
   };
@@ -199,10 +245,30 @@ const AdminProductForm = () => {
         )}
 
         <label>Image:</label>
-        <input type="file" onChange={e => setImage(e.target.files[0])} />
+        <input 
+          type="file" 
+          accept="image/*"
+          onChange={handleImageChange}
+          disabled={uploadingImage}
+        />
         
-        <button type="submit" disabled={loading}>
-          {loading ? 'Saving...' : (id ? 'Update Product' : 'Create Product')}
+        {imagePreview && (
+          <div style={{ marginTop: '10px' }}>
+            <img 
+              src={imagePreview} 
+              alt="Preview" 
+              style={{ 
+                maxWidth: '200px', 
+                maxHeight: '200px', 
+                border: '1px solid #ccc',
+                borderRadius: '4px'
+              }} 
+            />
+          </div>
+        )}
+        
+        <button type="submit" disabled={loading || uploadingImage}>
+          {loading ? 'Saving...' : uploadingImage ? 'Uploading Image...' : (id ? 'Update Product' : 'Create Product')}
         </button>
       </form>
     </div>

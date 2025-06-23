@@ -34,10 +34,28 @@ exports.registerUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
 
+  console.log('=== LOGIN ATTEMPT ===');
+  console.log('Email:', email);
+  console.log('Password provided:', password ? 'YES' : 'NO');
+
   try {
     const user = await User.findOne({ email });
-    if (!user || !(await user.matchPassword(password)))
+    console.log('User found:', user ? 'YES' : 'NO');
+    
+    if (!user) {
+      console.log('No user found with this email');
       return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    const passwordMatch = await user.matchPassword(password);
+    console.log('Password match:', passwordMatch ? 'YES' : 'NO');
+    
+    if (!passwordMatch) {
+      console.log('Password does not match');
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    console.log('Login successful for user:', user.name);
 
     res.json({
       token: generateToken(user),
@@ -49,6 +67,7 @@ exports.loginUser = async (req, res) => {
       }
     });
   } catch (err) {
+    console.error('Login error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 };

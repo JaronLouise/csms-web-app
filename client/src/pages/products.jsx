@@ -45,9 +45,19 @@ const Products = () => {
       }}>
         {products.map((p) => {
           console.log('Product:', p.name, 'Image:', p.images && p.images[0]);
-          const imageUrl = p.images && p.images.length > 0
-            ? BACKEND_URL + p.images[0].replace(/\\/g, '/')
-            : placeholderImage;
+          
+          // Handle both old string format and new object format
+          let imageUrl = placeholderImage;
+          if (p.images && p.images.length > 0) {
+            if (typeof p.images[0] === 'string') {
+              // Old format: string URL
+              imageUrl = BACKEND_URL + p.images[0].replace(/\\/g, '/');
+            } else if (p.images[0].url) {
+              // New format: Supabase object with url property
+              imageUrl = p.images[0].url;
+            }
+          }
+          
           return (
             <div key={p._id} style={{
               background: '#fff',
