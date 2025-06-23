@@ -63,9 +63,10 @@ const AdminOrderList = () => {
                   value={order.status} 
                   onChange={(e) => handleStatusChange(order._id, e.target.value)}
                 >
+                  <option value="pending">Pending</option>
                   <option value="processing">Processing</option>
-                  <option value="shipped">Shipped</option>
-                  <option value="delivered">Delivered</option>
+                  <option value="ready_for_pickup">Ready for Pickup</option>
+                  <option value="completed">Completed</option>
                   <option value="cancelled">Cancelled</option>
                 </select>
               </td>

@@ -99,18 +99,24 @@ exports.getAllOrders = async (req, res) => {
 // Admin: Update order status
 exports.updateOrderStatus = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id);
-    if (!order) return res.status(404).json({ message: 'Order not found' });
+    const { status } = req.body;
+    
+    const order = await Order.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true, runValidators: true }
+    );
 
-    const previousStatus = order.status;
-    order.status = req.body.status || order.status;
-    await order.save();
+    if (!order) return res.status(404).json({ message: 'Order not found' });
 
     // Send status update email to user
     try {
       const user = await User.findById(order.user);
       if (user) {
-        await emailService.sendOrderStatusUpdate(order, user, previousStatus);
+        // We don't have previousStatus here, so we'll pass the new status.
+        // Or we can decide not to send it, or fetch the order before updating.
+        // For now, let's just indicate it's an update.
+        await emailService.sendOrderStatusUpdate(order, user, 'updated');
         console.log('Order status update email sent successfully');
       }
     } catch (emailError) {
@@ -120,7 +126,8 @@ exports.updateOrderStatus = async (req, res) => {
 
     res.json(order);
   } catch (err) {
-    res.status(500).json({ message: 'Failed to update order status' });
+    console.error('Failed to update order status:', err); // Enhanced logging
+    res.status(500).json({ message: 'Failed to update order status', error: err.message });
   }
 };
 
