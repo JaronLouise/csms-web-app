@@ -1,4 +1,5 @@
 const Product = require('../models/Product');
+const { deleteImage } = require('../config/supabase');
 
 // @desc Get all products (with optional filters)
 exports.getAllProducts = async (req, res) => {
@@ -84,8 +85,14 @@ exports.createProduct = async (req, res) => {
       images: []
     };
 
-    if (req.file) {
-      newProduct.images.push(req.file.path);
+    // Handle Firebase image data if uploaded
+    if (req.body.imageData) {
+      try {
+        const imageData = JSON.parse(req.body.imageData);
+        newProduct.images.push(imageData);
+      } catch (parseError) {
+        console.error('Error parsing image data:', parseError);
+      }
     }
 
     console.log('Product data to save:', newProduct);
@@ -133,8 +140,31 @@ exports.updateProduct = async (req, res) => {
       stock: Number(stock)  // Explicit casting
     };
     
-    if (req.file) {
-      updateData.images = [req.file.path];
+    // Handle image updates
+    if (req.body.imageData) {
+      try {
+        const imageData = JSON.parse(req.body.imageData);
+        
+        // Get existing product to delete old images
+        const existingProduct = await Product.findById(req.params.id);
+        if (existingProduct && existingProduct.images.length > 0) {
+          // Delete old images from Supabase Storage
+          for (const image of existingProduct.images) {
+            if (image.public_id) {
+              try {
+                await deleteImage(image.public_id);
+                console.log('Deleted old image:', image.public_id);
+              } catch (deleteError) {
+                console.error('Failed to delete old image:', deleteError);
+              }
+            }
+          }
+        }
+        
+        updateData.images = [imageData];
+      } catch (parseError) {
+        console.error('Error parsing image data:', parseError);
+      }
     }
 
     console.log('Update data:', updateData);
@@ -172,10 +202,31 @@ exports.updateProduct = async (req, res) => {
 // @desc Delete product (admin only)
 exports.deleteProduct = async (req, res) => {
   try {
-    const deleted = await Product.findByIdAndDelete(req.params.id);
-    if (!deleted) return res.status(404).json({ message: 'Product not found' });
+    // Get product first to delete associated images
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    // Delete images from Supabase Storage
+    if (product.images && product.images.length > 0) {
+      for (const image of product.images) {
+        if (image.public_id) {
+          try {
+            await deleteImage(image.public_id);
+            console.log('Deleted image:', image.public_id);
+          } catch (deleteError) {
+            console.error('Failed to delete image:', deleteError);
+          }
+        }
+      }
+    }
+
+    // Delete product from database
+    await Product.findByIdAndDelete(req.params.id);
     res.json({ message: 'Product deleted' });
   } catch (err) {
-    res.status(500).json({ message: 'Delete failed', error: err });
+    console.error('ERROR DELETING PRODUCT:', err);
+    res.status(500).json({ message: 'Delete failed', error: err.message });
   }
 };

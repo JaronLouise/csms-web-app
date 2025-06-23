@@ -12,7 +12,16 @@ const productSchema = new mongoose.Schema(
       warranty: String,
       efficiency: String
     },
-    images: [String],
+    images: [
+      {
+        public_id: { type: String, required: true },
+        url: { type: String, required: true },
+        width: Number,
+        height: Number,
+        format: String,
+        size: Number
+      }
+    ],
     stock: { type: Number, default: 0 },
     isCustomizable: { type: Boolean, default: false },
     customizationOptions: [
