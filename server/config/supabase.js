@@ -1,7 +1,7 @@
 const { createClient } = require('@supabase/supabase-js');
 
 const supabaseUrl = 'https://rmocowjmaxrxiyhusvll.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtb2Nvd2ptYXhyeGl5aHVzdmxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA2NTgxMDIsImV4cCI6MjA2NjIzNDEwMn0.__lf_Zrq0i9c0xMNrkGZLsFq3JruXbu_BXym5p1O6g8';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtb2Nvd2ptYXhyeGl5aHVzdmxsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MDY1ODEwMiwiZXhwIjoyMDY2MjM0MTAyfQ.949_7xvRrjBUqeKJsW3Q0pzPv-8qp0O3_kVjJmifeiI';
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -20,6 +20,7 @@ const uploadImage = async (file) => {
       });
 
     if (error) {
+      console.error('Supabase returned error:', error);
       throw error;
     }
 
@@ -34,7 +35,7 @@ const uploadImage = async (file) => {
     };
   } catch (error) {
     console.error('Supabase upload error:', error);
-    throw new Error('Failed to upload image to Supabase.');
+    throw new Error('Failed to upload image to Supabase: ' + error.message);
   }
 };
 
