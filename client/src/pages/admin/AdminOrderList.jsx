@@ -56,7 +56,7 @@ const AdminOrderList = () => {
               <td>{order._id.slice(-6)}</td>
               <td>{order.user?.name || 'N/A'}</td>
               <td>{new Date(order.createdAt).toLocaleDateString()}</td>
-              <td>₱{order.totalAmount}</td>
+              <td>₱{order.totalAmount.toLocaleString()}</td>
               <td>{order.status}</td>
               <td>
                 <select 

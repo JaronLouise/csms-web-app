@@ -98,7 +98,7 @@ const emailTemplates = {
           <h3 style="color: #3498db; margin-top: 0;">Order Details</h3>
           <p><strong>Order ID:</strong> ${order._id}</p>
           <p><strong>Order Date:</strong> ${new Date(order.createdAt).toLocaleDateString()}</p>
-          <p><strong>Total Amount:</strong> $${order.totalAmount}</p>
+          <p><strong>Total Amount:</strong> ₱${order.totalAmount.toLocaleString()}</p>
           <p><strong>Status:</strong> <span style="color: #27ae60; font-weight: bold;">${order.status}</span></p>
         </div>
 
@@ -107,7 +107,7 @@ const emailTemplates = {
           ${order.items.map(item => `
             <div style="border-bottom: 1px solid #ddd; padding: 10px 0;">
               <p><strong>${item.name}</strong></p>
-              <p>Quantity: ${item.quantity} | Price: $${item.price}</p>
+              <p>Quantity: ${item.quantity} | Price: ₱${item.price.toLocaleString()}</p>
             </div>
           `).join('')}
         </div>

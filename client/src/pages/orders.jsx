@@ -55,13 +55,13 @@ const Orders = () => {
               <h3>Order #{order._id.slice(-6)}</h3>
               <p><strong>Date:</strong> {new Date(order.createdAt).toLocaleDateString()}</p>
               <p><strong>Status:</strong> {order.status}</p>
-              <p><strong>Total:</strong> ₱{order.totalAmount}</p>
+              <p><strong>Total:</strong> ₱{order.totalAmount.toLocaleString()}</p>
               
               <h4>Items:</h4>
               <ul>
                 {order.items.map((item, index) => (
                   <li key={index}>
-                    {item.name} x {item.quantity} - ₱{item.price * item.quantity}
+                    {item.name} x {item.quantity} - ₱{(item.price * item.quantity).toLocaleString()}
                   </li>
                 ))}
               </ul>
