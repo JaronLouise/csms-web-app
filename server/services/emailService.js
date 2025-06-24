@@ -1,13 +1,32 @@
 const nodemailer = require('nodemailer');
 
-// Create transporter
-const transporter = nodemailer.createTransport({
-  service: 'gmail', // or your email service
-  auth: {
-    user: process.env.EMAIL_USER || 'your-email@gmail.com',
-    pass: process.env.EMAIL_PASSWORD || 'your-app-password'
+// Brevo (Sendinblue) SMTP transporter
+const createBrevoTransporter = () => {
+  const BREVO_USER = process.env.BREVO_USER || 'your@email.com';
+  const BREVO_PASSWORD = process.env.BREVO_PASSWORD || 'your_brevo_smtp_key';
+
+  return nodemailer.createTransport({
+    host: 'smtp-relay.brevo.com',
+    port: 587,
+    secure: false,
+    auth: {
+      user: BREVO_USER,
+      pass: BREVO_PASSWORD,
+    },
+  });
+};
+
+// Create transporter (only Brevo supported)
+async function createTransporter() {
+  try {
+    const transporter = createBrevoTransporter();
+    await transporter.verify();
+    return transporter;
+  } catch (error) {
+    console.error('[DEBUG] Brevo transporter failed:', error.message);
+    throw error;
   }
-});
+}
 
 // Email templates
 const emailTemplates = {
@@ -149,19 +168,17 @@ const emailService = {
   sendContactEmail: async (contactData) => {
     try {
       const { subject, html } = emailTemplates.contactForm(contactData);
-      
+      const fromEmail = '22-03531@g.batstate-u.edu.ph';
       const mailOptions = {
-        from: process.env.EMAIL_USER || 'your-email@gmail.com',
-        to: ['info@resetcorp.com'], // Send to RESET Corp. info email
+        from: fromEmail,
+        to: ['info@resetcorp.com'],
         subject: subject,
         html: html
       };
-
+      const transporter = await createTransporter();
       const result = await transporter.sendMail(mailOptions);
-      console.log('Contact email sent successfully:', result.messageId);
       return { success: true, messageId: result.messageId };
     } catch (error) {
-      console.error('Error sending contact email:', error);
       throw new Error('Failed to send contact email');
     }
   },
@@ -170,19 +187,17 @@ const emailService = {
   sendQuoteEmail: async (quoteData) => {
     try {
       const { subject, html } = emailTemplates.quoteRequest(quoteData);
-      
+      const fromEmail = '22-03531@g.batstate-u.edu.ph';
       const mailOptions = {
-        from: process.env.EMAIL_USER || 'your-email@gmail.com',
-        to: ['info@resetcorp.com'], // Send to RESET Corp. info email
+        from: fromEmail,
+        to: ['info@resetcorp.com'],
         subject: subject,
         html: html
       };
-
+      const transporter = await createTransporter();
       const result = await transporter.sendMail(mailOptions);
-      console.log('Quote email sent successfully:', result.messageId);
       return { success: true, messageId: result.messageId };
     } catch (error) {
-      console.error('Error sending quote email:', error);
       throw new Error('Failed to send quote email');
     }
   },
@@ -191,19 +206,17 @@ const emailService = {
   sendOrderConfirmation: async (order, user) => {
     try {
       const { subject, html } = emailTemplates.orderConfirmation(order, user);
-      
+      const fromEmail = '22-03531@g.batstate-u.edu.ph';
       const mailOptions = {
-        from: process.env.EMAIL_USER || 'your-email@gmail.com',
+        from: fromEmail,
         to: user.email,
         subject: subject,
         html: html
       };
-
+      const transporter = await createTransporter();
       const result = await transporter.sendMail(mailOptions);
-      console.log('Order confirmation email sent successfully:', result.messageId);
       return { success: true, messageId: result.messageId };
     } catch (error) {
-      console.error('Error sending order confirmation email:', error);
       throw new Error('Failed to send order confirmation email');
     }
   },
@@ -212,19 +225,17 @@ const emailService = {
   sendOrderStatusUpdate: async (order, user, previousStatus) => {
     try {
       const { subject, html } = emailTemplates.orderStatusUpdate(order, user, previousStatus);
-      
+      const fromEmail = '22-03531@g.batstate-u.edu.ph';
       const mailOptions = {
-        from: process.env.EMAIL_USER || 'your-email@gmail.com',
+        from: fromEmail,
         to: user.email,
         subject: subject,
         html: html
       };
-
+      const transporter = await createTransporter();
       const result = await transporter.sendMail(mailOptions);
-      console.log('Order status update email sent successfully:', result.messageId);
       return { success: true, messageId: result.messageId };
     } catch (error) {
-      console.error('Error sending order status update email:', error);
       throw new Error('Failed to send order status update email');
     }
   }

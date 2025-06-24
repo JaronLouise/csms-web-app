@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Checkout = () => {
   const { user } = useAuth();
-  const { cart, getCartTotal, clearCart } = useCart();
+  const { cart, getCartTotal, clearCart, loadCart } = useCart();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -65,7 +65,7 @@ const Checkout = () => {
       };
       
       const newOrder = await createOrder(orderData);
-      
+      await loadCart();
       alert('Order placed successfully! You will be redirected to your orders page.');
       
       // No need to call clearCart here as the backend handles it.
