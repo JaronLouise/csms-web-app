@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FaTimes, FaEnvelope, FaPhone, FaUser, FaBuilding, FaDollarSign, FaCalendar, FaComments } from 'react-icons/fa';
+import { FaPesoSign } from 'react-icons/fa6';
 import emailService from '../services/emailService';
 
 const QuoteModal = ({ isOpen, onClose }) => {
@@ -115,7 +116,7 @@ const QuoteModal = ({ isOpen, onClose }) => {
         </button>
 
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <FaDollarSign style={{ fontSize: '2rem', color: '#27ae60', marginBottom: '1rem' }} />
+          <span style={{ fontSize: '2rem', color: '#27ae60', marginBottom: '1rem', display: 'inline-block' }}>₱</span>
           <h2>Request a Quote</h2>
           <p>Tell us about your project and we'll provide you with a customized quote.</p>
         </div>
@@ -292,7 +293,7 @@ const QuoteModal = ({ isOpen, onClose }) => {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
             <div>
               <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                <FaDollarSign style={{ marginRight: '0.5rem' }} />
+                <span style={{ marginRight: '0.5rem' }}>₱</span>
                 Budget Range
               </label>
               <select
@@ -309,11 +310,11 @@ const QuoteModal = ({ isOpen, onClose }) => {
                 }}
               >
                 <option value="">Select budget range</option>
-                <option value="under-10k">Under $10,000</option>
-                <option value="10k-50k">$10,000 - $50,000</option>
-                <option value="50k-100k">$50,000 - $100,000</option>
-                <option value="100k-500k">$100,000 - $500,000</option>
-                <option value="over-500k">Over $500,000</option>
+                <option value="under-10k">Under ₱10,000</option>
+                <option value="10k-50k">₱10,000 - ₱50,000</option>
+                <option value="50k-100k">₱50,000 - ₱100,000</option>
+                <option value="100k-500k">₱100,000 - ₱500,000</option>
+                <option value="over-500k">Over ₱500,000</option>
                 <option value="to-be-discussed">To be discussed</option>
               </select>
             </div>

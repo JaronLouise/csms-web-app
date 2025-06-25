@@ -134,13 +134,13 @@ const Checkout = () => {
               <img src={item.image} alt={item.name} style={{ width: '50px', height: '50px', borderRadius: '5px', marginRight: '10px' }} />
               <span>{item.name} x {item.quantity}</span>
             </div>
-            <span>₱{item.price * item.quantity}</span>
+            <span>₱{(item.price * item.quantity).toLocaleString()}</span>
           </div>
         ))}
         <hr />
         <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', marginTop: '10px' }}>
           <span>Total</span>
-          <span>₱{getCartTotal()}</span>
+          <span>₱{getCartTotal().toLocaleString()}</span>
         </div>
         <button 
           type="submit" 

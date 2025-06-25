@@ -145,7 +145,7 @@ const Cart = () => {
             textAlign: 'right'
           }}>
             <h3 style={{ margin: '0 0 10px 0' }}>
-              Total: ₱{getCartTotal()}
+              Total: ₱{getCartTotal().toLocaleString()}
             </h3>
             <button 
               onClick={() => navigate('/checkout')}
