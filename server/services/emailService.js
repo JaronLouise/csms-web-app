@@ -2,8 +2,8 @@ const nodemailer = require('nodemailer');
 
 // Brevo (Sendinblue) SMTP transporter
 const createBrevoTransporter = () => {
-  const BREVO_USER = process.env.BREVO_USER || 'your@email.com';
-  const BREVO_PASSWORD = process.env.BREVO_PASSWORD || 'your_brevo_smtp_key';
+  const BREVO_USER = process.env.BREVO_USER || '905f86002@smtp-brevo.com';
+  const BREVO_PASSWORD = process.env.BREVO_PASSWORD || 'BTAXDqyRWHhU2wEO';
 
   return nodemailer.createTransport({
     host: 'smtp-relay.brevo.com',
@@ -171,7 +171,7 @@ const emailService = {
       const fromEmail = '22-03531@g.batstate-u.edu.ph';
       const mailOptions = {
         from: fromEmail,
-        to: ['info@resetcorp.com'],
+        to: ['22-03531@g.batstate-u.edu.ph'],
         subject: subject,
         html: html
       };
@@ -190,7 +190,7 @@ const emailService = {
       const fromEmail = '22-03531@g.batstate-u.edu.ph';
       const mailOptions = {
         from: fromEmail,
-        to: ['info@resetcorp.com'],
+        to: ['22-03531@g.batstate-u.edu.ph'],
         subject: subject,
         html: html
       };
