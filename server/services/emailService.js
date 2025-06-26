@@ -2,8 +2,12 @@ const nodemailer = require('nodemailer');
 
 // Brevo (Sendinblue) SMTP transporter
 const createBrevoTransporter = () => {
-  const BREVO_USER = process.env.BREVO_USER || '905f86002@smtp-brevo.com';
-  const BREVO_PASSWORD = process.env.BREVO_PASSWORD || 'BTAXDqyRWHhU2wEO';
+  const BREVO_USER = process.env.BREVO_USER;
+  const BREVO_PASSWORD = process.env.BREVO_PASSWORD;
+
+  if (!BREVO_USER || !BREVO_PASSWORD) {
+    throw new Error('Brevo email credentials not configured');
+  }
 
   return nodemailer.createTransport({
     host: 'smtp-relay.brevo.com',
@@ -168,10 +172,10 @@ const emailService = {
   sendContactEmail: async (contactData) => {
     try {
       const { subject, html } = emailTemplates.contactForm(contactData);
-      const fromEmail = '22-03531@g.batstate-u.edu.ph';
+      const fromEmail = process.env.EMAIL_FROM || 'noreply@resetcorp.com';
       const mailOptions = {
         from: fromEmail,
-        to: ['22-03531@g.batstate-u.edu.ph'],
+        to: [process.env.ADMIN_EMAIL || 'admin@resetcorp.com'],
         subject: subject,
         html: html
       };
@@ -179,6 +183,7 @@ const emailService = {
       const result = await transporter.sendMail(mailOptions);
       return { success: true, messageId: result.messageId };
     } catch (error) {
+      console.error('Email service error:', error);
       throw new Error('Failed to send contact email');
     }
   },
@@ -187,10 +192,10 @@ const emailService = {
   sendQuoteEmail: async (quoteData) => {
     try {
       const { subject, html } = emailTemplates.quoteRequest(quoteData);
-      const fromEmail = '22-03531@g.batstate-u.edu.ph';
+      const fromEmail = process.env.EMAIL_FROM || 'noreply@resetcorp.com';
       const mailOptions = {
         from: fromEmail,
-        to: ['22-03531@g.batstate-u.edu.ph'],
+        to: [process.env.ADMIN_EMAIL || 'admin@resetcorp.com'],
         subject: subject,
         html: html
       };
@@ -198,6 +203,7 @@ const emailService = {
       const result = await transporter.sendMail(mailOptions);
       return { success: true, messageId: result.messageId };
     } catch (error) {
+      console.error('Email service error:', error);
       throw new Error('Failed to send quote email');
     }
   },
@@ -206,7 +212,7 @@ const emailService = {
   sendOrderConfirmation: async (order, user) => {
     try {
       const { subject, html } = emailTemplates.orderConfirmation(order, user);
-      const fromEmail = '22-03531@g.batstate-u.edu.ph';
+      const fromEmail = process.env.EMAIL_FROM || 'noreply@resetcorp.com';
       const mailOptions = {
         from: fromEmail,
         to: user.email,
@@ -217,6 +223,7 @@ const emailService = {
       const result = await transporter.sendMail(mailOptions);
       return { success: true, messageId: result.messageId };
     } catch (error) {
+      console.error('Email service error:', error);
       throw new Error('Failed to send order confirmation email');
     }
   },
@@ -225,7 +232,7 @@ const emailService = {
   sendOrderStatusUpdate: async (order, user, previousStatus) => {
     try {
       const { subject, html } = emailTemplates.orderStatusUpdate(order, user, previousStatus);
-      const fromEmail = '22-03531@g.batstate-u.edu.ph';
+      const fromEmail = process.env.EMAIL_FROM || 'noreply@resetcorp.com';
       const mailOptions = {
         from: fromEmail,
         to: user.email,
@@ -236,6 +243,7 @@ const emailService = {
       const result = await transporter.sendMail(mailOptions);
       return { success: true, messageId: result.messageId };
     } catch (error) {
+      console.error('Email service error:', error);
       throw new Error('Failed to send order status update email');
     }
   }
