@@ -13,15 +13,18 @@ api.interceptors.request.use(
     console.log('Method:', config.method);
     console.log('Base URL:', config.baseURL);
     console.log('Full URL:', config.baseURL + config.url);
-    console.log('Headers:', config.headers);
     
     const token = localStorage.getItem('token');
+    console.log('Token from localStorage:', token ? 'EXISTS' : 'NOT FOUND');
+    console.log('Token value:', token);
+    
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-      console.log('Token added to request');
+      console.log('Token added to request headers:', config.headers.Authorization);
     } else {
       console.log('No token found in localStorage');
     }
+    console.log('Final headers:', config.headers);
     return config;
   },
   (error) => {
@@ -45,6 +48,7 @@ api.interceptors.response.use(
     console.error('Error code:', error.code);
     console.error('Error response:', error.response);
     console.error('Request URL:', error.config?.url);
+    console.error('Request headers:', error.config?.headers);
     return Promise.reject(error);
   }
 );

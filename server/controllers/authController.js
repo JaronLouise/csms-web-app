@@ -5,10 +5,13 @@ exports.registerUser = async (req, res) => {
   const { name, email, password, role } = req.body;
 
   try {
+    // Check if user already exists
     const existingUser = await User.findOne({ email });
-    if (existingUser)
-      return res.status(400).json({ message: 'Email already registered' });
+    if (existingUser) {
+      return res.status(409).json({ message: 'Email already registered' });
+    }
 
+    // Create user with enhanced validation
     const user = await User.create({ 
       name, 
       email, 
@@ -16,8 +19,13 @@ exports.registerUser = async (req, res) => {
       role: role || 'customer' 
     });
 
+    // Generate token with enhanced security
+    const token = generateToken(user);
+
     res.status(201).json({
-      token: generateToken(user),
+      success: true,
+      message: 'User registered successfully',
+      token,
       user: {
         id: user._id,
         name: user.name,
@@ -26,7 +34,21 @@ exports.registerUser = async (req, res) => {
       }
     });
   } catch (err) {
-    console.error('Registration error:', err); 
+    console.error('Registration error:', err);
+    
+    // Handle specific validation errors
+    if (err.name === 'ValidationError') {
+      const errors = Object.values(err.errors).map(e => e.message);
+      return res.status(400).json({ 
+        message: 'Validation failed', 
+        errors 
+      });
+    }
+    
+    if (err.code === 11000) {
+      return res.status(409).json({ message: 'Email already registered' });
+    }
+    
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -34,31 +56,46 @@ exports.registerUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
 
-  console.log('=== LOGIN ATTEMPT ===');
-  console.log('Email:', email);
-  console.log('Password provided:', password ? 'YES' : 'NO');
-
   try {
+    // Find user by email
     const user = await User.findOne({ email });
-    console.log('User found:', user ? 'YES' : 'NO');
     
     if (!user) {
-      console.log('No user found with this email');
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
+    // Check if account is locked
+    if (user.isLocked) {
+      return res.status(423).json({ 
+        message: 'Account is temporarily locked due to too many failed login attempts. Please try again later.' 
+      });
+    }
+
+    // Check if account is active
+    if (!user.isActive) {
+      return res.status(401).json({ message: 'Account is deactivated' });
+    }
+
+    // Verify password
     const passwordMatch = await user.matchPassword(password);
-    console.log('Password match:', passwordMatch ? 'YES' : 'NO');
     
     if (!passwordMatch) {
-      console.log('Password does not match');
+      // Increment failed login attempts
+      await user.incLoginAttempts();
+      
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    console.log('Login successful for user:', user.name);
+    // Reset login attempts on successful login
+    await user.resetLoginAttempts();
+
+    // Generate token
+    const token = generateToken(user);
 
     res.json({
-      token: generateToken(user),
+      success: true,
+      message: 'Login successful',
+      token,
       user: {
         id: user._id,
         name: user.name,
@@ -72,13 +109,23 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-
 // @desc Get current user profile
 exports.getUserProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).select('-password');
-    res.json(user);
+    const user = await User.findById(req.user._id)
+      .select('-password -loginAttempts -lockUntil')
+      .lean();
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json({
+      success: true,
+      user
+    });
   } catch (err) {
+    console.error('Get profile error:', err);
     res.status(500).json({ message: 'Failed to load profile' });
   }
 };
@@ -88,39 +135,46 @@ exports.updateUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
 
-    if (!user) return res.status(404).json({ message: 'User not found' });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
     // Check if email is being changed and if it's already taken
     if (req.body.email && req.body.email !== user.email) {
       const existingUser = await User.findOne({ email: req.body.email });
       if (existingUser) {
-        return res.status(400).json({ message: 'Email already registered' });
+        return res.status(409).json({ message: 'Email already registered' });
       }
     }
 
-    user.name = req.body.name || user.name;
-    user.email = req.body.email || user.email;
+    // Update fields with validation
+    if (req.body.name) user.name = req.body.name;
+    if (req.body.email) user.email = req.body.email;
 
     // Initialize profile if it doesn't exist
     if (!user.profile) {
       user.profile = {};
     }
 
-    user.profile.phone = req.body.phone || user.profile.phone || '';
+    // Update profile fields
+    if (req.body.phone !== undefined) user.profile.phone = req.body.phone;
 
     // Initialize address if it doesn't exist
     if (!user.profile.address) {
       user.profile.address = {};
     }
 
-    user.profile.address.street = req.body.address?.street || user.profile.address.street || '';
-    user.profile.address.city = req.body.address?.city || user.profile.address.city || '';
-    user.profile.address.state = req.body.address?.state || user.profile.address.state || '';
-    user.profile.address.zipCode = req.body.address?.zipCode || user.profile.address.zipCode || '';
+    // Update address fields
+    if (req.body.address?.street !== undefined) user.profile.address.street = req.body.address.street;
+    if (req.body.address?.city !== undefined) user.profile.address.city = req.body.address.city;
+    if (req.body.address?.state !== undefined) user.profile.address.state = req.body.address.state;
+    if (req.body.address?.zipCode !== undefined) user.profile.address.zipCode = req.body.address.zipCode;
 
     const updated = await user.save();
+    
     res.json({
-      message: 'Profile updated',
+      success: true,
+      message: 'Profile updated successfully',
       user: {
         id: updated._id,
         name: updated.name,
@@ -130,7 +184,16 @@ exports.updateUserProfile = async (req, res) => {
       }
     });
   } catch (err) {
-    console.error('Profile update error:', err);
+    console.error('Update profile error:', err);
+    
+    if (err.name === 'ValidationError') {
+      const errors = Object.values(err.errors).map(e => e.message);
+      return res.status(400).json({ 
+        message: 'Validation failed', 
+        errors 
+      });
+    }
+    
     res.status(500).json({ message: 'Failed to update profile' });
   }
 };

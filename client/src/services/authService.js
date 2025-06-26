@@ -10,12 +10,8 @@ export const login = async (credentials) => {
   return res.data;
 };
 
-export const getProfile = async (token) => {
-  const res = await api.get('/auth/profile', {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  });
+export const getProfile = async () => {
+  const res = await api.get('/auth/profile');
   return res.data;
 };
 
