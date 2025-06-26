@@ -126,8 +126,9 @@ const validateSecurityConfig = () => {
     errors.push('JWT_SECRET must be at least 32 characters long');
   }
 
+  // Check for email credentials but don't fail if missing (make them optional)
   if (!process.env.BREVO_USER || !process.env.BREVO_PASSWORD) {
-    errors.push('Email service credentials (BREVO_USER, BREVO_PASSWORD) are required');
+    console.warn('⚠️  Email service credentials (BREVO_USER, BREVO_PASSWORD) are missing - email functionality will be disabled');
   }
 
   if (!process.env.MONGODB_URI) {

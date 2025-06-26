@@ -1,5 +1,30 @@
 // Load environment variables first
+const path = require('path');
+const fs = require('fs');
+
+console.log('Current working directory:', process.cwd());
+console.log('Looking for .env file at:', path.resolve('.env'));
+
+// Check if .env file exists
+const envPath = path.resolve('.env');
+if (fs.existsSync(envPath)) {
+  console.log('✅ .env file found');
+  console.log('File size:', fs.statSync(envPath).size, 'bytes');
+} else {
+  console.log('❌ .env file NOT found');
+}
+
 require('dotenv').config();
+
+// Debug: Check if dotenv is working
+console.log('=== DOTENV DEBUG ===');
+console.log('JWT_SECRET exists:', !!process.env.JWT_SECRET);
+console.log('JWT_SECRET length:', process.env.JWT_SECRET?.length || 'NOT FOUND');
+console.log('MONGODB_URI exists:', !!process.env.MONGODB_URI);
+console.log('BREVO_USER exists:', !!process.env.BREVO_USER);
+console.log('BREVO_PASSWORD exists:', !!process.env.BREVO_PASSWORD);
+console.log('NODE_ENV:', process.env.NODE_ENV || 'NOT SET');
+console.log('========================');
 
 // server.js
 const app = require('./app');
