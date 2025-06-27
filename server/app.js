@@ -44,13 +44,33 @@ app.use(helmet({
 }));
 
 // Enhanced CORS configuration
-app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [
+      'http://localhost:5173', // Development
+      'http://localhost:3000', // Alternative dev port
+      process.env.CORS_ORIGIN, // Production frontend URL
+      'https://your-frontend-url.vercel.app', // Replace with your actual frontend URL
+      'https://your-frontend-url.netlify.app' // Alternative hosting
+    ].filter(Boolean); // Remove undefined values
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   exposedHeaders: ['X-Total-Count']
-}));
+};
+
+app.use(cors(corsOptions));
 
 // Body parsing middleware with size limits
 app.use(express.json({ limit: '10mb' }));
@@ -92,7 +112,19 @@ app.use('/api/cart', cartRoutes);
 
 // Serve static files with enhanced security headers
 app.use('/uploads', (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', process.env.CORS_ORIGIN || 'http://localhost:5173');
+  const origin = req.headers.origin;
+  const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    process.env.CORS_ORIGIN,
+    'https://your-frontend-url.vercel.app',
+    'https://your-frontend-url.netlify.app'
+  ].filter(Boolean);
+  
+  if (allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  
   res.header('Access-Control-Allow-Methods', 'GET,OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   res.header('X-Content-Type-Options', 'nosniff');
