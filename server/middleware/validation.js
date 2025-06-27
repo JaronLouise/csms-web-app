@@ -25,8 +25,8 @@ const validateRegistration = [
     .trim()
     .isLength({ min: 2, max: 50 })
     .withMessage('Name must be between 2 and 50 characters')
-    .matches(/^[a-zA-Z\s]+$/)
-    .withMessage('Name can only contain letters and spaces'),
+    .matches(/^[a-zA-Z\s\-'\.]+$/)
+    .withMessage('Name can only contain letters, spaces, hyphens, apostrophes, and periods'),
   
   body('email')
     .isEmail()
@@ -40,7 +40,7 @@ const validateRegistration = [
     .withMessage('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'),
   
   body('role')
-    .optional()
+    .optional({ checkFalsy: true })
     .isIn(['customer', 'admin'])
     .withMessage('Invalid role specified')
 ];
@@ -63,8 +63,8 @@ const validateContactForm = [
     .trim()
     .isLength({ min: 2, max: 50 })
     .withMessage('Name must be between 2 and 50 characters')
-    .matches(/^[a-zA-Z\s]+$/)
-    .withMessage('Name can only contain letters and spaces'),
+    .matches(/^[a-zA-Z\s\-'\.]+$/)
+    .withMessage('Name can only contain letters, spaces, hyphens, apostrophes, and periods'),
   
   body('email')
     .isEmail()
@@ -72,20 +72,20 @@ const validateContactForm = [
     .withMessage('Please provide a valid email address'),
   
   body('phone')
-    .optional()
-    .matches(/^[\+]?[1-9][\d]{0,15}$/)
+    .optional({ checkFalsy: true })
+    .matches(/^[\+]?[0-9\s\-\(\)\.]{7,20}$/)
     .withMessage('Please provide a valid phone number'),
   
   body('subject')
-    .optional()
+    .optional({ checkFalsy: true })
     .trim()
     .isLength({ max: 100 })
     .withMessage('Subject must be less than 100 characters'),
   
   body('message')
     .trim()
-    .isLength({ min: 10, max: 1000 })
-    .withMessage('Message must be between 10 and 1000 characters')
+    .isLength({ min: 5, max: 2000 })
+    .withMessage('Message must be between 5 and 2000 characters')
 ];
 
 // Validation rules for quote request
@@ -94,8 +94,8 @@ const validateQuoteRequest = [
     .trim()
     .isLength({ min: 2, max: 50 })
     .withMessage('Name must be between 2 and 50 characters')
-    .matches(/^[a-zA-Z\s]+$/)
-    .withMessage('Name can only contain letters and spaces'),
+    .matches(/^[a-zA-Z\s\-'\.]+$/)
+    .withMessage('Name can only contain letters, spaces, hyphens, apostrophes, and periods'),
   
   body('email')
     .isEmail()
@@ -103,12 +103,12 @@ const validateQuoteRequest = [
     .withMessage('Please provide a valid email address'),
   
   body('phone')
-    .optional()
-    .matches(/^[\+]?[1-9][\d]{0,15}$/)
+    .optional({ checkFalsy: true })
+    .matches(/^[\+]?[0-9\s\-\(\)\.]{7,20}$/)
     .withMessage('Please provide a valid phone number'),
   
   body('company')
-    .optional()
+    .optional({ checkFalsy: true })
     .trim()
     .isLength({ max: 100 })
     .withMessage('Company name must be less than 100 characters'),
@@ -124,19 +124,19 @@ const validateQuoteRequest = [
     .withMessage('Project description must be between 20 and 2000 characters'),
   
   body('budgetRange')
-    .optional()
+    .optional({ checkFalsy: true })
     .trim()
     .isLength({ max: 50 })
     .withMessage('Budget range must be less than 50 characters'),
   
   body('timeline')
-    .optional()
+    .optional({ checkFalsy: true })
     .trim()
     .isLength({ max: 100 })
     .withMessage('Timeline must be less than 100 characters'),
   
   body('additionalInfo')
-    .optional()
+    .optional({ checkFalsy: true })
     .trim()
     .isLength({ max: 1000 })
     .withMessage('Additional information must be less than 1000 characters')
@@ -150,7 +150,7 @@ const validateProduct = [
     .withMessage('Product name must be between 2 and 100 characters'),
   
   body('description')
-    .optional()
+    .optional({ checkFalsy: true })
     .trim()
     .isLength({ max: 1000 })
     .withMessage('Description must be less than 1000 characters'),
@@ -213,8 +213,8 @@ const validateOrder = [
     .withMessage('Region must be between 2 and 50 characters'),
   
   body('billingAddress.phone')
-    .optional()
-    .matches(/^[\+]?[1-9][\d]{0,15}$/)
+    .optional({ checkFalsy: true })
+    .matches(/^[\+]?[0-9\s\-\(\)\.]{7,20}$/)
     .withMessage('Please provide a valid phone number')
 ];
 
@@ -222,6 +222,8 @@ const validateOrder = [
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    console.log('Validation errors:', errors.array());
+    console.log('Request body:', req.body);
     return res.status(400).json({
       message: 'Validation failed',
       errors: errors.array().map(error => ({

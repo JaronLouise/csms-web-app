@@ -3,10 +3,15 @@ const emailService = require('../services/emailService');
 // @desc Send contact form email
 exports.sendContactEmail = async (req, res) => {
   try {
+    console.log('=== CONTACT EMAIL REQUEST ===');
+    console.log('Request body:', req.body);
+    console.log('Request headers:', req.headers);
+    
     const { name, email, phone, subject, message } = req.body;
 
     // Basic validation
     if (!name || !email || !message) {
+      console.log('Basic validation failed:', { name: !!name, email: !!email, message: !!message });
       return res.status(400).json({ 
         message: 'Name, email, and message are required' 
       });
@@ -15,6 +20,7 @@ exports.sendContactEmail = async (req, res) => {
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
+      console.log('Email validation failed:', email);
       return res.status(400).json({ 
         message: 'Please provide a valid email address' 
       });
@@ -28,7 +34,11 @@ exports.sendContactEmail = async (req, res) => {
       message: message.trim()
     };
 
+    console.log('Contact data prepared:', contactData);
+
     const result = await emailService.sendContactEmail(contactData);
+    
+    console.log('Email sent successfully:', result);
     
     res.status(200).json({
       success: true,
