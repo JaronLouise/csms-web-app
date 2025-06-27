@@ -40,7 +40,10 @@ const ContactModal = ({ isOpen, onClose }) => {
     setError('');
 
     try {
+      console.log('Submitting contact form with data:', formData);
       const result = await emailService.sendContactEmail(formData);
+      
+      console.log('Contact form submitted successfully:', result);
       
       setSuccess(true);
       setFormData({
@@ -58,8 +61,19 @@ const ContactModal = ({ isOpen, onClose }) => {
       }, 2000);
       
     } catch (err) {
-      setError(err.message || 'Failed to send message. Please check your connection and try again.');
       console.error('Error sending contact form:', err);
+      console.error('Error response:', err.response);
+      console.error('Error data:', err.response?.data);
+      
+      // Handle validation errors specifically
+      if (err.response?.data?.errors && Array.isArray(err.response.data.errors)) {
+        const errorMessages = err.response.data.errors.map(error => `${error.field}: ${error.message}`).join(', ');
+        setError(`Validation errors: ${errorMessages}`);
+      } else if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError(err.message || 'Failed to send message. Please check your connection and try again.');
+      }
     } finally {
       setLoading(false);
     }

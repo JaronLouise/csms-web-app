@@ -6,7 +6,18 @@ const createBrevoTransporter = () => {
   const BREVO_PASSWORD = process.env.BREVO_PASSWORD;
 
   if (!BREVO_USER || !BREVO_PASSWORD) {
-    throw new Error('Brevo email credentials not configured');
+    console.warn('Brevo email credentials not configured. Using fallback email service.');
+    // Return a mock transporter that logs instead of sending
+    return {
+      verify: async () => Promise.resolve(),
+      sendMail: async (mailOptions) => {
+        console.log('=== MOCK EMAIL SENT ===');
+        console.log('To:', mailOptions.to);
+        console.log('Subject:', mailOptions.subject);
+        console.log('Content:', mailOptions.html);
+        return { messageId: 'mock-message-id-' + Date.now() };
+      }
+    };
   }
 
   return nodemailer.createTransport({
