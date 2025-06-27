@@ -52,12 +52,26 @@ const corsOptions = {
     const allowedOrigins = [
       'http://localhost:5173', // Development
       'http://localhost:3000', // Alternative dev port
-      process.env.CORS_ORIGIN, // Production frontend URL
-      'https://your-frontend-url.vercel.app', // Replace with your actual frontend URL
-      'https://your-frontend-url.netlify.app' // Alternative hosting
-    ].filter(Boolean); // Remove undefined values
+      process.env.CORS_ORIGIN, // Production frontend URL from environment
+      // Allow all Vercel domains
+      /^https:\/\/.*\.vercel\.app$/,
+      /^https:\/\/.*\.vercel\.app\/.*$/,
+      // Allow all Netlify domains
+      /^https:\/\/.*\.netlify\.app$/,
+      /^https:\/\/.*\.netlify\.app\/.*$/
+    ];
     
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    // Check if origin matches any allowed pattern
+    const isAllowed = allowedOrigins.some(allowedOrigin => {
+      if (typeof allowedOrigin === 'string') {
+        return allowedOrigin === origin;
+      } else if (allowedOrigin instanceof RegExp) {
+        return allowedOrigin.test(origin);
+      }
+      return false;
+    });
+    
+    if (isAllowed) {
       callback(null, true);
     } else {
       console.log('CORS blocked origin:', origin);
@@ -117,11 +131,25 @@ app.use('/uploads', (req, res, next) => {
     'http://localhost:5173',
     'http://localhost:3000',
     process.env.CORS_ORIGIN,
-    'https://your-frontend-url.vercel.app',
-    'https://your-frontend-url.netlify.app'
-  ].filter(Boolean);
+    // Allow all Vercel domains
+    /^https:\/\/.*\.vercel\.app$/,
+    /^https:\/\/.*\.vercel\.app\/.*$/,
+    // Allow all Netlify domains
+    /^https:\/\/.*\.netlify\.app$/,
+    /^https:\/\/.*\.netlify\.app\/.*$/
+  ];
   
-  if (allowedOrigins.includes(origin)) {
+  // Check if origin matches any allowed pattern
+  const isAllowed = allowedOrigins.some(allowedOrigin => {
+    if (typeof allowedOrigin === 'string') {
+      return allowedOrigin === origin;
+    } else if (allowedOrigin instanceof RegExp) {
+      return allowedOrigin.test(origin);
+    }
+    return false;
+  });
+  
+  if (isAllowed && origin) {
     res.header('Access-Control-Allow-Origin', origin);
   }
   
