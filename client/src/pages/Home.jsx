@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import ContactModal from '../components/ContactModal';
+import QuoteModal from '../components/QuoteModal';
+import ServiceDetailModal from '../components/ServiceDetailModal';
 
 const defaultServices = [
   {
@@ -48,6 +51,18 @@ const defaultServices = [
 const Home = () => {
   const [showContact, setShowContact] = useState(false);
   const [showQuote, setShowQuote] = useState(false);
+  const [showServiceDetail, setShowServiceDetail] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
+
+  const handleLearnMore = (service) => {
+    setSelectedService(service);
+    setShowServiceDetail(true);
+  };
+
+  const closeServiceDetailModal = () => {
+    setShowServiceDetail(false);
+    setSelectedService(null);
+  };
 
   return (
     <div className="homepage-root">
@@ -68,7 +83,7 @@ const Home = () => {
               <ul>
                 {service.features.map((feature, idx) => <li key={idx}>{feature}</li>)}
               </ul>
-              <button className="learn-more-btn">Learn More</button>
+              <button className="learn-more-btn" onClick={() => handleLearnMore(service)}>Learn More</button>
             </div>
           ))}
         </div>
@@ -84,6 +99,9 @@ const Home = () => {
       <footer id="footer" className="homepage-section footer-section">
         <h3>Footer Section</h3>
       </footer>
+      <ContactModal isOpen={showContact} onClose={() => setShowContact(false)} />
+      <QuoteModal isOpen={showQuote} onClose={() => setShowQuote(false)} />
+      <ServiceDetailModal isOpen={showServiceDetail} onClose={closeServiceDetailModal} service={selectedService} />
       <style>{`
         .homepage-root {
           width: 100vw;
