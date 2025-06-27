@@ -49,34 +49,35 @@ const corsOptions = {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
+    console.log('=== CORS CHECK ===');
+    console.log('Origin:', origin);
+    
     const allowedOrigins = [
       'http://localhost:5173', // Development
       'http://localhost:3000', // Alternative dev port
       process.env.CORS_ORIGIN, // Production frontend URL from environment
-      // Allow all Vercel domains
-      /^https:\/\/.*\.vercel\.app$/,
-      /^https:\/\/.*\.vercel\.app\/.*$/,
-      // Allow all Netlify domains
-      /^https:\/\/.*\.netlify\.app$/,
-      /^https:\/\/.*\.netlify\.app\/.*$/
     ];
     
-    // Check if origin matches any allowed pattern
-    const isAllowed = allowedOrigins.some(allowedOrigin => {
-      if (typeof allowedOrigin === 'string') {
-        return allowedOrigin === origin;
-      } else if (allowedOrigin instanceof RegExp) {
-        return allowedOrigin.test(origin);
-      }
-      return false;
-    });
-    
-    if (isAllowed) {
-      callback(null, true);
-    } else {
-      console.log('CORS blocked origin:', origin);
-      callback(new Error('Not allowed by CORS'));
+    // Check exact string matches first
+    if (allowedOrigins.includes(origin)) {
+      console.log('Origin matched exact string');
+      return callback(null, true);
     }
+    
+    // Check Vercel domains with more permissive regex
+    if (origin.includes('.vercel.app')) {
+      console.log('Origin is a Vercel domain, allowing');
+      return callback(null, true);
+    }
+    
+    // Check Netlify domains
+    if (origin.includes('.netlify.app')) {
+      console.log('Origin is a Netlify domain, allowing');
+      return callback(null, true);
+    }
+    
+    console.log('CORS blocked origin:', origin);
+    callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -127,30 +128,26 @@ app.use('/api/cart', cartRoutes);
 // Serve static files with enhanced security headers
 app.use('/uploads', (req, res, next) => {
   const origin = req.headers.origin;
-  const allowedOrigins = [
-    'http://localhost:5173',
-    'http://localhost:3000',
-    process.env.CORS_ORIGIN,
-    // Allow all Vercel domains
-    /^https:\/\/.*\.vercel\.app$/,
-    /^https:\/\/.*\.vercel\.app\/.*$/,
-    // Allow all Netlify domains
-    /^https:\/\/.*\.netlify\.app$/,
-    /^https:\/\/.*\.netlify\.app\/.*$/
-  ];
   
-  // Check if origin matches any allowed pattern
-  const isAllowed = allowedOrigins.some(allowedOrigin => {
-    if (typeof allowedOrigin === 'string') {
-      return allowedOrigin === origin;
-    } else if (allowedOrigin instanceof RegExp) {
-      return allowedOrigin.test(origin);
+  if (origin) {
+    const allowedOrigins = [
+      'http://localhost:5173',
+      'http://localhost:3000',
+      process.env.CORS_ORIGIN,
+    ];
+    
+    // Check exact string matches first
+    if (allowedOrigins.includes(origin)) {
+      res.header('Access-Control-Allow-Origin', origin);
     }
-    return false;
-  });
-  
-  if (isAllowed && origin) {
-    res.header('Access-Control-Allow-Origin', origin);
+    // Check Vercel domains
+    else if (origin.includes('.vercel.app')) {
+      res.header('Access-Control-Allow-Origin', origin);
+    }
+    // Check Netlify domains
+    else if (origin.includes('.netlify.app')) {
+      res.header('Access-Control-Allow-Origin', origin);
+    }
   }
   
   res.header('Access-Control-Allow-Methods', 'GET,OPTIONS');
