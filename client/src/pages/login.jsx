@@ -91,12 +91,12 @@ const Login = () => {
             {error && <p style={{ color: 'red', textAlign: 'center', margin: 0 }}>{error}</p>}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               <label htmlFor="email" style={{ fontWeight: 500, fontSize: 14, marginBottom: 2 }}>Email address</label>
-              <input
+      <input
                 id="email"
                 type="email"
                 placeholder="Email address"
-                value={form.email}
-                onChange={e => setForm({ ...form, email: e.target.value })}
+        value={form.email}
+        onChange={e => setForm({ ...form, email: e.target.value })}
                 style={{
                   padding: '10px 12px',
                   border: '1px solid #bbb',
@@ -112,12 +112,12 @@ const Login = () => {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
               <label htmlFor="password" style={{ fontWeight: 500, fontSize: 14, marginBottom: 2 }}>Password</label>
               <div style={{ position: 'relative', width: '100%' }}>
-                <input
+      <input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="Password"
-                  value={form.password}
-                  onChange={e => setForm({ ...form, password: e.target.value })}
+        placeholder="Password"
+        value={form.password}
+        onChange={e => setForm({ ...form, password: e.target.value })}
                   style={{
                     padding: '10px 38px 10px 12px',
                     border: '1px solid #bbb',
@@ -197,7 +197,7 @@ const Login = () => {
                 Create free account?
               </span>
             </div>
-          </form>
+    </form>
         </div>
       </div>
 
@@ -236,4 +236,4 @@ const Login = () => {
   );
 };
 
-export default Login; 
+export default Login;

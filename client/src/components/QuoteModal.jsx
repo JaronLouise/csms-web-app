@@ -92,12 +92,13 @@ const QuoteModal = ({ isOpen, onClose }) => {
       <div style={{
         background: 'white',
         padding: '2rem',
-        borderRadius: '8px',
+        borderRadius: '16px',
         maxWidth: '600px',
         width: '90%',
         maxHeight: '90vh',
         overflow: 'auto',
-        position: 'relative'
+        position: 'relative',
+        boxShadow: '0 4px 32px rgba(52,152,219,0.08)'
       }}>
         <button
           onClick={onClose}
@@ -117,8 +118,10 @@ const QuoteModal = ({ isOpen, onClose }) => {
 
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <span style={{ fontSize: '2rem', color: '#27ae60', marginBottom: '1rem', display: 'inline-block' }}>₱</span>
-          <h2>Request a Quote</h2>
-          <p>Tell us about your project and we'll provide you with a customized quote.</p>
+          <h2 style={{ color: '#222', fontWeight: 700, fontSize: '2rem', marginBottom: '0.5rem' }}>Request a Quote</h2>
+          <p style={{ color: '#3498db', fontSize: '1.05rem', marginBottom: '1.5rem' }}>
+            Tell us about your project and we'll provide you with a customized quote.
+          </p>
         </div>
 
         {success && (
@@ -149,11 +152,12 @@ const QuoteModal = ({ isOpen, onClose }) => {
         <form onSubmit={handleSubmit}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
             <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+              <label htmlFor="quote-name" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: '#222' }}>
                 <FaUser style={{ marginRight: '0.5rem' }} />
                 Name *
               </label>
               <input
+                id="quote-name"
                 type="text"
                 name="name"
                 value={formData.name}
@@ -161,22 +165,30 @@ const QuoteModal = ({ isOpen, onClose }) => {
                 required
                 style={{
                   width: '100%',
-                  padding: '0.75rem',
-                  border: '2px solid #e0e0e0',
-                  borderRadius: '8px',
+                  boxSizing: 'border-box',
+                  padding: '0.85rem',
+                  border: '2px solid #b3d9ff',
+                  borderRadius: '12px',
                   fontSize: '1rem',
-                  transition: 'border-color 0.3s ease'
+                  background: '#f5f7fa',
+                  color: '#222',
+                  transition: 'border-color 0.3s',
+                  outline: 'none',
+                  marginBottom: 0,
                 }}
                 placeholder="Your full name"
+                onFocus={e => e.target.style.borderColor = '#3498db'}
+                onBlur={e => e.target.style.borderColor = '#b3d9ff'}
               />
             </div>
 
             <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+              <label htmlFor="quote-email" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: '#222' }}>
                 <FaEnvelope style={{ marginRight: '0.5rem' }} />
                 Email *
               </label>
               <input
+                id="quote-email"
                 type="email"
                 name="email"
                 value={formData.email}
@@ -184,80 +196,111 @@ const QuoteModal = ({ isOpen, onClose }) => {
                 required
                 style={{
                   width: '100%',
-                  padding: '0.75rem',
-                  border: '2px solid #e0e0e0',
-                  borderRadius: '8px',
+                  boxSizing: 'border-box',
+                  padding: '0.85rem',
+                  border: '2px solid #b3d9ff',
+                  borderRadius: '12px',
                   fontSize: '1rem',
-                  transition: 'border-color 0.3s ease'
+                  background: '#f5f7fa',
+                  color: '#222',
+                  transition: 'border-color 0.3s',
+                  outline: 'none',
+                  marginBottom: 0,
                 }}
                 placeholder="your.email@example.com"
+                onFocus={e => e.target.style.borderColor = '#3498db'}
+                onBlur={e => e.target.style.borderColor = '#b3d9ff'}
               />
             </div>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
             <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+              <label htmlFor="quote-phone" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: '#222' }}>
                 <FaPhone style={{ marginRight: '0.5rem' }} />
                 Phone
               </label>
               <input
-                type="tel"
+                id="quote-phone"
+                type="text"
                 name="phone"
                 value={formData.phone}
                 onChange={handleInputChange}
                 style={{
                   width: '100%',
-                  padding: '0.75rem',
-                  border: '2px solid #e0e0e0',
-                  borderRadius: '8px',
+                  boxSizing: 'border-box',
+                  padding: '0.85rem',
+                  border: '2px solid #b3d9ff',
+                  borderRadius: '12px',
                   fontSize: '1rem',
-                  transition: 'border-color 0.3s ease'
+                  background: '#f5f7fa',
+                  color: '#222',
+                  transition: 'border-color 0.3s',
+                  outline: 'none',
+                  marginBottom: 0,
                 }}
                 placeholder="Your phone number"
+                onFocus={e => e.target.style.borderColor = '#3498db'}
+                onBlur={e => e.target.style.borderColor = '#b3d9ff'}
               />
             </div>
 
             <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+              <label htmlFor="quote-company" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: '#222' }}>
                 <FaBuilding style={{ marginRight: '0.5rem' }} />
                 Company
               </label>
               <input
+                id="quote-company"
                 type="text"
                 name="company"
                 value={formData.company}
                 onChange={handleInputChange}
                 style={{
                   width: '100%',
-                  padding: '0.75rem',
-                  border: '2px solid #e0e0e0',
-                  borderRadius: '8px',
+                  boxSizing: 'border-box',
+                  padding: '0.85rem',
+                  border: '2px solid #b3d9ff',
+                  borderRadius: '12px',
                   fontSize: '1rem',
-                  transition: 'border-color 0.3s ease'
+                  background: '#f5f7fa',
+                  color: '#222',
+                  transition: 'border-color 0.3s',
+                  outline: 'none',
+                  marginBottom: 0,
                 }}
                 placeholder="Your company name"
+                onFocus={e => e.target.style.borderColor = '#3498db'}
+                onBlur={e => e.target.style.borderColor = '#b3d9ff'}
               />
             </div>
           </div>
 
           <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-              Service Type *
+            <label htmlFor="quote-serviceType" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: '#222' }}>
+              Service
             </label>
             <select
+              id="quote-serviceType"
               name="serviceType"
               value={formData.serviceType}
               onChange={handleInputChange}
               required
               style={{
                 width: '100%',
-                padding: '0.75rem',
-                border: '2px solid #e0e0e0',
-                borderRadius: '8px',
+                boxSizing: 'border-box',
+                padding: '0.85rem',
+                border: '2px solid #b3d9ff',
+                borderRadius: '12px',
                 fontSize: '1rem',
-                transition: 'border-color 0.3s ease'
+                background: '#f5f7fa',
+                color: '#222',
+                transition: 'border-color 0.3s',
+                outline: 'none',
+                marginBottom: 0,
               }}
+              onFocus={e => e.target.style.borderColor = '#3498db'}
+              onBlur={e => e.target.style.borderColor = '#b3d9ff'}
             >
               <option value="">Select a service</option>
               <option value="sustainable-energy">Sustainable Energy Solutions</option>
@@ -267,47 +310,60 @@ const QuoteModal = ({ isOpen, onClose }) => {
           </div>
 
           <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-              <FaComments style={{ marginRight: '0.5rem' }} />
+            <label htmlFor="quote-projectDescription" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: '#222' }}>
               Project Description *
             </label>
             <textarea
+              id="quote-projectDescription"
               name="projectDescription"
               value={formData.projectDescription}
               onChange={handleInputChange}
               required
-              rows="4"
               style={{
                 width: '100%',
-                padding: '0.75rem',
-                border: '2px solid #e0e0e0',
-                borderRadius: '8px',
+                boxSizing: 'border-box',
+                padding: '0.85rem',
+                border: '2px solid #b3d9ff',
+                borderRadius: '12px',
                 fontSize: '1rem',
+                background: '#f5f7fa',
+                color: '#222',
+                minHeight: '100px',
                 resize: 'vertical',
-                transition: 'border-color 0.3s ease'
+                transition: 'border-color 0.3s',
+                outline: 'none',
               }}
               placeholder="Describe your project requirements, goals, and any specific needs..."
+              onFocus={e => e.target.style.borderColor = '#3498db'}
+              onBlur={e => e.target.style.borderColor = '#b3d9ff'}
             />
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
             <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                <span style={{ marginRight: '0.5rem' }}>₱</span>
+              <label htmlFor="quote-budgetRange" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: '#222' }}>
                 Budget Range
               </label>
               <select
+                id="quote-budgetRange"
                 name="budgetRange"
                 value={formData.budgetRange}
                 onChange={handleInputChange}
                 style={{
                   width: '100%',
-                  padding: '0.75rem',
-                  border: '2px solid #e0e0e0',
-                  borderRadius: '8px',
+                  boxSizing: 'border-box',
+                  padding: '0.85rem',
+                  border: '2px solid #b3d9ff',
+                  borderRadius: '12px',
                   fontSize: '1rem',
-                  transition: 'border-color 0.3s ease'
+                  background: '#f5f7fa',
+                  color: '#222',
+                  transition: 'border-color 0.3s',
+                  outline: 'none',
+                  marginBottom: 0,
                 }}
+                onFocus={e => e.target.style.borderColor = '#3498db'}
+                onBlur={e => e.target.style.borderColor = '#b3d9ff'}
               >
                 <option value="">Select budget range</option>
                 <option value="under-10k">Under ₱10,000</option>
@@ -320,25 +376,31 @@ const QuoteModal = ({ isOpen, onClose }) => {
             </div>
 
             <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                <FaCalendar style={{ marginRight: '0.5rem' }} />
+              <label htmlFor="quote-timeline" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: '#222' }}>
                 Timeline
               </label>
               <select
+                id="quote-timeline"
                 name="timeline"
                 value={formData.timeline}
                 onChange={handleInputChange}
                 style={{
                   width: '100%',
-                  padding: '0.75rem',
-                  border: '2px solid #e0e0e0',
-                  borderRadius: '8px',
+                  boxSizing: 'border-box',
+                  padding: '0.85rem',
+                  border: '2px solid #b3d9ff',
+                  borderRadius: '12px',
                   fontSize: '1rem',
-                  transition: 'border-color 0.3s ease'
+                  background: '#f5f7fa',
+                  color: '#222',
+                  transition: 'border-color 0.3s',
+                  outline: 'none',
+                  marginBottom: 0,
                 }}
+                onFocus={e => e.target.style.borderColor = '#3498db'}
+                onBlur={e => e.target.style.borderColor = '#b3d9ff'}
               >
-                <option value="">Select timeline</option>
-                <option value="asap">ASAP</option>
+                <option value="">ASAP</option>
                 <option value="1-3-months">1-3 months</option>
                 <option value="3-6-months">3-6 months</option>
                 <option value="6-12-months">6-12 months</option>
@@ -349,24 +411,31 @@ const QuoteModal = ({ isOpen, onClose }) => {
           </div>
 
           <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-              Additional Information
+            <label htmlFor="quote-additionalInfo" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: '#222' }}>
+              Additional Details
             </label>
             <textarea
+              id="quote-additionalInfo"
               name="additionalInfo"
               value={formData.additionalInfo}
               onChange={handleInputChange}
-              rows="3"
               style={{
                 width: '100%',
-                padding: '0.75rem',
-                border: '2px solid #e0e0e0',
-                borderRadius: '8px',
+                boxSizing: 'border-box',
+                padding: '0.85rem',
+                border: '2px solid #b3d9ff',
+                borderRadius: '12px',
                 fontSize: '1rem',
+                background: '#f5f7fa',
+                color: '#222',
+                minHeight: '100px',
                 resize: 'vertical',
-                transition: 'border-color 0.3s ease'
+                transition: 'border-color 0.3s',
+                outline: 'none',
               }}
               placeholder="Any additional details, requirements, or questions..."
+              onFocus={e => e.target.style.borderColor = '#3498db'}
+              onBlur={e => e.target.style.borderColor = '#b3d9ff'}
             />
           </div>
 
@@ -375,19 +444,22 @@ const QuoteModal = ({ isOpen, onClose }) => {
             disabled={loading}
             style={{
               width: '100%',
-              padding: '1rem',
-              background: '#27ae60',
-              color: 'white',
+              background: '#3498db',
+              color: '#fff',
               border: 'none',
-              borderRadius: '8px',
-              fontSize: '1rem',
-              fontWeight: 'bold',
+              borderRadius: '24px',
+              padding: '1rem 0',
+              fontWeight: 500,
+              fontSize: '1.1rem',
+              marginTop: '0.5rem',
+              boxShadow: '0 2px 8px rgba(52,152,219,0.08)',
               cursor: loading ? 'not-allowed' : 'pointer',
-              opacity: loading ? 0.7 : 1,
-              transition: 'all 0.3s ease'
+              transition: 'background 0.2s',
             }}
+            onMouseOver={e => e.currentTarget.style.background = '#217dbb'}
+            onMouseOut={e => e.currentTarget.style.background = '#3498db'}
           >
-            {loading ? 'Submitting...' : 'Submit Quote Request'}
+            {loading ? 'Sending...' : 'Send Request'}
           </button>
         </form>
       </div>
