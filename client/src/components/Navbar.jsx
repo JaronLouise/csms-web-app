@@ -150,7 +150,7 @@ const Navbar = () => {
           onClick={() => setDrawerOpen(true)}
           style={{ background: 'none', border: 'none', color: '#222', fontSize: '2rem', cursor: 'pointer', minWidth: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         >
-          &#9776;
+          <span className="material-symbols-outlined" style={{ fontSize: '2rem', verticalAlign: 'middle' }}>menu</span>
         </button>
       </div>
       {/* Side Drawer */}
@@ -177,13 +177,14 @@ const Navbar = () => {
           onClick={() => setDrawerOpen(false)}
           style={{ alignSelf: 'flex-end', marginRight: '1.5rem', background: 'none', border: 'none', color: '#222', fontSize: '2rem', cursor: 'pointer', minWidth: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         >
-          &times;
+          <span className="material-symbols-outlined" style={{ fontSize: '2rem', verticalAlign: 'middle' }}>close</span>
         </button>
         <button onClick={() => handleScrollNav('home')} style={{ background: 'none', border: 'none', color: '#222', fontSize: '1.1rem', textAlign: 'left', padding: '1rem 2rem', cursor: 'pointer', width: '100%' }}>Home</button>
         <button onClick={() => handleRoute('/products')} style={{ background: 'none', border: 'none', color: '#222', fontSize: '1.1rem', textAlign: 'left', padding: '1rem 2rem', cursor: 'pointer', width: '100%' }}>Products</button>
         <button onClick={() => handleScrollNav('services')} style={{ background: 'none', border: 'none', color: '#222', fontSize: '1.1rem', textAlign: 'left', padding: '1rem 2rem', cursor: 'pointer', width: '100%' }}>Services</button>
         <button onClick={() => handleScrollNav('about')} style={{ background: 'none', border: 'none', color: '#222', fontSize: '1.1rem', textAlign: 'left', padding: '1rem 2rem', cursor: 'pointer', width: '100%' }}>About Us</button>
         <button onClick={() => handleRoute('/contact')} style={{ background: 'none', border: 'none', color: '#222', fontSize: '1.1rem', textAlign: 'left', padding: '1rem 2rem', cursor: 'pointer', width: '100%' }}>Contacts</button>
+        <button onClick={() => handleRoute('/cart')} style={{ background: 'none', border: 'none', color: '#222', fontSize: '1.1rem', textAlign: 'left', padding: '1rem 2rem', cursor: 'pointer', width: '100%' }}>Cart</button>
         {user ? (
           <>
             <button onClick={() => handleRoute('/profile')} style={{ background: 'none', border: '1px solid #222', color: '#222', borderRadius: '1.5rem', padding: '0.7rem 2rem', fontWeight: 500, margin: '1rem 2rem', cursor: 'pointer', fontSize: '1.1rem', width: 'calc(100% - 4rem)' }}>Profile</button>
@@ -192,12 +193,6 @@ const Navbar = () => {
         ) : (
           <button onClick={() => handleRoute('/login')} style={{ background: '#000', color: '#fff', border: 'none', borderRadius: '1.5rem', padding: '0.7rem 2rem', fontWeight: 500, margin: '1rem 2rem', cursor: 'pointer', fontSize: '1.1rem', width: 'calc(100% - 4rem)' }}>Login</button>
         )}
-        <button onClick={() => handleRoute('/cart')} style={{ background: 'none', border: 'none', color: '#222', fontSize: '1.5rem', position: 'relative', textAlign: 'left', padding: '1rem 2rem', cursor: 'pointer', width: '100%', display: 'flex', alignItems: 'center' }}>
-          <span className="material-symbols-outlined" style={{ fontSize: '1.6rem', verticalAlign: 'middle' }}>shopping_cart</span>
-          {cartItemCount > 0 && (
-            <span style={{ marginLeft: 8, background: '#000', color: '#fff', borderRadius: '50%', fontSize: '0.8rem', padding: '0.1rem 0.4rem', minWidth: 18, textAlign: 'center' }}>{cartItemCount}</span>
-          )}
-        </button>
       </div>
       {/* Overlay */}
       {drawerOpen && (
