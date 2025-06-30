@@ -197,29 +197,7 @@ const Home = () => {
             Embrace a greener future with innovative solutions tailored for eco-conscious living.
           </p>
           <button
-            style={{
-              background: 'linear-gradient(90deg, #b2f0e6 0%, #0fd850 100%)',
-              color: '#222',
-              border: 'none',
-              borderRadius: 32,
-              padding: '18px 52px', // Increased padding for more prominence
-              fontWeight: 600,
-              fontSize: 20,
-              fontFamily: 'Poppins, sans-serif',
-              boxShadow: '0 4px 20px rgba(0,0,0,0.15)', // Enhanced shadow
-              cursor: 'pointer',
-              transition: 'all 0.3s ease', // Improved transition
-              letterSpacing: '0.5px',
-              transform: 'translateX(0)', // Base transform for hover effect
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.transform = 'translateX(8px) translateY(-2px)';
-              e.target.style.boxShadow = '0 6px 24px rgba(0,0,0,0.2)';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.transform = 'translateX(0) translateY(0)';
-              e.target.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)';
-            }}
+            className="flash-slide flash-slide--green"
             onClick={() => navigate('/products')}
           >
             Shop Now
@@ -380,11 +358,11 @@ const Home = () => {
           padding: 2rem 1rem;
           box-sizing: border-box;
         }
-        .home-section { background: #e0f7fa; min-height: 60vh; }
-        .featured-section { background: #f1f8e9; }
-        .services-section { background: #fffde7; }
-        .about-section { background: #fce4ec; }
-        .footer-section { background: #ececec; min-height: 20vh; }
+        .home-section { background: #e8fbe8; min-height: 60vh; }
+        .featured-section { background: #f1fbe9; }
+        .services-section { background: #f6fff6; }
+        .about-section { background: #f4fbe8; }
+        .footer-section { background: #e8fbe8; min-height: 20vh; }
         .homepage-section h1, .homepage-section h2, .homepage-section h3 {
           margin: 0.5em 0;
         }
@@ -398,7 +376,7 @@ const Home = () => {
         .service-card {
           background: #fff;
           border-radius: 1rem;
-          box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+          box-shadow: 0 2px 12px rgba(40,167,69,0.13);
           padding: 2.5rem 1.8rem 2rem 1.8rem;
           min-width: 260px;
           max-width: 320px;
@@ -407,17 +385,23 @@ const Home = () => {
           flex-direction: column;
           align-items: center;
           transition: box-shadow 0.3s, transform 0.3s;
-          border: 2px solid #e0f7fa;
+          border: 2px solid #e8fbe8;
         }
         .service-card:hover {
-          box-shadow: 0 8px 32px rgba(0,123,255,0.13);
+          box-shadow: 0 8px 32px rgba(40,167,69,0.13);
           transform: translateY(-8px) scale(1.03);
-          border-color: #007bff;
+          border-color: #28a745;
         }
         .service-icon.material-symbols-outlined {
-          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+          background: #e8fbe8;
+          color: #28a745;
+          border-radius: 50%;
+          padding: 16px;
           font-size: 2.5rem;
           margin-bottom: 1rem;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
         }
         .service-card ul {
           text-align: left;
@@ -455,9 +439,13 @@ const Home = () => {
           font-weight: 500;
           font-size: 1.1rem;
           cursor: pointer;
+          transition: background 0.2s;
         }
         .quote-btn {
-          background: #007bff;
+          background: #28a745;
+        }
+        .contact-btn:hover, .quote-btn:hover {
+          background: #218838;
         }
         
         /* Responsive Design Improvements */
@@ -506,6 +494,49 @@ const Home = () => {
         }
         .spec-box-animate {
           will-change: opacity, transform;
+        }
+        .flash-slide {
+          border: none;
+          display: inline-block;
+          color: #222;
+          border-radius: 32px;
+          position: relative;
+          overflow: hidden;
+          text-decoration: none;
+          font-family: 'Poppins', sans-serif;
+          font-size: 20px;
+          font-weight: 600;
+          letter-spacing: 0.5px;
+          text-align: center;
+          box-shadow: 0 4px 20px rgba(40,167,69,0.13);
+          transition: box-shadow 0.3s, transform 0.3s;
+          background: linear-gradient(90deg, #e8fbe8 0%, #28a745 100%);
+          cursor: pointer;
+          padding: 18px 52px;
+        }
+        .flash-slide--green {
+          background: linear-gradient(90deg, #e8fbe8 0%, #28a745 100%);
+        }
+        
+        .flash-slide:hover {
+          transform: scale(1.08);
+          box-shadow: 0 8px 32px rgba(40,167,69,0.25);
+        }
+
+        .flash-slide::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: -75%;
+          width: 50%;
+          height: 100%;
+          background: rgba(255, 255, 255, 0.3);
+          transform: skewX(-20deg);
+          transition: left 0.5s;
+        }
+
+        .flash-slide:hover::before {
+          left: 125%;
         }
       `}</style>
     </div>

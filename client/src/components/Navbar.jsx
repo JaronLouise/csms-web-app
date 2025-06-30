@@ -100,7 +100,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav style={{ position: 'sticky', top: 0, left: 0, width: '100vw', background: '#fff', color: '#222', zIndex: 1000, borderBottom: '1px solid #ddd', minHeight: 64, boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+    <nav style={{ position: 'sticky', top: 0, left: 0, width: '100vw', background: '#fff', color: '#222', zIndex: 1000, borderBottom: '1px solid #ddd', minHeight: 64, boxShadow: '0 2px 8px rgba(40,167,69,0.13)' }}>
       {/* Desktop/Tablet Navbar */}
       <div className="navbar-desktop" style={{ display: 'flex', minHeight: 64, width: '100vw' }}>
         <div style={{
@@ -177,7 +177,7 @@ const Navbar = () => {
           onClick={() => setDrawerOpen(false)}
           style={{ alignSelf: 'flex-end', marginRight: '1.5rem', background: 'none', border: 'none', color: '#222', fontSize: '2rem', cursor: 'pointer', minWidth: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         >
-          <span className="material-symbols-outlined" style={{ fontSize: '2rem', verticalAlign: 'middle' }}>close</span>
+          &times;
         </button>
         <button onClick={() => handleScrollNav('home')} style={{ background: 'none', border: 'none', color: '#222', fontSize: '1.1rem', textAlign: 'left', padding: '1rem 2rem', cursor: 'pointer', width: '100%' }}>Home</button>
         <button onClick={() => handleRoute('/products')} style={{ background: 'none', border: 'none', color: '#222', fontSize: '1.1rem', textAlign: 'left', padding: '1rem 2rem', cursor: 'pointer', width: '100%' }}>Products</button>
@@ -231,9 +231,11 @@ const Navbar = () => {
           min-width: 80px;
           outline: none;
           transition: color 0.18s;
+          text-align: center;
+          text-decoration: none;
         }
         .nav-link:hover, .nav-link.active {
-          color: #0099ff;
+          color: #28a745;
         }
         .nav-link::before {
           content: '';
@@ -248,7 +250,10 @@ const Navbar = () => {
           transition: background 0.18s;
         }
         .nav-link:hover::before, .nav-link.active::before {
-          background: #0099ff;
+          background: #28a745;
+        }
+        .nav-link:not(:last-child) {
+          margin-right: 30px;
         }
         .material-symbols-outlined {
           font-family: 'Material Symbols Outlined', sans-serif;
@@ -260,6 +265,20 @@ const Navbar = () => {
         }
         .nav-link:active, .nav-link:focus {
           outline: none;
+        }
+        nav, .navbar-desktop, .navbar-mobile {
+          box-shadow: 0 2px 8px rgba(40,167,69,0.13) !important;
+        }
+        .navbar-desktop {
+          background: #fff !important;
+        }
+        .navbar-mobile {
+          background: #fff !important;
+        }
+        /* Drawer/side menu (if you want green highlights) */
+        .navbar-mobile button:focus,
+        .navbar-mobile button:hover {
+          color: #28a745 !important;
         }
       `}</style>
     </nav>
