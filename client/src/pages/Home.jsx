@@ -130,7 +130,7 @@ const Home = () => {
           inset: 0,
           width: '100%',
           height: '100%',
-          background: 'linear-gradient(135deg, rgba(20,20,20,0.72) 0%, rgba(20,20,20,0.92) 100%)',
+          background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.72) 0%, rgba(11, 11, 12, 0.92) 100%)',
           zIndex: 2,
         }} />
         {/* Bottom fade to featured section */}
@@ -161,16 +161,16 @@ const Home = () => {
         <div style={{
           position: 'relative',
           zIndex: 3,
-          maxWidth: 1200,
+          maxWidth: 650,
           width: '100%',
           margin: '0 auto',
           color: '#fff',
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'flex-start',
+          alignItems: 'center',
           justifyContent: 'center',
-          textAlign: 'left',
-          padding: '0 2rem 0 4rem', // Increased left padding for better left alignment
+          textAlign: 'center',
+          padding: '0 2rem',
         }}>
           <h1 style={{
             fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
@@ -222,7 +222,7 @@ const Home = () => {
             }}
             onClick={() => navigate('/products')}
           >
-            Get Started
+            Shop Now
           </button>
         </div>
       </section>
