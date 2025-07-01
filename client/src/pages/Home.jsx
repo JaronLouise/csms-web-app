@@ -143,31 +143,6 @@ const Home = () => {
           background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.72) 0%, rgba(11, 11, 12, 0.92) 100%)',
           zIndex: 2,
         }} />
-        {/* Bottom fade to featured section */}
-        {/* Blur + opacity fade overlay for vanishing effect */}
-        <div style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          bottom: 0,
-          height: 70, // Height of the blur/fade effect
-          zIndex: 3,
-          pointerEvents: 'none',
-          background: 'linear-gradient(to bottom, rgba(178,240,230,0) 0%, rgba(178,240,230,0.7) 60%, #b2f0e6 100%)',
-          filter: 'blur(12px)',
-          opacity: 0.85,
-        }} />
-        {/* Reduced height for the main blend gradient */}
-        <div style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          bottom: 0,
-          height: 120, // Reduced from 340 to 120
-          background: 'linear-gradient(to bottom, transparent 0%, #b2f0e6 100%)',
-          zIndex: 3,
-          pointerEvents: 'none',
-        }} />
         <div className="homepage-content" style={{
           position: 'relative',
           zIndex: 3,
@@ -198,11 +173,11 @@ const Home = () => {
           <p style={{
             fontSize: 'clamp(1.1rem, 2vw, 1.5rem)',
             fontWeight: 400,
-            marginBottom: 48, // Increased margin for better spacing
-            maxWidth: 580, // Increased max width
+            marginBottom: 48,
+            maxWidth: 580,
             color: '#f3f3f3',
             textShadow: '0 2px 8px rgba(0,0,0,0.10)',
-            lineHeight: 1.5 // Added line height for better readability
+            lineHeight: 1.5
           }}>
             Embrace a greener future with innovative solutions tailored for eco-conscious living.
           </p>
@@ -212,6 +187,82 @@ const Home = () => {
           >
             Shop Now
           </button>
+        </div>
+        {/* Animated Sliding Stats Section - now part of normal flow */}
+        <div className="sliding-stats-container single-row">
+          <div className="sliding-stats-track">
+            <div className="stat-group">
+              <div className="stat-number huge">120+</div>
+              <div className="stat-label">
+                <span className="stat-title">Projects</span>
+                <span className="stat-desc">Completed worldwide</span>
+              </div>
+            </div>
+            <div className="stat-group">
+              <div className="stat-number huge">98%</div>
+              <div className="stat-label">
+                <span className="stat-title">Satisfaction</span>
+                <span className="stat-desc">Client approval rate</span>
+              </div>
+            </div>
+            <div className="stat-group">
+              <div className="stat-number huge">24/7</div>
+              <div className="stat-label">
+                <span className="stat-title">Support</span>
+                <span className="stat-desc">Always available</span>
+              </div>
+            </div>
+            <div className="stat-group">
+              <div className="stat-number huge">50+</div>
+              <div className="stat-label">
+                <span className="stat-title">Team Members</span>
+                <span className="stat-desc">Expert professionals</span>
+              </div>
+            </div>
+            <div className="stat-group">
+              <div className="stat-number huge">10</div>
+              <div className="stat-label">
+                <span className="stat-title">Awards</span>
+                <span className="stat-desc">Industry recognition</span>
+              </div>
+            </div>
+            {/* Duplicate for continuous effect */}
+            <div className="stat-group">
+              <div className="stat-number huge">120+</div>
+              <div className="stat-label">
+                <span className="stat-title">Projects</span>
+                <span className="stat-desc">Completed worldwide</span>
+              </div>
+            </div>
+            <div className="stat-group">
+              <div className="stat-number huge">98%</div>
+              <div className="stat-label">
+                <span className="stat-title">Satisfaction</span>
+                <span className="stat-desc">Client approval rate</span>
+              </div>
+            </div>
+            <div className="stat-group">
+              <div className="stat-number huge">24/7</div>
+              <div className="stat-label">
+                <span className="stat-title">Support</span>
+                <span className="stat-desc">Always available</span>
+              </div>
+            </div>
+            <div className="stat-group">
+              <div className="stat-number huge">50+</div>
+              <div className="stat-label">
+                <span className="stat-title">Team Members</span>
+                <span className="stat-desc">Expert professionals</span>
+              </div>
+            </div>
+            <div className="stat-group">
+              <div className="stat-number huge">10</div>
+              <div className="stat-label">
+                <span className="stat-title">Awards</span>
+                <span className="stat-desc">Industry recognition</span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -729,83 +780,6 @@ const Home = () => {
       <ContactModal isOpen={showContact} onClose={() => setShowContact(false)} />
       <QuoteModal isOpen={showQuote} onClose={() => setShowQuote(false)} />
       <ServiceDetailModal isOpen={showServiceDetail} onClose={closeServiceDetailModal} service={selectedService} />
-      {/* Animated Sliding Stats Section */}
-      <div className="sliding-stats-container single-row">
-        <div className="sliding-stats-track">
-          <div className="stat-group">
-            <div className="stat-number huge">120+</div>
-            <div className="stat-label">
-              <span className="stat-title">Projects</span>
-              <span className="stat-desc">Completed worldwide</span>
-            </div>
-          </div>
-          <div className="stat-group">
-            <div className="stat-number huge">98%</div>
-            <div className="stat-label">
-              <span className="stat-title">Satisfaction</span>
-              <span className="stat-desc">Client approval rate</span>
-            </div>
-          </div>
-          <div className="stat-group">
-            <div className="stat-number huge">24/7</div>
-            <div className="stat-label">
-              <span className="stat-title">Support</span>
-              <span className="stat-desc">Always available</span>
-            </div>
-          </div>
-          <div className="stat-group">
-            <div className="stat-number huge">50+</div>
-            <div className="stat-label">
-              <span className="stat-title">Team Members</span>
-              <span className="stat-desc">Expert professionals</span>
-            </div>
-          </div>
-          <div className="stat-group">
-            <div className="stat-number huge">10</div>
-            <div className="stat-label">
-              <span className="stat-title">Awards</span>
-              <span className="stat-desc">Industry recognition</span>
-            </div>
-          </div>
-          {/* Duplicate for continuous effect */}
-          <div className="stat-group">
-            <div className="stat-number huge">120+</div>
-            <div className="stat-label">
-              <span className="stat-title">Projects</span>
-              <span className="stat-desc">Completed worldwide</span>
-            </div>
-          </div>
-          <div className="stat-group">
-            <div className="stat-number huge">98%</div>
-            <div className="stat-label">
-              <span className="stat-title">Satisfaction</span>
-              <span className="stat-desc">Client approval rate</span>
-            </div>
-          </div>
-          <div className="stat-group">
-            <div className="stat-number huge">24/7</div>
-            <div className="stat-label">
-              <span className="stat-title">Support</span>
-              <span className="stat-desc">Always available</span>
-            </div>
-          </div>
-          <div className="stat-group">
-            <div className="stat-number huge">50+</div>
-            <div className="stat-label">
-              <span className="stat-title">Team Members</span>
-              <span className="stat-desc">Expert professionals</span>
-            </div>
-          </div>
-          <div className="stat-group">
-            <div className="stat-number huge">10</div>
-            <div className="stat-label">
-              <span className="stat-title">Awards</span>
-              <span className="stat-desc">Industry recognition</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* End Animated Sliding Stats Section */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
@@ -1012,10 +986,9 @@ const Home = () => {
           left: 125%;
         }
         .sliding-stats-container.single-row {
-          position: absolute;
-          bottom: 120px;
-          left: 0;
+          position: static;
           width: 100vw;
+          margin-top: 32px;
           z-index: 10;
           display: flex;
           flex-direction: row;
