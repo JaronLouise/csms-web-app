@@ -177,3 +177,9 @@ FIREBASE_APP_ID=your-app-id
 CORS_ORIGIN=http://localhost:3000
 RATE_LIMIT_WINDOW=15
 RATE_LIMIT_MAX_REQUESTS=100
+client/.vite/deps/package.json
+client/.vite/deps/_metadata.json
+
+   # Vite build output and cache
+   client/dist/
+   client/.vite/
