@@ -114,7 +114,7 @@ const Home = () => {
     <div className="homepage-root">
       {/* Main Homepage Section */}
       <section id="home" className="homepage-section home-section-modern" style={{
-        minHeight: '100vh',
+        minHeight: 'calc(100vh - 64px)',
         width: '100%',
         display: 'flex',
         alignItems: 'center',
@@ -185,7 +185,7 @@ const Home = () => {
           <h1 style={{
             fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
             fontWeight: 700,
-            marginBottom: 32,
+            marginBottom: 64,
             lineHeight: 1.08,
             letterSpacing: '-2px',
             fontFamily: 'Poppins, sans-serif',
@@ -867,7 +867,7 @@ const Home = () => {
           font-size: 2.5rem;
           margin-bottom: 1rem;
           display: inline-flex;
-          align-items: center;
+          alignItems: center;
           justify-content: center;
         }
         .service-card ul {
@@ -1157,6 +1157,40 @@ const Home = () => {
           }
           .home-section-modern p {
             font-size: 0.85rem !important;
+          }
+        }
+        @media (max-height: 900px), (max-width: 900px) {
+          .home-section-modern {
+            min-height: unset !important;
+            padding-top: 80px !important;
+            padding-bottom: 40px !important;
+          }
+          .sliding-stats-container.single-row {
+            position: static !important;
+            margin-top: 24px;
+            bottom: unset !important;
+            z-index: 1 !important;
+          }
+        }
+        .homepage-stats-row {
+          margin-top: 64px;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          align-items: flex-end;
+          z-index: 3;
+          position: relative;
+        }
+        @media (max-width: 900px), (max-height: 900px) {
+          .homepage-stats-row {
+            margin-top: 80px !important;
+          }
+        }
+        @media (max-width: 600px) {
+          .homepage-stats-row {
+            flex-direction: column;
+            margin-top: 48px !important;
+            gap: 24px;
           }
         }
       `}</style>
