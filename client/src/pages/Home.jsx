@@ -1215,6 +1215,17 @@ const Home = () => {
             padding-bottom: 24px !important;
           }
         }
+        @media (max-height: 1080px) and (min-width: 1200px) {
+          .stat-number.huge {
+            font-size: 3.2rem;
+          }
+          .stat-title {
+            font-size: 1.3rem;
+          }
+          .stat-desc {
+            font-size: 0.9rem;
+          }
+        }
       `}</style>
     </div>
   );
