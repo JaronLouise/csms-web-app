@@ -171,7 +171,7 @@ const ContactModal = ({ isOpen, onClose }) => {
                 width: '100%',
                 boxSizing: 'border-box',
                 padding: '0.85rem',
-                border: '2px solid #b3d9ff',
+                border: '2px solid #b7eac7',
                 borderRadius: '12px',
                 fontSize: '1rem',
                 background: '#f5f7fa',
@@ -181,8 +181,8 @@ const ContactModal = ({ isOpen, onClose }) => {
                 marginBottom: 0,
               }}
               placeholder="Your full name"
-              onFocus={e => e.target.style.borderColor = '#3498db'}
-              onBlur={e => e.target.style.borderColor = '#b3d9ff'}
+              onFocus={e => e.target.style.borderColor = '#28a745'}
+              onBlur={e => e.target.style.borderColor = '#b7eac7'}
             />
           </div>
 
@@ -202,7 +202,7 @@ const ContactModal = ({ isOpen, onClose }) => {
                 width: '100%',
                 boxSizing: 'border-box',
                 padding: '0.85rem',
-                border: '2px solid #b3d9ff',
+                border: '2px solid #b7eac7',
                 borderRadius: '12px',
                 fontSize: '1rem',
                 background: '#f5f7fa',
@@ -212,8 +212,8 @@ const ContactModal = ({ isOpen, onClose }) => {
                 marginBottom: 0,
               }}
               placeholder="your.email@example.com"
-              onFocus={e => e.target.style.borderColor = '#3498db'}
-              onBlur={e => e.target.style.borderColor = '#b3d9ff'}
+              onFocus={e => e.target.style.borderColor = '#28a745'}
+              onBlur={e => e.target.style.borderColor = '#b7eac7'}
             />
           </div>
 
@@ -232,7 +232,7 @@ const ContactModal = ({ isOpen, onClose }) => {
                 width: '100%',
                 boxSizing: 'border-box',
                 padding: '0.85rem',
-                border: '2px solid #b3d9ff',
+                border: '2px solid #b7eac7',
                 borderRadius: '12px',
                 fontSize: '1rem',
                 background: '#f5f7fa',
@@ -242,8 +242,8 @@ const ContactModal = ({ isOpen, onClose }) => {
                 marginBottom: 0,
               }}
               placeholder="Your phone number"
-              onFocus={e => e.target.style.borderColor = '#3498db'}
-              onBlur={e => e.target.style.borderColor = '#b3d9ff'}
+              onFocus={e => e.target.style.borderColor = '#28a745'}
+              onBlur={e => e.target.style.borderColor = '#b7eac7'}
             />
           </div>
 
@@ -262,7 +262,7 @@ const ContactModal = ({ isOpen, onClose }) => {
                 width: '100%',
                 boxSizing: 'border-box',
                 padding: '0.85rem',
-                border: '2px solid #b3d9ff',
+                border: '2px solid #b7eac7',
                 borderRadius: '12px',
                 fontSize: '1rem',
                 background: '#f5f7fa',
@@ -272,8 +272,8 @@ const ContactModal = ({ isOpen, onClose }) => {
                 marginBottom: 0,
               }}
               placeholder="What is this about?"
-              onFocus={e => e.target.style.borderColor = '#3498db'}
-              onBlur={e => e.target.style.borderColor = '#b3d9ff'}
+              onFocus={e => e.target.style.borderColor = '#28a745'}
+              onBlur={e => e.target.style.borderColor = '#b7eac7'}
             />
           </div>
 
@@ -291,7 +291,7 @@ const ContactModal = ({ isOpen, onClose }) => {
                 width: '100%',
                 boxSizing: 'border-box',
                 padding: '0.85rem',
-                border: '2px solid #b3d9ff',
+                border: '2px solid #b7eac7',
                 borderRadius: '12px',
                 fontSize: '1rem',
                 background: '#f5f7fa',
@@ -302,8 +302,8 @@ const ContactModal = ({ isOpen, onClose }) => {
                 outline: 'none',
               }}
               placeholder="Tell us about your inquiry..."
-              onFocus={e => e.target.style.borderColor = '#3498db'}
-              onBlur={e => e.target.style.borderColor = '#b3d9ff'}
+              onFocus={e => e.target.style.borderColor = '#28a745'}
+              onBlur={e => e.target.style.borderColor = '#b7eac7'}
             />
           </div>
 
@@ -312,7 +312,7 @@ const ContactModal = ({ isOpen, onClose }) => {
             disabled={loading}
             style={{
               width: '100%',
-              background: '#3498db',
+              background: '#28a745',
               color: '#fff',
               border: 'none',
               borderRadius: '24px',
@@ -320,12 +320,12 @@ const ContactModal = ({ isOpen, onClose }) => {
               fontWeight: 500,
               fontSize: '1.1rem',
               marginTop: '0.5rem',
-              boxShadow: '0 2px 8px rgba(52,152,219,0.08)',
+              boxShadow: '0 2px 8px rgba(40,167,69,0.08)',
               cursor: loading ? 'not-allowed' : 'pointer',
               transition: 'background 0.2s',
             }}
-            onMouseOver={e => e.currentTarget.style.background = '#217dbb'}
-            onMouseOut={e => e.currentTarget.style.background = '#3498db'}
+            onMouseOver={e => e.currentTarget.style.background = '#218838'}
+            onMouseOut={e => e.currentTarget.style.background = '#28a745'}
           >
             {loading ? 'Sending...' : 'Send Message'}
           </button>

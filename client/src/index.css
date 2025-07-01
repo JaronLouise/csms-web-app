@@ -30,6 +30,11 @@ body {
   min-height: 100vh;
 }
 
+/* Add padding-top for pages with fixed navbar */
+.with-navbar {
+  padding-top: 64px;
+}
+
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
@@ -68,8 +73,9 @@ button:focus-visible {
 }
 
 html, body, #root {
-  width: 100vw;
-  min-height: 100vh;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
   margin: 0;
   padding: 0;
   box-sizing: border-box;

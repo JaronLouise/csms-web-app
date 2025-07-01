@@ -100,14 +100,14 @@ const Navbar = () => {
   };
 
   return (
-    <nav style={{ position: 'sticky', top: 0, left: 0, width: '100vw', background: '#fff', color: '#222', zIndex: 1000, borderBottom: '1px solid #ddd', minHeight: 64, boxShadow: '0 2px 8px rgba(40,167,69,0.13)' }}>
+    <nav style={{ position: 'fixed', top: 0, left: 0, width: '100%', background: '#fff', color: '#222', zIndex: 1000, borderBottom: '1px solid #ddd', minHeight: 64, boxShadow: '0 2px 8px rgba(40,167,69,0.13)' }}>
       {/* Desktop/Tablet Navbar */}
-      <div className="navbar-desktop" style={{ display: 'flex', minHeight: 64, width: '100vw' }}>
+      <div className="navbar-desktop" style={{ display: 'flex', minHeight: 64, width: '100%' }}>
         <div style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: '100vw',
+          width: '100%',
           height: 64,
           position: 'relative',
         }}>
@@ -143,7 +143,7 @@ const Navbar = () => {
         </div>
       </div>
       {/* Mobile Navbar */}
-      <div className="navbar-mobile" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 1rem', minHeight: 64, width: '100vw' }}>
+      <div className="navbar-mobile" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 1rem', minHeight: 64, width: '100%' }}>
         <span style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>RESET CORP.</span>
         <button
           aria-label="Open navigation menu"
@@ -177,7 +177,7 @@ const Navbar = () => {
           onClick={() => setDrawerOpen(false)}
           style={{ alignSelf: 'flex-end', marginRight: '1.5rem', background: 'none', border: 'none', color: '#222', fontSize: '2rem', cursor: 'pointer', minWidth: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         >
-          &times;
+          <span className="material-symbols-outlined" style={{ fontSize: '2rem' }}>close</span>
         </button>
         <button onClick={() => handleScrollNav('home')} style={{ background: 'none', border: 'none', color: '#222', fontSize: '1.1rem', textAlign: 'left', padding: '1rem 2rem', cursor: 'pointer', width: '100%' }}>Home</button>
         <button onClick={() => handleRoute('/products')} style={{ background: 'none', border: 'none', color: '#222', fontSize: '1.1rem', textAlign: 'left', padding: '1rem 2rem', cursor: 'pointer', width: '100%' }}>Products</button>

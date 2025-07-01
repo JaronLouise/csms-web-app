@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Products from './pages/products';
 import Login from './pages/login';
 import Cart from "./pages/Cart";
@@ -24,40 +24,49 @@ import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import Home from './pages/Home';
 
+function AppContent() {
+  const location = useLocation();
+  const hideNavbar = location.pathname === '/login' || location.pathname === '/register';
+
+  return (
+    <div className={!hideNavbar ? 'with-navbar' : ''}>
+      {!hideNavbar && <Navbar />}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
+        <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
+        <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+
+        {/* Admin Routes */}
+        <Route path="/admin" element={<AdminRoute />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="products" element={<AdminProductList />} />
+          <Route path="products/new" element={<AdminProductForm />} />
+          <Route path="products/edit/:id" element={<AdminProductForm />} />
+          <Route path="orders" element={<AdminOrderList />} />
+          <Route path="users" element={<AdminUserList />} />
+          <Route path="users/edit/:id" element={<AdminUserForm />} />
+          <Route path="services" element={<AdminServiceList />} />
+          <Route path="services/new" element={<AdminServiceForm />} />
+          <Route path="services/edit/:id" element={<AdminServiceForm />} />
+        </Route>
+      </Routes>
+    </div>
+  );
+}
+
 function App() {
   return (
     <Router>
       <AuthProvider>
         <CartProvider>
-          <div>
-            <Navbar />
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/products" element={<Products />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
-              <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
-              <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
-              <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-
-              {/* Admin Routes */}
-              <Route path="/admin" element={<AdminRoute />}>
-                <Route index element={<AdminDashboard />} />
-                <Route path="products" element={<AdminProductList />} />
-                <Route path="products/new" element={<AdminProductForm />} />
-                <Route path="products/edit/:id" element={<AdminProductForm />} />
-                <Route path="orders" element={<AdminOrderList />} />
-                <Route path="users" element={<AdminUserList />} />
-                <Route path="users/edit/:id" element={<AdminUserForm />} />
-                <Route path="services" element={<AdminServiceList />} />
-                <Route path="services/new" element={<AdminServiceForm />} />
-                <Route path="services/edit/:id" element={<AdminServiceForm />} />
-              </Route>
-            </Routes>
-          </div>
+          <AppContent />
         </CartProvider>
       </AuthProvider>
     </Router>

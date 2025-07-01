@@ -71,7 +71,7 @@ const ServiceDetailModal = ({ isOpen, onClose, service }) => {
             background: '#f8f9fa', 
             padding: '1.5rem', 
             borderRadius: '8px',
-            borderLeft: '4px solid #3498db'
+            borderLeft: '4px solid #28a745'
           }}>
             <ul style={{ margin: 0, paddingLeft: '1.5rem', color: '#222' }}>
               <li style={{ marginBottom: '0.5rem', color: '#222' }}>Expert team with specialized knowledge</li>
@@ -84,10 +84,10 @@ const ServiceDetailModal = ({ isOpen, onClose, service }) => {
         </div>
 
         <div style={{ 
-          background: '#e8f4fd', 
+          background: '#eafaf1', 
           padding: '1.5rem', 
           borderRadius: '8px',
-          border: '1px solid #b3d9ff'
+          border: '1px solid #b7eac7'
         }}>
           <h4 style={{ color: '#2c3e50', marginBottom: '1rem' }}>Ready to Get Started?</h4>
           <p style={{ color: '#7f8c8d', marginBottom: '1rem' }}>
@@ -98,7 +98,7 @@ const ServiceDetailModal = ({ isOpen, onClose, service }) => {
               onClick={() => { onClose(); navigate('/contact'); }}
               style={{
                 padding: '0.75rem 1.5rem',
-                background: '#3498db',
+                background: '#28a745',
                 color: 'white',
                 border: 'none',
                 borderRadius: '4px',
@@ -106,8 +106,11 @@ const ServiceDetailModal = ({ isOpen, onClose, service }) => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.5rem',
-                fontWeight: 'bold'
+                fontWeight: 'bold',
+                transition: 'background 0.2s'
               }}
+              onMouseOver={e => e.currentTarget.style.background = '#218838'}
+              onMouseOut={e => e.currentTarget.style.background = '#28a745'}
             >
               Contact Us <FaArrowRight />
             </button>
@@ -116,15 +119,18 @@ const ServiceDetailModal = ({ isOpen, onClose, service }) => {
               style={{
                 padding: '0.75rem 1.5rem',
                 background: 'transparent',
-                color: '#3498db',
-                border: '2px solid #3498db',
+                color: '#28a745',
+                border: '2px solid #28a745',
                 borderRadius: '4px',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.5rem',
-                fontWeight: 'bold'
+                fontWeight: 'bold',
+                transition: 'background 0.2s, color 0.2s, border-color 0.2s'
               }}
+              onMouseOver={e => { e.currentTarget.style.background = '#28a745'; e.currentTarget.style.color = '#fff'; }}
+              onMouseOut={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#28a745'; }}
             >
               Request Quote <FaArrowRight />
             </button>

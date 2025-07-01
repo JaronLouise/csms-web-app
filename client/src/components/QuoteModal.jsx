@@ -167,7 +167,7 @@ const QuoteModal = ({ isOpen, onClose }) => {
                   width: '100%',
                   boxSizing: 'border-box',
                   padding: '0.85rem',
-                  border: '2px solid #b3d9ff',
+                  border: '2px solid #b7eac7',
                   borderRadius: '12px',
                   fontSize: '1rem',
                   background: '#f5f7fa',
@@ -177,8 +177,8 @@ const QuoteModal = ({ isOpen, onClose }) => {
                   marginBottom: 0,
                 }}
                 placeholder="Your full name"
-                onFocus={e => e.target.style.borderColor = '#3498db'}
-                onBlur={e => e.target.style.borderColor = '#b3d9ff'}
+                onFocus={e => e.target.style.borderColor = '#28a745'}
+                onBlur={e => e.target.style.borderColor = '#b7eac7'}
               />
             </div>
 
@@ -198,7 +198,7 @@ const QuoteModal = ({ isOpen, onClose }) => {
                   width: '100%',
                   boxSizing: 'border-box',
                   padding: '0.85rem',
-                  border: '2px solid #b3d9ff',
+                  border: '2px solid #b7eac7',
                   borderRadius: '12px',
                   fontSize: '1rem',
                   background: '#f5f7fa',
@@ -208,8 +208,8 @@ const QuoteModal = ({ isOpen, onClose }) => {
                   marginBottom: 0,
                 }}
                 placeholder="your.email@example.com"
-                onFocus={e => e.target.style.borderColor = '#3498db'}
-                onBlur={e => e.target.style.borderColor = '#b3d9ff'}
+                onFocus={e => e.target.style.borderColor = '#28a745'}
+                onBlur={e => e.target.style.borderColor = '#b7eac7'}
               />
             </div>
           </div>
@@ -230,7 +230,7 @@ const QuoteModal = ({ isOpen, onClose }) => {
                   width: '100%',
                   boxSizing: 'border-box',
                   padding: '0.85rem',
-                  border: '2px solid #b3d9ff',
+                  border: '2px solid #b7eac7',
                   borderRadius: '12px',
                   fontSize: '1rem',
                   background: '#f5f7fa',
@@ -240,8 +240,8 @@ const QuoteModal = ({ isOpen, onClose }) => {
                   marginBottom: 0,
                 }}
                 placeholder="Your phone number"
-                onFocus={e => e.target.style.borderColor = '#3498db'}
-                onBlur={e => e.target.style.borderColor = '#b3d9ff'}
+                onFocus={e => e.target.style.borderColor = '#28a745'}
+                onBlur={e => e.target.style.borderColor = '#b7eac7'}
               />
             </div>
 
@@ -260,7 +260,7 @@ const QuoteModal = ({ isOpen, onClose }) => {
                   width: '100%',
                   boxSizing: 'border-box',
                   padding: '0.85rem',
-                  border: '2px solid #b3d9ff',
+                  border: '2px solid #b7eac7',
                   borderRadius: '12px',
                   fontSize: '1rem',
                   background: '#f5f7fa',
@@ -270,8 +270,8 @@ const QuoteModal = ({ isOpen, onClose }) => {
                   marginBottom: 0,
                 }}
                 placeholder="Your company name"
-                onFocus={e => e.target.style.borderColor = '#3498db'}
-                onBlur={e => e.target.style.borderColor = '#b3d9ff'}
+                onFocus={e => e.target.style.borderColor = '#28a745'}
+                onBlur={e => e.target.style.borderColor = '#b7eac7'}
               />
             </div>
           </div>
@@ -290,7 +290,7 @@ const QuoteModal = ({ isOpen, onClose }) => {
                 width: '100%',
                 boxSizing: 'border-box',
                 padding: '0.85rem',
-                border: '2px solid #b3d9ff',
+                border: '2px solid #b7eac7',
                 borderRadius: '12px',
                 fontSize: '1rem',
                 background: '#f5f7fa',
@@ -299,8 +299,8 @@ const QuoteModal = ({ isOpen, onClose }) => {
                 outline: 'none',
                 marginBottom: 0,
               }}
-              onFocus={e => e.target.style.borderColor = '#3498db'}
-              onBlur={e => e.target.style.borderColor = '#b3d9ff'}
+              onFocus={e => e.target.style.borderColor = '#28a745'}
+              onBlur={e => e.target.style.borderColor = '#b7eac7'}
             >
               <option value="">Select a service</option>
               <option value="sustainable-energy">Sustainable Energy Solutions</option>
@@ -323,7 +323,7 @@ const QuoteModal = ({ isOpen, onClose }) => {
                 width: '100%',
                 boxSizing: 'border-box',
                 padding: '0.85rem',
-                border: '2px solid #b3d9ff',
+                border: '2px solid #b7eac7',
                 borderRadius: '12px',
                 fontSize: '1rem',
                 background: '#f5f7fa',
@@ -334,8 +334,8 @@ const QuoteModal = ({ isOpen, onClose }) => {
                 outline: 'none',
               }}
               placeholder="Describe your project requirements, goals, and any specific needs..."
-              onFocus={e => e.target.style.borderColor = '#3498db'}
-              onBlur={e => e.target.style.borderColor = '#b3d9ff'}
+              onFocus={e => e.target.style.borderColor = '#28a745'}
+              onBlur={e => e.target.style.borderColor = '#b7eac7'}
             />
           </div>
 
@@ -353,7 +353,7 @@ const QuoteModal = ({ isOpen, onClose }) => {
                   width: '100%',
                   boxSizing: 'border-box',
                   padding: '0.85rem',
-                  border: '2px solid #b3d9ff',
+                  border: '2px solid #b7eac7',
                   borderRadius: '12px',
                   fontSize: '1rem',
                   background: '#f5f7fa',
@@ -362,8 +362,8 @@ const QuoteModal = ({ isOpen, onClose }) => {
                   outline: 'none',
                   marginBottom: 0,
                 }}
-                onFocus={e => e.target.style.borderColor = '#3498db'}
-                onBlur={e => e.target.style.borderColor = '#b3d9ff'}
+                onFocus={e => e.target.style.borderColor = '#28a745'}
+                onBlur={e => e.target.style.borderColor = '#b7eac7'}
               >
                 <option value="">Select budget range</option>
                 <option value="under-10k">Under ₱10,000</option>
@@ -388,7 +388,7 @@ const QuoteModal = ({ isOpen, onClose }) => {
                   width: '100%',
                   boxSizing: 'border-box',
                   padding: '0.85rem',
-                  border: '2px solid #b3d9ff',
+                  border: '2px solid #b7eac7',
                   borderRadius: '12px',
                   fontSize: '1rem',
                   background: '#f5f7fa',
@@ -397,8 +397,8 @@ const QuoteModal = ({ isOpen, onClose }) => {
                   outline: 'none',
                   marginBottom: 0,
                 }}
-                onFocus={e => e.target.style.borderColor = '#3498db'}
-                onBlur={e => e.target.style.borderColor = '#b3d9ff'}
+                onFocus={e => e.target.style.borderColor = '#28a745'}
+                onBlur={e => e.target.style.borderColor = '#b7eac7'}
               >
                 <option value="">ASAP</option>
                 <option value="1-3-months">1-3 months</option>
@@ -423,7 +423,7 @@ const QuoteModal = ({ isOpen, onClose }) => {
                 width: '100%',
                 boxSizing: 'border-box',
                 padding: '0.85rem',
-                border: '2px solid #b3d9ff',
+                border: '2px solid #b7eac7',
                 borderRadius: '12px',
                 fontSize: '1rem',
                 background: '#f5f7fa',
@@ -434,8 +434,8 @@ const QuoteModal = ({ isOpen, onClose }) => {
                 outline: 'none',
               }}
               placeholder="Any additional details, requirements, or questions..."
-              onFocus={e => e.target.style.borderColor = '#3498db'}
-              onBlur={e => e.target.style.borderColor = '#b3d9ff'}
+              onFocus={e => e.target.style.borderColor = '#28a745'}
+              onBlur={e => e.target.style.borderColor = '#b7eac7'}
             />
           </div>
 
@@ -444,7 +444,7 @@ const QuoteModal = ({ isOpen, onClose }) => {
             disabled={loading}
             style={{
               width: '100%',
-              background: '#3498db',
+              background: '#28a745',
               color: '#fff',
               border: 'none',
               borderRadius: '24px',
@@ -452,12 +452,12 @@ const QuoteModal = ({ isOpen, onClose }) => {
               fontWeight: 500,
               fontSize: '1.1rem',
               marginTop: '0.5rem',
-              boxShadow: '0 2px 8px rgba(52,152,219,0.08)',
+              boxShadow: '0 2px 8px rgba(40,167,69,0.08)',
               cursor: loading ? 'not-allowed' : 'pointer',
               transition: 'background 0.2s',
             }}
-            onMouseOver={e => e.currentTarget.style.background = '#217dbb'}
-            onMouseOut={e => e.currentTarget.style.background = '#3498db'}
+            onMouseOver={e => e.currentTarget.style.background = '#218838'}
+            onMouseOut={e => e.currentTarget.style.background = '#28a745'}
           >
             {loading ? 'Sending...' : 'Send Request'}
           </button>
