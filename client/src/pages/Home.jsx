@@ -1162,10 +1162,10 @@ const Home = () => {
         }
         @media (max-width: 900px), (max-height: 900px) {
           .sliding-stats-container.single-row {
+            z-index: 10 !important;
             position: static !important;
             margin-top: 24px;
             bottom: unset !important;
-            z-index: 1 !important;
             pointer-events: auto;
           }
           .home-section-modern {
@@ -1176,10 +1176,10 @@ const Home = () => {
         }
         @media (max-width: 600px) {
           .sliding-stats-container.single-row {
+            z-index: 10 !important;
             position: static !important;
             margin-top: 16px;
             bottom: unset !important;
-            z-index: 1 !important;
             pointer-events: auto;
           }
           .home-section-modern {
