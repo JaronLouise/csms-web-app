@@ -123,7 +123,7 @@ const Home = () => {
         background: '#222',
         overflow: 'hidden',
         padding: 0,
-        paddingTop: '120px', // Added top padding for headspace
+        paddingTop: '120px',
       }}>
         {/* Background image placeholder */}
         <div style={{
@@ -168,7 +168,7 @@ const Home = () => {
           zIndex: 3,
           pointerEvents: 'none',
         }} />
-        <div style={{
+        <div className="homepage-content" style={{
           position: 'relative',
           zIndex: 3,
           maxWidth: 650,
@@ -185,15 +185,15 @@ const Home = () => {
           <h1 style={{
             fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
             fontWeight: 700,
-            marginBottom: 32, // Increased margin for better spacing
+            marginBottom: 32,
             lineHeight: 1.08,
             letterSpacing: '-2px',
             fontFamily: 'Poppins, sans-serif',
             textShadow: '0 4px 24px rgba(0,0,0,0.18)',
-            maxWidth: '650px' // Slightly increased max width
+            maxWidth: '650px',
           }}>
-            Sustainable Energy that<br />
-            Adapts to You
+            Sustainable Energy<br />
+            <span className="nowrap-span">that Adapts to You</span>
           </h1>
           <p style={{
             fontSize: 'clamp(1.1rem, 2vw, 1.5rem)',
@@ -258,8 +258,8 @@ const Home = () => {
               alignItems: 'center',
               justifyContent: 'center'
             }}>
-              <span className="material-symbols-outlined" style={{ fontSize: 56 }}>chevron_left</span>
-            </button>
+            <span className="material-symbols-outlined" style={{ fontSize: 56 }}>chevron_left</span>
+          </button>
           </div>
           {/* Product image (transparent PNG, no shadow/container) */}
           <img
@@ -280,8 +280,8 @@ const Home = () => {
               alignItems: 'center',
               justifyContent: 'center'
             }}>
-              <span className="material-symbols-outlined" style={{ fontSize: 56 }}>chevron_right</span>
-            </button>
+            <span className="material-symbols-outlined" style={{ fontSize: 56 }}>chevron_right</span>
+          </button>
           </div>
           {/* Dots indicator */}
           <div className="dots-indicator featured-section-modern dots-indicator" style={{ position: 'absolute', left: 0, right: 0, bottom: -32 }}>
@@ -373,10 +373,10 @@ const Home = () => {
             maxWidth: 600,
           }}>
             Contact us today to discuss your project requirements and get customized solutions
-          </div>
-          <div className="services-cta">
-            <button className="contact-btn" onClick={() => setShowContact(true)}>Contact Us</button>
-            <button className="quote-btn" onClick={() => setShowQuote(true)}>Request a Quote</button>
+        </div>
+        <div className="services-cta">
+          <button className="contact-btn" onClick={() => setShowContact(true)}>Contact Us</button>
+          <button className="quote-btn" onClick={() => setShowQuote(true)}>Request a Quote</button>
           </div>
         </div>
       </section>
@@ -1113,6 +1113,51 @@ const Home = () => {
         }
         .featured-image-fade.exiting {
           opacity: 0;
+        }
+        @media (max-width: 600px) {
+          .home-section-modern h1 {
+            font-size: clamp(2.8rem, 11vw, 4rem) !important;
+            margin-bottom: 18px !important;
+            line-height: 1.14 !important;
+            letter-spacing: 0 !important;
+            word-break: break-word !important;
+            text-align: center !important;
+          }
+          .home-section-modern p {
+            font-size: clamp(1.1rem, 4vw, 1.3rem) !important;
+            margin-bottom: 20px !important;
+          }
+          .home-section-modern .homepage-content {
+            max-width: 100% !important;
+            padding: 0 0.2rem !important;
+            margin: 0 auto !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+            display: flex !important;
+            flex-direction: column !important;
+          }
+          .home-section-modern .nowrap-span {
+            white-space: normal !important;
+          }
+        }
+        @media (max-width: 450px) {
+          .home-section-modern h1 {
+            font-size: 2.3rem !important;
+            line-height: 1.18 !important;
+          }
+          .home-section-modern p {
+            font-size: 1.05rem !important;
+          }
+        }
+        @media (max-width: 370px) {
+          .home-section-modern h1 {
+            font-size: 1.8rem !important;
+            line-height: 1.22 !important;
+          }
+          .home-section-modern p {
+            font-size: 0.85rem !important;
+          }
         }
       `}</style>
     </div>
