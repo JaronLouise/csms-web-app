@@ -867,7 +867,7 @@ const Home = () => {
           font-size: 2.5rem;
           margin-bottom: 1rem;
           display: inline-flex;
-          alignItems: center;
+          align-items: center;
           justify-content: center;
         }
         .service-card ul {
@@ -1159,17 +1159,11 @@ const Home = () => {
             font-size: 0.85rem !important;
           }
         }
-        @media (max-height: 900px), (max-width: 900px) {
+        @media (max-height: 900px) {
           .home-section-modern {
             min-height: unset !important;
             padding-top: 80px !important;
             padding-bottom: 40px !important;
-          }
-          .sliding-stats-container.single-row {
-            position: static !important;
-            margin-top: 24px;
-            bottom: unset !important;
-            z-index: 1 !important;
           }
         }
         .homepage-stats-row {
@@ -1193,156 +1187,34 @@ const Home = () => {
             gap: 24px;
           }
         }
-        /* --- RESPONSIVENESS FIXES FOR STATS BAR AND MAIN SECTION --- */
-        @media (max-height: 900px), (max-width: 900px) {
-          .home-section-modern {
-            min-height: unset !important;
-            padding-top: 80px !important;
-            padding-bottom: 40px !important;
-          }
+        @media (max-width: 900px), (max-height: 900px) {
           .sliding-stats-container.single-row {
             position: static !important;
             margin-top: 24px;
             bottom: unset !important;
             z-index: 1 !important;
-          }
-        }
-        /* --- LAPTOP-SPECIFIC RESPONSIVENESS --- */
-        @media (max-width: 1400px), (max-height: 850px) {
-          .home-section-modern {
-            min-height: unset !important;
-            padding-top: 48px !important;
-            padding-bottom: 18px !important;
-          }
-          .homepage-content {
-            padding: 0 0.5rem !important;
-          }
-          .home-section-modern h1 {
-            font-size: clamp(1.5rem, 3vw, 2.3rem) !important;
-            margin-bottom: 22px !important;
-          }
-          .home-section-modern p {
-            font-size: clamp(0.95rem, 1.2vw, 1rem) !important;
-            margin-bottom: 16px !important;
-          }
-          .flash-slide {
-            font-size: 0.95rem !important;
-            padding: 10px 22px !important;
-          }
-          .sliding-stats-container.single-row {
-            position: static !important;
-            margin-top: 10px;
-            bottom: unset !important;
-            z-index: 1 !important;
-          }
-          .stat-number.huge {
-            font-size: 2rem !important;
-            margin-right: 7px !important;
-          }
-          .stat-label, .stat-title {
-            font-size: 0.95rem !important;
-          }
-          .stat-desc {
-            font-size: 0.7rem !important;
-          }
-          .stat-group {
-            min-width: 110px !important;
-            padding: 0 6px 0 0 !important;
-          }
-        }
-        /* --- END LAPTOP-SPECIFIC RESPONSIVENESS --- */
-        /* --- END RESPONSIVENESS FIXES --- */
-        /* --- ALWAYS SHOW STATS BAR ON LAPTOPS AND SMALLER SCREENS --- */
-        @media (max-width: 1920px), (max-height: 1080px) {
-          .sliding-stats-container.single-row {
-            position: static !important;
-            margin-top: 10px;
-            bottom: unset !important;
-            z-index: 1 !important;
+            pointer-events: auto;
           }
           .home-section-modern {
             min-height: unset !important;
-            padding-top: 36px !important;
-            padding-bottom: 10px !important;
-          }
-          .homepage-content {
-            padding: 0 0.2rem !important;
-          }
-          .home-section-modern h1 {
-            font-size: clamp(1.2rem, 2.5vw, 2rem) !important;
-            margin-bottom: 16px !important;
-          }
-          .home-section-modern p {
-            font-size: clamp(0.85rem, 1vw, 0.95rem) !important;
-            margin-bottom: 10px !important;
-          }
-          .flash-slide {
-            font-size: 0.9rem !important;
-            padding: 8px 16px !important;
-          }
-          .stat-number.huge {
-            font-size: 1.5rem !important;
-            margin-right: 5px !important;
-          }
-          .stat-label, .stat-title {
-            font-size: 0.8rem !important;
-          }
-          .stat-desc {
-            font-size: 0.6rem !important;
-          }
-          .stat-group {
-            min-width: 80px !important;
-            padding: 0 4px 0 0 !important;
+            padding-top: 80px !important;
+            padding-bottom: 40px !important;
           }
         }
-        @media (max-height: 800px) {
-          .home-section-modern {
-            padding-top: 18px !important;
-            padding-bottom: 4px !important;
-          }
-          .home-section-modern h1 {
-            font-size: 1.1rem !important;
-            margin-bottom: 8px !important;
-          }
-          .home-section-modern p {
-            font-size: 0.8rem !important;
-            margin-bottom: 6px !important;
-          }
-          .flash-slide {
-            font-size: 0.8rem !important;
-            padding: 6px 10px !important;
-          }
-          .stat-number.huge {
-            font-size: 1.1rem !important;
-            margin-right: 3px !important;
-          }
-          .stat-label, .stat-title {
-            font-size: 0.65rem !important;
-          }
-          .stat-desc {
-            font-size: 0.5rem !important;
-          }
-          .stat-group {
-            min-width: 60px !important;
-            padding: 0 2px 0 0 !important;
-          }
-        }
-        /* Only use absolute positioning for very large desktops */
-        @media (min-width: 1921px) and (min-height: 1081px) {
+        @media (max-width: 600px) {
           .sliding-stats-container.single-row {
-            position: absolute !important;
-            bottom: 120px !important;
-            left: 0;
-            width: 100vw;
-            z-index: 10;
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-start;
-            pointer-events: none;
-            overflow: hidden;
+            position: static !important;
+            margin-top: 16px;
+            bottom: unset !important;
+            z-index: 1 !important;
+            pointer-events: auto;
+          }
+          .home-section-modern {
+            min-height: unset !important;
+            padding-top: 60px !important;
+            padding-bottom: 24px !important;
           }
         }
-        /* --- END ALWAYS SHOW STATS BAR --- */
       `}</style>
     </div>
   );
