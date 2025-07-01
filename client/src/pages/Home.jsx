@@ -1188,13 +1188,13 @@ const Home = () => {
             padding-bottom: 24px !important;
           }
           .stat-number.huge {
-            font-size: 1.7rem;
+            font-size: 1.35rem;
           }
           .stat-title {
-            font-size: 1rem;
+            font-size: 0.9rem;
           }
           .stat-desc {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
           }
         }
         @media (max-height: 1080px) and (min-width: 1200px) {
