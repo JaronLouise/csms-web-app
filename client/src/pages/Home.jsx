@@ -1193,6 +1193,65 @@ const Home = () => {
             gap: 24px;
           }
         }
+        /* --- RESPONSIVENESS FIXES FOR STATS BAR AND MAIN SECTION --- */
+        @media (max-height: 900px), (max-width: 900px) {
+          .home-section-modern {
+            min-height: unset !important;
+            padding-top: 80px !important;
+            padding-bottom: 40px !important;
+          }
+          .sliding-stats-container.single-row {
+            position: static !important;
+            margin-top: 24px;
+            bottom: unset !important;
+            z-index: 1 !important;
+          }
+        }
+        /* --- LAPTOP-SPECIFIC RESPONSIVENESS --- */
+        @media (max-width: 1400px), (max-height: 850px) {
+          .home-section-modern {
+            min-height: unset !important;
+            padding-top: 48px !important;
+            padding-bottom: 18px !important;
+          }
+          .homepage-content {
+            padding: 0 0.5rem !important;
+          }
+          .home-section-modern h1 {
+            font-size: clamp(1.5rem, 3vw, 2.3rem) !important;
+            margin-bottom: 22px !important;
+          }
+          .home-section-modern p {
+            font-size: clamp(0.95rem, 1.2vw, 1rem) !important;
+            margin-bottom: 16px !important;
+          }
+          .flash-slide {
+            font-size: 0.95rem !important;
+            padding: 10px 22px !important;
+          }
+          .sliding-stats-container.single-row {
+            position: static !important;
+            margin-top: 10px;
+            bottom: unset !important;
+            z-index: 1 !important;
+          }
+          .stat-number.huge {
+            font-size: 2rem !important;
+            margin-right: 7px !important;
+          }
+          .stat-label, .stat-title {
+            font-size: 0.95rem !important;
+          }
+          .stat-desc {
+            font-size: 0.7rem !important;
+          }
+          .stat-group {
+            min-width: 110px !important;
+            padding: 0 6px 0 0 !important;
+          }
+        }
+        /* --- END LAPTOP-SPECIFIC RESPONSIVENESS --- */
+        /* --- END RESPONSIVENESS FIXES --- */
       `}</style>
     </div>
   );
