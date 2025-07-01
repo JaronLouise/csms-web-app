@@ -1252,6 +1252,97 @@ const Home = () => {
         }
         /* --- END LAPTOP-SPECIFIC RESPONSIVENESS --- */
         /* --- END RESPONSIVENESS FIXES --- */
+        /* --- ALWAYS SHOW STATS BAR ON LAPTOPS AND SMALLER SCREENS --- */
+        @media (max-width: 1920px), (max-height: 1080px) {
+          .sliding-stats-container.single-row {
+            position: static !important;
+            margin-top: 10px;
+            bottom: unset !important;
+            z-index: 1 !important;
+          }
+          .home-section-modern {
+            min-height: unset !important;
+            padding-top: 36px !important;
+            padding-bottom: 10px !important;
+          }
+          .homepage-content {
+            padding: 0 0.2rem !important;
+          }
+          .home-section-modern h1 {
+            font-size: clamp(1.2rem, 2.5vw, 2rem) !important;
+            margin-bottom: 16px !important;
+          }
+          .home-section-modern p {
+            font-size: clamp(0.85rem, 1vw, 0.95rem) !important;
+            margin-bottom: 10px !important;
+          }
+          .flash-slide {
+            font-size: 0.9rem !important;
+            padding: 8px 16px !important;
+          }
+          .stat-number.huge {
+            font-size: 1.5rem !important;
+            margin-right: 5px !important;
+          }
+          .stat-label, .stat-title {
+            font-size: 0.8rem !important;
+          }
+          .stat-desc {
+            font-size: 0.6rem !important;
+          }
+          .stat-group {
+            min-width: 80px !important;
+            padding: 0 4px 0 0 !important;
+          }
+        }
+        @media (max-height: 800px) {
+          .home-section-modern {
+            padding-top: 18px !important;
+            padding-bottom: 4px !important;
+          }
+          .home-section-modern h1 {
+            font-size: 1.1rem !important;
+            margin-bottom: 8px !important;
+          }
+          .home-section-modern p {
+            font-size: 0.8rem !important;
+            margin-bottom: 6px !important;
+          }
+          .flash-slide {
+            font-size: 0.8rem !important;
+            padding: 6px 10px !important;
+          }
+          .stat-number.huge {
+            font-size: 1.1rem !important;
+            margin-right: 3px !important;
+          }
+          .stat-label, .stat-title {
+            font-size: 0.65rem !important;
+          }
+          .stat-desc {
+            font-size: 0.5rem !important;
+          }
+          .stat-group {
+            min-width: 60px !important;
+            padding: 0 2px 0 0 !important;
+          }
+        }
+        /* Only use absolute positioning for very large desktops */
+        @media (min-width: 1921px) and (min-height: 1081px) {
+          .sliding-stats-container.single-row {
+            position: absolute !important;
+            bottom: 120px !important;
+            left: 0;
+            width: 100vw;
+            z-index: 10;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            pointer-events: none;
+            overflow: hidden;
+          }
+        }
+        /* --- END ALWAYS SHOW STATS BAR --- */
       `}</style>
     </div>
   );
