@@ -73,7 +73,7 @@ const validateContactForm = [
   
   body('phone')
     .optional({ checkFalsy: true })
-    .matches(/^[\+]?[0-9\s\-\(\)\.]{7,20}$/)
+    .matches(/^[\+]?([0]|[1-9])[0-9\s\-\(\)\.]{6,19}$/)
     .withMessage('Please provide a valid phone number'),
   
   body('subject')
@@ -104,7 +104,7 @@ const validateQuoteRequest = [
   
   body('phone')
     .optional({ checkFalsy: true })
-    .matches(/^[\+]?[0-9\s\-\(\)\.]{7,20}$/)
+    .matches(/^[\+]?([0]|[1-9])[0-9\s\-\(\)\.]{6,19}$/)
     .withMessage('Please provide a valid phone number'),
   
   body('company')
@@ -214,7 +214,7 @@ const validateOrder = [
   
   body('billingAddress.phone')
     .optional({ checkFalsy: true })
-    .matches(/^[\+]?[0-9\s\-\(\)\.]{7,20}$/)
+    .matches(/^[\+]?([0]|[1-9])[0-9\s\-\(\)\.]{6,19}$/)
     .withMessage('Please provide a valid phone number')
 ];
 

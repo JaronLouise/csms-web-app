@@ -97,12 +97,13 @@ const ContactModal = ({ isOpen, onClose }) => {
       <div style={{
         background: 'white',
         padding: '2rem',
-        borderRadius: '8px',
+        borderRadius: '16px',
         maxWidth: '500px',
         width: '90%',
         maxHeight: '90vh',
         overflow: 'auto',
-        position: 'relative'
+        position: 'relative',
+        boxShadow: '0 4px 32px rgba(52,152,219,0.08)',
       }}>
         <button
           onClick={onClose}
@@ -122,8 +123,10 @@ const ContactModal = ({ isOpen, onClose }) => {
 
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <FaEnvelope style={{ fontSize: '2rem', color: '#3498db', marginBottom: '1rem' }} />
-          <h2>Contact Us</h2>
-          <p>Get in touch with us. We'd love to hear from you!</p>
+          <h2 style={{ color: '#222', fontWeight: 700, fontSize: '2rem', marginBottom: '0.5rem' }}>Contact Us</h2>
+          <p style={{ color: '#3498db', fontSize: '1.05rem', marginBottom: '1.5rem' }}>
+            Get in touch with us. We'd love to hear from you!
+          </p>
         </div>
 
         {success && (
@@ -153,11 +156,12 @@ const ContactModal = ({ isOpen, onClose }) => {
 
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+            <label htmlFor="contact-name" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: '#222' }}>
               <FaUser style={{ marginRight: '0.5rem' }} />
               Name *
             </label>
             <input
+              id="contact-name"
               type="text"
               name="name"
               value={formData.name}
@@ -165,22 +169,30 @@ const ContactModal = ({ isOpen, onClose }) => {
               required
               style={{
                 width: '100%',
-                padding: '0.75rem',
-                border: '2px solid #e0e0e0',
-                borderRadius: '8px',
+                boxSizing: 'border-box',
+                padding: '0.85rem',
+                border: '2px solid #b7eac7',
+                borderRadius: '12px',
                 fontSize: '1rem',
-                transition: 'border-color 0.3s ease'
+                background: '#f5f7fa',
+                color: '#222',
+                transition: 'border-color 0.3s',
+                outline: 'none',
+                marginBottom: 0,
               }}
               placeholder="Your full name"
+              onFocus={e => e.target.style.borderColor = '#28a745'}
+              onBlur={e => e.target.style.borderColor = '#b7eac7'}
             />
           </div>
 
           <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+            <label htmlFor="contact-email" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: '#222' }}>
               <FaEnvelope style={{ marginRight: '0.5rem' }} />
               Email *
             </label>
             <input
+              id="contact-email"
               type="email"
               name="email"
               value={formData.email}
@@ -188,80 +200,110 @@ const ContactModal = ({ isOpen, onClose }) => {
               required
               style={{
                 width: '100%',
-                padding: '0.75rem',
-                border: '2px solid #e0e0e0',
-                borderRadius: '8px',
+                boxSizing: 'border-box',
+                padding: '0.85rem',
+                border: '2px solid #b7eac7',
+                borderRadius: '12px',
                 fontSize: '1rem',
-                transition: 'border-color 0.3s ease'
+                background: '#f5f7fa',
+                color: '#222',
+                transition: 'border-color 0.3s',
+                outline: 'none',
+                marginBottom: 0,
               }}
               placeholder="your.email@example.com"
+              onFocus={e => e.target.style.borderColor = '#28a745'}
+              onBlur={e => e.target.style.borderColor = '#b7eac7'}
             />
           </div>
 
           <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+            <label htmlFor="contact-phone" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: '#222' }}>
               <FaPhone style={{ marginRight: '0.5rem' }} />
               Phone
             </label>
             <input
-              type="tel"
+              id="contact-phone"
+              type="text"
               name="phone"
               value={formData.phone}
               onChange={handleInputChange}
               style={{
                 width: '100%',
-                padding: '0.75rem',
-                border: '2px solid #e0e0e0',
-                borderRadius: '8px',
+                boxSizing: 'border-box',
+                padding: '0.85rem',
+                border: '2px solid #b7eac7',
+                borderRadius: '12px',
                 fontSize: '1rem',
-                transition: 'border-color 0.3s ease'
+                background: '#f5f7fa',
+                color: '#222',
+                transition: 'border-color 0.3s',
+                outline: 'none',
+                marginBottom: 0,
               }}
               placeholder="Your phone number"
+              onFocus={e => e.target.style.borderColor = '#28a745'}
+              onBlur={e => e.target.style.borderColor = '#b7eac7'}
             />
           </div>
 
           <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+            <label htmlFor="contact-subject" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: '#222' }}>
+              <FaComments style={{ marginRight: '0.5rem' }} />
               Subject
             </label>
             <input
+              id="contact-subject"
               type="text"
               name="subject"
               value={formData.subject}
               onChange={handleInputChange}
               style={{
                 width: '100%',
-                padding: '0.75rem',
-                border: '2px solid #e0e0e0',
-                borderRadius: '8px',
+                boxSizing: 'border-box',
+                padding: '0.85rem',
+                border: '2px solid #b7eac7',
+                borderRadius: '12px',
                 fontSize: '1rem',
-                transition: 'border-color 0.3s ease'
+                background: '#f5f7fa',
+                color: '#222',
+                transition: 'border-color 0.3s',
+                outline: 'none',
+                marginBottom: 0,
               }}
               placeholder="What is this about?"
+              onFocus={e => e.target.style.borderColor = '#28a745'}
+              onBlur={e => e.target.style.borderColor = '#b7eac7'}
             />
           </div>
 
           <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-              <FaComments style={{ marginRight: '0.5rem' }} />
-              Message *
+            <label htmlFor="contact-message" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold', color: '#222' }}>
+               Message *
             </label>
             <textarea
+              id="contact-message"
               name="message"
               value={formData.message}
               onChange={handleInputChange}
               required
-              rows="4"
               style={{
                 width: '100%',
-                padding: '0.75rem',
-                border: '2px solid #e0e0e0',
-                borderRadius: '8px',
+                boxSizing: 'border-box',
+                padding: '0.85rem',
+                border: '2px solid #b7eac7',
+                borderRadius: '12px',
                 fontSize: '1rem',
+                background: '#f5f7fa',
+                color: '#222',
+                minHeight: '100px',
                 resize: 'vertical',
-                transition: 'border-color 0.3s ease'
+                transition: 'border-color 0.3s',
+                outline: 'none',
               }}
               placeholder="Tell us about your inquiry..."
+              onFocus={e => e.target.style.borderColor = '#28a745'}
+              onBlur={e => e.target.style.borderColor = '#b7eac7'}
             />
           </div>
 
@@ -270,17 +312,20 @@ const ContactModal = ({ isOpen, onClose }) => {
             disabled={loading}
             style={{
               width: '100%',
-              padding: '1rem',
-              background: '#3498db',
-              color: 'white',
+              background: '#28a745',
+              color: '#fff',
               border: 'none',
-              borderRadius: '8px',
-              fontSize: '1rem',
-              fontWeight: 'bold',
+              borderRadius: '24px',
+              padding: '1rem 0',
+              fontWeight: 500,
+              fontSize: '1.1rem',
+              marginTop: '0.5rem',
+              boxShadow: '0 2px 8px rgba(40,167,69,0.08)',
               cursor: loading ? 'not-allowed' : 'pointer',
-              opacity: loading ? 0.7 : 1,
-              transition: 'all 0.3s ease'
+              transition: 'background 0.2s',
             }}
+            onMouseOver={e => e.currentTarget.style.background = '#218838'}
+            onMouseOut={e => e.currentTarget.style.background = '#28a745'}
           >
             {loading ? 'Sending...' : 'Send Message'}
           </button>
