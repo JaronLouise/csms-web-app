@@ -180,6 +180,14 @@ RATE_LIMIT_MAX_REQUESTS=100
 client/.vite/deps/package.json
 client/.vite/deps/_metadata.json
 
-   # Vite build output and cache
-   client/dist/
-   client/.vite/
+# Vite build output and cache
+client/dist/
+client/.vite/
+client/.vite/deps/axios.js
+client/.vite/deps/axios.js.map
+client/.vite/deps/chunk-5HNGYYSW.js
+client/.vite/deps/chunk-5HNGYYSW.js.map
+client/.vite/deps/chunk-G3PMV62Z.js
+client/.vite/deps/chunk-G3PMV62Z.js.map
+client/.vite/deps/chunk-GQIAEJ4M.js
+client/.vite/deps/chunk-GQIAEJ4M.js.map
