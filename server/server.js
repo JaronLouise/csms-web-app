@@ -1,6 +1,7 @@
 // Load environment variables first
 const path = require('path');
 const fs = require('fs');
+const express = require('express');
 
 console.log('Current working directory:', process.cwd());
 console.log('Looking for .env file at:', path.resolve('.env'));
@@ -32,6 +33,9 @@ const connectDB = require('./config/database');
 const { validateSecurityConfig } = require('./config/security');
 
 const PORT = process.env.PORT || 5000;
+
+// Serve uploads directory as static
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Validate security configuration before starting server
 const startServer = async () => {

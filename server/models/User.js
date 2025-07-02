@@ -37,6 +37,11 @@ const userSchema = new mongoose.Schema(
       enum: ['customer', 'admin'], 
       default: 'customer' 
     },
+    profilePicture: {
+      type: String,
+      default: '', // URL or path to the profile image
+      trim: true
+    },
     profile: {
       phone: {
         type: String,
