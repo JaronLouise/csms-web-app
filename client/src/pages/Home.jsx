@@ -160,7 +160,7 @@ const Home = () => {
           <h1 style={{
             fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
             fontWeight: 700,
-            marginBottom: 64,
+            marginBottom: 14,
             lineHeight: 1.08,
             letterSpacing: '-2px',
             fontFamily: 'Poppins, sans-serif',
@@ -171,9 +171,9 @@ const Home = () => {
             <span className="nowrap-span">that Adapts to You</span>
           </h1>
           <p style={{
-            fontSize: 'clamp(1.1rem, 2vw, 1.5rem)',
+            fontSize: 'clamp(1rem, 1.8vw, 1.3rem)',
             fontWeight: 400,
-            marginBottom: 48,
+            marginBottom: 36,
             maxWidth: 580,
             color: '#f3f3f3',
             textShadow: '0 2px 8px rgba(0,0,0,0.10)',
@@ -1024,7 +1024,7 @@ const Home = () => {
         .sliding-stats-container.single-row {
           position: static;
           width: 100vw;
-          margin-top: 60px;
+          margin-top: 110px;
           z-index: 10;
           display: flex;
           flex-direction: row;
