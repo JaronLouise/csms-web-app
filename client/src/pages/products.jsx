@@ -56,7 +56,7 @@ const styles = {
   },
 };
 
-const placeholderImage = "data:image/svg+xml;utf8,<svg width='150' height='100' xmlns='http://www.w3.org/2000/svg'><rect width='100%' height='100%' fill='%23f3f3f3'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23ccc' font-size='16'>No Image</text></svg>";
+const placeholderImage = '/placeholder.png';
 
 const Product = () => {
   const { addToCart, cart } = useCart();
