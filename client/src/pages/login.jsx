@@ -88,10 +88,10 @@ const Login = () => {
           padding: '32px 24px',
         }}>
           <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: 320, display: 'flex', flexDirection: 'column', gap: 18 }}>
-            <h2 style={{ textAlign: 'center', fontWeight: 600, fontSize: '1.5rem', marginBottom: 12 }}>Login</h2>
+            <h2 style={{ textAlign: 'center', fontWeight: 600, fontSize: '1.5rem', marginBottom: 12, color: '#111' }}>Login</h2>
             {error && <p style={{ color: 'red', textAlign: 'center', margin: 0 }}>{error}</p>}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <label htmlFor="email" style={{ fontWeight: 500, fontSize: 14, marginBottom: 2 }}>Email address</label>
+              <label htmlFor="email" style={{ fontWeight: 500, fontSize: 14, marginBottom: 2, color: '#111' }}>Email address</label>
       <input
                 id="email"
                 type="email"
@@ -105,13 +105,18 @@ const Login = () => {
                   fontSize: 15,
                   outline: 'none',
                   marginBottom: 0,
+                  width: '100%',
+                  height: 40,
+                  background: '#c3c9d1',
+                  color: '#222',
+                  boxSizing: 'border-box',
                 }}
                 autoComplete="email"
                 required
               />
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              <label htmlFor="password" style={{ fontWeight: 500, fontSize: 14, marginBottom: 2 }}>Password</label>
+              <label htmlFor="password" style={{ fontWeight: 500, fontSize: 14, marginBottom: 2, color: '#111' }}>Password</label>
               <div style={{ position: 'relative', width: '100%' }}>
       <input
                   id="password"
@@ -192,7 +197,7 @@ const Login = () => {
             >
               Login
             </button>
-            <div style={{ textAlign: 'center', marginTop: 10, fontSize: 15 }}>
+            <div style={{ textAlign: 'center', marginTop: 10, fontSize: 15, color: '#111' }}>
               Don't have an account?{' '}
               <span onClick={() => navigate('/register')} style={{ color: '#0099ff', textDecoration: 'underline', fontWeight: 500, cursor: 'pointer' }}>
                 Create free account?
