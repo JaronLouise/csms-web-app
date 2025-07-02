@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 
 // Add Material Icons font import for SSR/CSR
 if (typeof document !== 'undefined') {
@@ -24,7 +25,8 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
-  const cartItemCount = 0; // Placeholder for cart count, set to 0 for logged out/empty cart
+  const { cart } = useCart();
+  const cartItemCount = cart?.items?.reduce((sum, item) => sum + (item.quantity || 1), 0) || 0;
   const [pendingScroll, setPendingScroll] = useState(null);
   const [activeSection, setActiveSection] = useState('home');
   const scrollListenerRef = useRef(null);
@@ -138,8 +140,10 @@ const Navbar = () => {
             )}
             <button onClick={() => handleRoute('/cart')} style={{ background: 'none', border: 'none', color: '#222', fontSize: '1.5rem', position: 'relative', cursor: 'pointer', minWidth: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <span className="material-symbols-outlined" style={{ fontSize: '1.6rem', verticalAlign: 'middle' }}>shopping_cart</span>
-              {cartItemCount > 0 && (
-                <span style={{ position: 'absolute', top: 8, right: 8, background: '#000', color: '#fff', borderRadius: '50%', fontSize: '0.8rem', padding: '0.1rem 0.4rem', minWidth: 18, textAlign: 'center' }}>{cartItemCount}</span>
+              {user && cartItemCount > 0 && (
+                <span style={{ marginLeft: 4, fontSize: '1rem', color: '#222', fontWeight: 600 }}>
+                  ({cartItemCount})
+                </span>
               )}
             </button>
           </div>
