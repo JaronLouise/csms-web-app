@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { login } from '../services/authService';
 import { useAuth } from '../context/AuthContext';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const Login = () => {
   const { login: loginUser } = useAuth();
@@ -9,6 +9,7 @@ const Login = () => {
   const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -89,6 +90,11 @@ const Login = () => {
         }}>
           <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: 320, display: 'flex', flexDirection: 'column', gap: 18 }}>
             <h2 style={{ textAlign: 'center', fontWeight: 600, fontSize: '1.5rem', marginBottom: 12, color: '#111' }}>Login</h2>
+            {location.state?.redirected && (
+              <p style={{ color: '#0099ff', textAlign: 'center', margin: 0, marginBottom: 8 }}>
+                Please log in to access that page.
+              </p>
+            )}
             {error && <p style={{ color: 'red', textAlign: 'center', margin: 0 }}>{error}</p>}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               <label htmlFor="email" style={{ fontWeight: 500, fontSize: 14, marginBottom: 2, color: '#111' }}>Email address</label>

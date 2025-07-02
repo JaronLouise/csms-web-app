@@ -5,8 +5,7 @@ const ProtectedRoute = ({ children }) => {
   const { user } = useAuth();
 
   if (!user) {
-    alert('You must be logged in to access this page.');
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" state={{ redirected: true }} />;
   }
 
   return children;
