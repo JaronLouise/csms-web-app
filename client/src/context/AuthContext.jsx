@@ -11,22 +11,27 @@ export const AuthProvider = ({ children }) => {
   console.log('Current token state:', token ? 'EXISTS' : 'NOT SET');
   console.log('Current user state:', user ? 'EXISTS' : 'NOT SET');
 
-  useEffect(() => {
+  const fetchUserProfile = async () => {
     if (token) {
       console.log('=== AUTH CONTEXT: GETTING PROFILE ===');
       console.log('Token exists, calling getProfile...');
-      getProfile()
-        .then(data => {
-          console.log('Profile data received:', data);
-          setUser(data.user);
-        })
-        .catch((error) => {
-          console.error('Profile fetch failed:', error);
-          setUser(null);
-          setToken('');
-          localStorage.removeItem('token');
-        });
+      try {
+        const data = await getProfile();
+        console.log('Profile data received:', data);
+        setUser(data.user);
+        return data;
+      } catch (error) {
+        console.error('Profile fetch failed:', error);
+        setUser(null);
+        setToken('');
+        localStorage.removeItem('token');
+        throw error;
+      }
     }
+  };
+
+  useEffect(() => {
+    fetchUserProfile();
   }, [token]);
 
   const login = (data) => {
@@ -58,8 +63,18 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const refreshUser = async () => {
+    console.log('=== AUTH CONTEXT: REFRESHING USER ===');
+    try {
+      await fetchUserProfile();
+    } catch (error) {
+      console.error('Failed to refresh user:', error);
+      throw error;
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, updateUserProfile }}>
+    <AuthContext.Provider value={{ user, token, login, logout, updateUserProfile, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );

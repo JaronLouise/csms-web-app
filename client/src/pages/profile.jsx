@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 
 const Profile = () => {
-  const { user, updateUserProfile, token } = useAuth();
+  const { user, updateUserProfile, token, refreshUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -49,12 +49,13 @@ const Profile = () => {
       setPreviewUrl(null);
       setProfilePic(data.profilePicture); // Update the displayed image immediately
       
-      // Update the user context with the new profile picture
-      if (data.user) {
-        // Force a re-render by updating the user state
-        window.location.reload(); // Simple approach to refresh user data
-      }
+      // Refresh user data from the backend to get the latest profile picture
+      console.log('🔄 Refreshing user data after profile picture upload...');
+      await refreshUser();
+      console.log('✅ User data refreshed successfully');
+      
     } catch (err) {
+      console.error('Upload error:', err);
       setError(err.response?.data?.message || err.message || 'Failed to upload image');
     } finally {
       setUploading(false);
