@@ -127,7 +127,10 @@ const Navbar = () => {
             <button className={`nav-link${location.pathname === '/contact' ? ' active' : ''}`} onClick={() => handleRoute('/contact')}>Contacts</button>
             {user ? (
               <>
-                <button onClick={() => handleRoute('/profile')} style={{ background: 'none', border: '1px solid #222', color: '#222', borderRadius: '1.5rem', padding: '0.5rem 1.5rem', fontWeight: 500, cursor: 'pointer', fontSize: '1rem', minWidth: 80 }}>Profile</button>
+                {user.role === 'admin' && (
+                  <button className={`nav-link${location.pathname === '/admin' ? ' active' : ''}`} onClick={() => handleRoute('/admin')}>Dashboard</button>
+                )}
+                <button className={`nav-link${location.pathname === '/profile' ? ' active' : ''}`} onClick={() => handleRoute('/profile')}>Profile</button>
                 <button onClick={handleLogout} style={{ background: '#f44336', color: '#fff', border: 'none', borderRadius: '1.5rem', padding: '0.5rem 1.5rem', fontWeight: 500, cursor: 'pointer', fontSize: '1rem', minWidth: 80 }}>Logout</button>
               </>
             ) : (
@@ -187,7 +190,10 @@ const Navbar = () => {
         <button onClick={() => handleRoute('/cart')} style={{ background: 'none', border: 'none', color: '#222', fontSize: '1.1rem', textAlign: 'left', padding: '1rem 2rem', cursor: 'pointer', width: '100%' }}>Cart</button>
         {user ? (
           <>
-            <button onClick={() => handleRoute('/profile')} style={{ background: 'none', border: '1px solid #222', color: '#222', borderRadius: '1.5rem', padding: '0.7rem 2rem', fontWeight: 500, margin: '1rem 2rem', cursor: 'pointer', fontSize: '1.1rem', width: 'calc(100% - 4rem)' }}>Profile</button>
+            {user.role === 'admin' && (
+              <button onClick={() => handleRoute('/admin')} style={{ background: 'none', border: 'none', color: '#222', fontSize: '1.1rem', textAlign: 'left', padding: '1rem 2rem', cursor: 'pointer', width: '100%' }}>Dashboard</button>
+            )}
+            <button onClick={() => handleRoute('/profile')} style={{ background: 'none', border: 'none', color: '#222', fontSize: '1.1rem', textAlign: 'left', padding: '1rem 2rem', cursor: 'pointer', width: '100%' }}>Profile</button>
             <button onClick={handleLogout} style={{ background: '#f44336', color: '#fff', border: 'none', borderRadius: '1.5rem', padding: '0.7rem 2rem', fontWeight: 500, margin: '0 2rem 1rem 2rem', cursor: 'pointer', fontSize: '1.1rem', width: 'calc(100% - 4rem)' }}>Logout</button>
           </>
         ) : (
