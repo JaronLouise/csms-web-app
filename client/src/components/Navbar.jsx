@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 
 // Add Material Icons font import for SSR/CSR
 if (typeof document !== 'undefined') {
@@ -24,7 +25,8 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
-  const cartItemCount = 0; // Placeholder for cart count, set to 0 for logged out/empty cart
+  const { cart } = useCart();
+  const cartItemCount = cart?.items?.reduce((sum, item) => sum + (item.quantity || 1), 0) || 0;
   const [pendingScroll, setPendingScroll] = useState(null);
   const [activeSection, setActiveSection] = useState('home');
   const scrollListenerRef = useRef(null);
@@ -127,7 +129,10 @@ const Navbar = () => {
             <button className={`nav-link${location.pathname === '/contact' ? ' active' : ''}`} onClick={() => handleRoute('/contact')}>Contacts</button>
             {user ? (
               <>
-                <button onClick={() => handleRoute('/profile')} style={{ background: 'none', border: '1px solid #222', color: '#222', borderRadius: '1.5rem', padding: '0.5rem 1.5rem', fontWeight: 500, cursor: 'pointer', fontSize: '1rem', minWidth: 80 }}>Profile</button>
+                {user.role === 'admin' && (
+                  <button className={`nav-link${location.pathname === '/admin' ? ' active' : ''}`} onClick={() => handleRoute('/admin')}>Dashboard</button>
+                )}
+                <button className={`nav-link${location.pathname === '/profile' ? ' active' : ''}`} onClick={() => handleRoute('/profile')}>Profile</button>
                 <button onClick={handleLogout} style={{ background: '#f44336', color: '#fff', border: 'none', borderRadius: '1.5rem', padding: '0.5rem 1.5rem', fontWeight: 500, cursor: 'pointer', fontSize: '1rem', minWidth: 80 }}>Logout</button>
               </>
             ) : (
@@ -135,8 +140,10 @@ const Navbar = () => {
             )}
             <button onClick={() => handleRoute('/cart')} style={{ background: 'none', border: 'none', color: '#222', fontSize: '1.5rem', position: 'relative', cursor: 'pointer', minWidth: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <span className="material-symbols-outlined" style={{ fontSize: '1.6rem', verticalAlign: 'middle' }}>shopping_cart</span>
-              {cartItemCount > 0 && (
-                <span style={{ position: 'absolute', top: 8, right: 8, background: '#000', color: '#fff', borderRadius: '50%', fontSize: '0.8rem', padding: '0.1rem 0.4rem', minWidth: 18, textAlign: 'center' }}>{cartItemCount}</span>
+              {user && cartItemCount > 0 && (
+                <span style={{ marginLeft: 4, fontSize: '1rem', color: '#222', fontWeight: 600 }}>
+                  ({cartItemCount})
+                </span>
               )}
             </button>
           </div>
@@ -187,7 +194,10 @@ const Navbar = () => {
         <button onClick={() => handleRoute('/cart')} style={{ background: 'none', border: 'none', color: '#222', fontSize: '1.1rem', textAlign: 'left', padding: '1rem 2rem', cursor: 'pointer', width: '100%' }}>Cart</button>
         {user ? (
           <>
-            <button onClick={() => handleRoute('/profile')} style={{ background: 'none', border: '1px solid #222', color: '#222', borderRadius: '1.5rem', padding: '0.7rem 2rem', fontWeight: 500, margin: '1rem 2rem', cursor: 'pointer', fontSize: '1.1rem', width: 'calc(100% - 4rem)' }}>Profile</button>
+            {user.role === 'admin' && (
+              <button onClick={() => handleRoute('/admin')} style={{ background: 'none', border: 'none', color: '#222', fontSize: '1.1rem', textAlign: 'left', padding: '1rem 2rem', cursor: 'pointer', width: '100%' }}>Dashboard</button>
+            )}
+            <button onClick={() => handleRoute('/profile')} style={{ background: 'none', border: 'none', color: '#222', fontSize: '1.1rem', textAlign: 'left', padding: '1rem 2rem', cursor: 'pointer', width: '100%' }}>Profile</button>
             <button onClick={handleLogout} style={{ background: '#f44336', color: '#fff', border: 'none', borderRadius: '1.5rem', padding: '0.7rem 2rem', fontWeight: 500, margin: '0 2rem 1rem 2rem', cursor: 'pointer', fontSize: '1.1rem', width: 'calc(100% - 4rem)' }}>Logout</button>
           </>
         ) : (
