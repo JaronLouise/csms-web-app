@@ -3,7 +3,7 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { getProducts } from '../services/productService';
 import { getCategories } from '../services/categoryService';
-import placeholderImage from '../assets/solar.png';
+import solarBanner from '../assets/solar.png';
 
 const BACKEND_URL = 'http://localhost:5000/';
 
@@ -55,6 +55,8 @@ const styles = {
     alignItems: 'center',
   },
 };
+
+const placeholderImage = "data:image/svg+xml;utf8,<svg width='150' height='100' xmlns='http://www.w3.org/2000/svg'><rect width='100%' height='100%' fill='%23f3f3f3'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23ccc' font-size='16'>No Image</text></svg>";
 
 const Product = () => {
   const { addToCart, cart } = useCart();
@@ -282,7 +284,7 @@ const Product = () => {
               </h1>
             </div>
             <div className="hero-img" style={styles.heroImgContainer}>
-              <img src={placeholderImage} alt="Solar Panels" style={{ width: '100%', maxWidth: 280, maxHeight: 180, height: 'auto', objectFit: 'contain' }} />
+              <img src={solarBanner} alt="Solar Panels" style={{ width: '100%', maxWidth: 280, maxHeight: 180, height: 'auto', objectFit: 'contain' }} />
             </div>
           </div>
         </div>
@@ -433,7 +435,7 @@ const Product = () => {
             {filteredProducts.map(product => (
               <div key={product._id} className="product-card" style={{ background: '#fff', borderRadius: '16px', padding: '1rem', width: '100%', maxWidth: '300px', flex: '1 1 260px', boxSizing: 'border-box', textAlign: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '370px' }}>
                 <img src={getProductImage(product)} alt={product.name} className="product-img" style={{ width: '100%', maxHeight: '150px', objectFit: 'contain', borderRadius: '10px', backgroundColor: '#e2e8f0' }} />
-                <h3 style={{ fontSize: '1rem', fontWeight: '600', margin: '0.5rem 0' }}>{product.name}</h3>
+                <h3 style={{ fontSize: '1rem', fontWeight: '600', margin: '0.5rem 0', color: '#000' }}>{product.name}</h3>
                 <p style={{ color: '#10b981', fontWeight: 'bold', margin: '0.25rem 0' }}>₱{product.price.toLocaleString()}</p>
                 <p style={{ fontSize: '0.875rem', color: '#555' }}>{product.description || 'No description available.'}</p>
                 {user?.role !== 'admin' && (
