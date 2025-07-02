@@ -180,7 +180,8 @@ exports.updateUserProfile = async (req, res) => {
         name: updated.name,
         email: updated.email,
         role: updated.role,
-        profile: updated.profile
+        profile: updated.profile,
+        profilePicture: updated.profilePicture
       }
     });
   } catch (err) {

@@ -35,6 +35,7 @@ const Login = () => {
       justifyContent: 'center',
       padding: 0,
       margin: 0,
+      flexDirection: 'column',
     }}>
       <div className="login-split-card" style={{
         width: '92vw',
@@ -201,8 +202,27 @@ const Login = () => {
         </div>
       </div>
 
+      {/* Back to Home link at lower left of the card */}
+      <div style={{ width: '100%', maxWidth: 800, margin: '0 auto', position: 'relative' }}>
+        <div style={{ position: 'absolute', left: 0, bottom: -36 }}>
+          <Link to="/" style={{ color: '#888', textDecoration: 'none', fontWeight: 400, fontSize: 14, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+            <span className="material-symbols-outlined" style={{ fontSize: 18, verticalAlign: 'middle' }}>arrow_back</span>
+            Back to Home
+          </Link>
+        </div>
+      </div>
+
       <style>{`
         @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+        @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
+        
+        .material-symbols-outlined {
+          font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+        }
         
         @media (max-width: 800px) {
           .login-split-card {
