@@ -160,7 +160,7 @@ const Home = () => {
           <h1 style={{
             fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
             fontWeight: 700,
-            marginBottom: 64,
+            marginBottom: 14,
             lineHeight: 1.08,
             letterSpacing: '-2px',
             fontFamily: 'Poppins, sans-serif',
@@ -171,9 +171,9 @@ const Home = () => {
             <span className="nowrap-span">that Adapts to You</span>
           </h1>
           <p style={{
-            fontSize: 'clamp(1.1rem, 2vw, 1.5rem)',
+            fontSize: 'clamp(1rem, 1.8vw, 1.3rem)',
             fontWeight: 400,
-            marginBottom: 48,
+            marginBottom: 36,
             maxWidth: 580,
             color: '#f3f3f3',
             textShadow: '0 2px 8px rgba(0,0,0,0.10)',
@@ -188,7 +188,8 @@ const Home = () => {
             Shop Now
           </button>
         </div>
-        {/* Animated Sliding Stats Section - now part of normal flow */}
+        {/* Spacer for 1920x1200 screens to push stats down */}
+        <div className="stats-spacer-1920" />
         <div className="sliding-stats-container single-row">
           <div className="sliding-stats-track">
             <div className="stat-group">
@@ -549,6 +550,41 @@ const Home = () => {
           @media (max-width: 600px) {
             .featured-arrow-left, .featured-arrow-right {
               display: none !important;
+            }
+          }
+          @media (min-width: 1800px) and (min-height: 1000px) {
+            .homepage-section.home-section-modern {
+              padding-top: 120px !important;
+            }
+            .stats-spacer-1920 {
+              height: 40px;
+              width: 100%;
+              display: block;
+              background: red;
+            }
+            .stat-number.huge {
+              font-size: 4.5rem !important;
+            }
+            .stat-title {
+              font-size: 1.7rem !important;
+            }
+            .stat-desc {
+              font-size: 1rem !important;
+            }
+            .stat-group {
+              min-width: 400px !important;
+              padding-right: 48px !important;
+            }
+            .sliding-stats-track {
+              gap: 140px !important;
+            }
+            .sliding-stats-container.single-row {
+              margin-top: 80px !important;
+            }
+          }
+          @media not all and (min-width: 1800px) and (min-height: 1000px) {
+            .stats-spacer-1920 {
+              display: none;
             }
           }
         `}</style>
@@ -988,7 +1024,7 @@ const Home = () => {
         .sliding-stats-container.single-row {
           position: static;
           width: 100vw;
-          margin-top: 32px;
+          margin-top: 110px;
           z-index: 10;
           display: flex;
           flex-direction: row;
@@ -1164,7 +1200,7 @@ const Home = () => {
           .sliding-stats-container.single-row {
             z-index: 10 !important;
             position: static !important;
-            margin-top: 24px;
+            margin-top: 50px;
             bottom: unset !important;
             pointer-events: auto;
           }
@@ -1178,7 +1214,7 @@ const Home = () => {
           .sliding-stats-container.single-row {
             z-index: 10 !important;
             position: static !important;
-            margin-top: 16px;
+            margin-top: 40px;
             bottom: unset !important;
             pointer-events: auto;
           }
