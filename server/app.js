@@ -125,6 +125,11 @@ app.use('/api/services', serviceRoutes);
 app.use('/api/emails', emailRoutes);
 app.use('/api/cart', cartRoutes);
 
+// Register profile routes
+const profileRoutes = require('./routes/profile');
+app.use('/api/profile', profileRoutes);
+console.log('Profile routes registered!');
+
 // Serve static files with enhanced security headers
 app.use('/uploads', (req, res, next) => {
   const origin = req.headers.origin;

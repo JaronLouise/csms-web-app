@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { register } from '../services/authService';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -84,6 +84,7 @@ const Register = () => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
+      flexDirection: 'column',
       padding: 0,
       margin: 0,
     }}>
@@ -139,10 +140,10 @@ const Register = () => {
           minHeight: '100%',
         }}>
           <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: 320, display: 'flex', flexDirection: 'column', gap: 18 }}>
-            <h2 style={{ textAlign: 'center', fontWeight: 600, fontSize: '1.5rem', marginBottom: 12 }}>Register</h2>
+            <h2 style={{ textAlign: 'center', fontWeight: 600, fontSize: '1.5rem', marginBottom: 12, color: '#111' }}>Register</h2>
             {error && <p style={{ color: 'red', textAlign: 'center', margin: 0 }}>{error}</p>}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <label htmlFor="name" style={{ fontWeight: 500, fontSize: 14, marginBottom: 2 }}>Name</label>
+              <label htmlFor="name" style={{ fontWeight: 500, fontSize: 14, marginBottom: 2, color: '#111' }}>Name</label>
               <input
                 id="name"
                 type="text"
@@ -167,7 +168,7 @@ const Register = () => {
               />
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <label htmlFor="email" style={{ fontWeight: 500, fontSize: 14, marginBottom: 2 }}>Email address</label>
+              <label htmlFor="email" style={{ fontWeight: 500, fontSize: 14, marginBottom: 2, color: '#111' }}>Email address</label>
               <input
                 id="email"
                 type="email"
@@ -192,7 +193,7 @@ const Register = () => {
               />
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              <label htmlFor="password" style={{ fontWeight: 500, fontSize: 14, marginBottom: 2 }}>Password</label>
+              <label htmlFor="password" style={{ fontWeight: 500, fontSize: 14, marginBottom: 2, color: '#111' }}>Password</label>
               <div style={{ position: 'relative', width: '100%' }}>
                 <input
                   id="password"
@@ -252,7 +253,7 @@ const Register = () => {
               </div>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              <label htmlFor="confirmPassword" style={{ fontWeight: 500, fontSize: 14, marginBottom: 2 }}>Confirm Password</label>
+              <label htmlFor="confirmPassword" style={{ fontWeight: 500, fontSize: 14, marginBottom: 2, color: '#111' }}>Confirm Password</label>
               <div style={{ position: 'relative', width: '100%' }}>
                 <input
                   id="confirmPassword"
@@ -332,7 +333,7 @@ const Register = () => {
             >
               Register
             </button>
-            <div style={{ textAlign: 'center', marginTop: 10, fontSize: 15 }}>
+            <div style={{ textAlign: 'center', marginTop: 10, fontSize: 15, color: '#111' }}>
               Already have an account?{' '}
               <span onClick={() => navigate('/login')} style={{ color: '#0099ff', textDecoration: 'underline', fontWeight: 500, cursor: 'pointer' }}>
                 Login
@@ -341,8 +342,23 @@ const Register = () => {
           </form>
         </div>
       </div>
+      {/* Back to Home link directly under the card, left-aligned */}
+      <div style={{ width: '92vw', maxWidth: 800, marginTop: 18, textAlign: 'left' }}>
+        <Link to="/" style={{ color: '#888', textDecoration: 'none', fontWeight: 400, fontSize: 14, display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+          <span className="material-symbols-outlined" style={{ fontSize: 18, verticalAlign: 'middle' }}>arrow_back</span>
+          Back to Home
+        </Link>
+      </div>
       <style>{`
         @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+        @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
+        .material-symbols-outlined {
+          font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24;
+        }
         @media (max-width: 800px) {
           .login-split-card {
             flex-direction: column !important;

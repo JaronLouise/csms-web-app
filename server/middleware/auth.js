@@ -34,6 +34,7 @@ const protect = async (req, res, next) => {
     console.log('Token decoded successfully:', decoded);
 
     // Find user and check if still exists
+    console.log('Looking for user with ID:', decoded.id);
     const user = await User.findById(decoded.id)
       .select('-password -loginAttempts -lockUntil')
       .lean();
@@ -54,8 +55,16 @@ const protect = async (req, res, next) => {
     }
 
     console.log('User authenticated successfully:', user.email);
+    console.log('User object being set on req.user:', {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      profilePicture: user.profilePicture
+    });
+    
     // Add user to request object
     req.user = user;
+    console.log('req.user set successfully:', req.user ? 'YES' : 'NO');
     next();
   } catch (err) {
     console.error('Token verification error:', err);

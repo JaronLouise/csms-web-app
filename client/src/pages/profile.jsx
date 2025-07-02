@@ -1,14 +1,67 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import api from '../services/api';
 
 const Profile = () => {
-  const { user, updateUserProfile } = useAuth();
+  const { user, updateUserProfile, token, refreshUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-  
+
+  // Profile picture upload state
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [profilePic, setProfilePic] = useState(user?.profilePicture || '/placeholder.png');
+
+  useEffect(() => {
+    setProfilePic(user?.profilePicture || '/placeholder.png');
+  }, [user]);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!selectedImage) return;
+    setUploading(true);
+    setError(null);
+    setSuccess(null);
+    try {
+      const formData = new FormData();
+      formData.append('image', selectedImage);
+      
+      const response = await api.post('/profile/picture', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      
+      const data = response.data;
+      setSuccess('Profile picture updated!');
+      setSelectedImage(null);
+      setPreviewUrl(null);
+      setProfilePic(data.profilePicture); // Update the displayed image immediately
+      
+      // Refresh user data from the backend to get the latest profile picture
+      console.log('🔄 Refreshing user data after profile picture upload...');
+      await refreshUser();
+      console.log('✅ User data refreshed successfully');
+      
+    } catch (err) {
+      console.error('Upload error:', err);
+      setError(err.response?.data?.message || err.message || 'Failed to upload image');
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -115,7 +168,36 @@ const Profile = () => {
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
       <h2 style={{ textAlign: 'center', marginBottom: '30px' }}>Profile Management</h2>
-      
+
+      {/* Profile Picture Upload UI */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 24 }}>
+        <img
+          src={previewUrl || profilePic}
+          alt="Profile"
+          style={{ width: 120, height: 120, borderRadius: '50%', objectFit: 'cover', border: '2px solid #eee', marginBottom: 12 }}
+        />
+        <input
+          type="file"
+          accept="image/*"
+          style={{ display: 'none' }}
+          id="profile-pic-input"
+          onChange={handleImageChange}
+        />
+        <label htmlFor="profile-pic-input" style={{ cursor: 'pointer', color: '#007bff', marginBottom: 8 }}>
+          {selectedImage ? 'Change' : 'Choose'} Profile Picture
+        </label>
+        {selectedImage && (
+          <button
+            type="button"
+            onClick={handleUpload}
+            disabled={uploading}
+            style={{ background: '#28a745', color: '#fff', border: 'none', borderRadius: 8, padding: '8px 20px', fontWeight: 600, cursor: 'pointer', marginBottom: 8 }}
+          >
+            {uploading ? 'Uploading...' : 'Upload'}
+          </button>
+        )}
+      </div>
+
       {error && <p style={{ color: 'red', textAlign: 'center', padding: '10px', backgroundColor: '#ffe6e6', borderRadius: '5px' }}>{error}</p>}
       {success && <p style={{ color: 'green', textAlign: 'center', padding: '10px', backgroundColor: '#e6ffe6', borderRadius: '5px' }}>{success}</p>}
 
