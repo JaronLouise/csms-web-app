@@ -71,17 +71,17 @@ const AdminProductList = () => {
   return (
     <div style={styles.container}>
       {/* Header */}
-      <div style={styles.header}>
-        <div style={styles.headerContent}>
-          <h1 style={styles.title}>Product Management</h1>
-          <p style={styles.subtitle}>Manage your product catalog and inventory</p>
-        </div>
+      <div style={styles.headerCentered}>
+        <h1 style={styles.title}>{'Product Management'}</h1>
+        <p style={styles.subtitle}>{'Manage your product catalog and inventory'}</p>
+      </div>
+      {/* Add New Product Button - upper right above products grid */}
+      <div style={styles.addButtonRight}>
         <Link to="new" style={styles.addButton}>
           <span style={styles.addIcon} className="material-symbols-outlined">add</span>
           Add New Product
         </Link>
       </div>
-
       {/* Products Grid */}
       <div style={styles.productsGrid}>
         {products.map(product => (
@@ -171,28 +171,32 @@ const styles = {
     padding: '2rem',
     fontFamily: 'Poppins, sans-serif'
   },
-  header: {
+  headerCentered: {
     display: 'flex',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
     alignItems: 'center',
-    marginBottom: '2rem',
-    flexWrap: 'wrap',
-    gap: '1rem'
-  },
-  headerContent: {
-    flex: 1
+    justifyContent: 'center',
+    marginBottom: '1.5rem',
   },
   title: {
     fontSize: '2.5rem',
     fontWeight: '700',
     color: '#2c3e50',
     marginBottom: '0.5rem',
-    letterSpacing: '-1px'
+    letterSpacing: '-1px',
+    textAlign: 'center',
   },
   subtitle: {
     fontSize: '1.1rem',
     color: '#6c757d',
-    margin: 0
+    margin: 0,
+    marginBottom: '1rem',
+    textAlign: 'center',
+  },
+  addButtonRight: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginBottom: '1.5rem',
   },
   addButton: {
     display: 'flex',
