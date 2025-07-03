@@ -36,6 +36,16 @@ const AdminProductList = () => {
     }
   };
 
+  const getProductImage = (product) => {
+    if (product?.images && product.images.length > 0) {
+      const img = product.images[0];
+      if (typeof img === 'string') return img;
+      if (img.url) return img.url;
+      if (img.path) return img.path;
+    }
+    return null;
+  };
+
   if (loading) {
     return (
       <div style={styles.container}>
@@ -77,17 +87,23 @@ const AdminProductList = () => {
         {products.map(product => (
           <div key={product._id} style={styles.productCard}>
             <div style={styles.productImage}>
-              {product.images && product.images.length > 0 ? (
+              {getProductImage(product) ? (
                 <img 
-                  src={product.images[0]} 
+                  src={getProductImage(product)} 
                   alt={product.name}
                   style={styles.image}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextSibling.style.display = 'flex';
+                  }}
                 />
-              ) : (
-                <div style={styles.placeholderImage}>
-                  <span style={styles.placeholderIcon} className="material-symbols-outlined">inventory_2</span>
-                </div>
-              )}
+              ) : null}
+              <div style={{
+                ...styles.placeholderImage,
+                display: getProductImage(product) ? 'none' : 'flex'
+              }}>
+                <span style={styles.placeholderIcon} className="material-symbols-outlined">inventory_2</span>
+              </div>
             </div>
             
             <div style={styles.productInfo}>
@@ -124,9 +140,9 @@ const AdminProductList = () => {
               <button 
                 onClick={() => handleDelete(product._id)} 
                 style={styles.deleteButton}
+                title="Delete Product"
               >
-                <span style={styles.actionIcon} className="material-symbols-outlined">delete</span>
-                Delete
+                <span style={styles.deleteIcon} className="material-symbols-outlined">delete</span>
               </button>
             </div>
           </div>
@@ -192,7 +208,20 @@ const styles = {
   },
   addIcon: {
     fontSize: '1.2rem',
-    marginRight: '0.5rem'
+    marginRight: '0.5rem',
+    color: 'white',
+    fontFamily: 'Material Symbols Outlined',
+    fontWeight: 'normal',
+    fontStyle: 'normal',
+    lineHeight: 1,
+    letterSpacing: 'normal',
+    textTransform: 'none',
+    display: 'inline-block',
+    whiteSpace: 'nowrap',
+    wordWrap: 'normal',
+    direction: 'ltr',
+    WebkitFontFeatureSettings: '"liga"',
+    WebkitFontSmoothing: 'antialiased'
   },
   productsGrid: {
     display: 'grid',
@@ -210,12 +239,13 @@ const styles = {
   productImage: {
     height: '200px',
     overflow: 'hidden',
-    background: '#f8f9fa'
+    background: '#f8f9fa',
+    position: 'relative'
   },
   image: {
     width: '100%',
     height: '100%',
-    objectFit: 'cover'
+    objectFit: 'contain'
   },
   placeholderImage: {
     width: '100%',
@@ -223,11 +253,26 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    background: '#f8f9fa'
+    background: '#f8f9fa',
+    position: 'absolute',
+    top: 0,
+    left: 0
   },
   placeholderIcon: {
     fontSize: '3rem',
-    color: '#6c757d'
+    color: 'white',
+    fontFamily: 'Material Symbols Outlined',
+    fontWeight: 'normal',
+    fontStyle: 'normal',
+    lineHeight: 1,
+    letterSpacing: 'normal',
+    textTransform: 'none',
+    display: 'inline-block',
+    whiteSpace: 'nowrap',
+    wordWrap: 'normal',
+    direction: 'ltr',
+    WebkitFontFeatureSettings: '"liga"',
+    WebkitFontSmoothing: 'antialiased'
   },
   productInfo: {
     padding: '1.5rem'
@@ -279,7 +324,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     padding: '0.75rem',
-    background: '#007bff',
+    background: '#000000',
     color: 'white',
     borderRadius: '8px',
     textDecoration: 'none',
@@ -287,7 +332,6 @@ const styles = {
     transition: 'all 0.3s ease'
   },
   deleteButton: {
-    flex: 1,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -298,11 +342,43 @@ const styles = {
     border: 'none',
     fontWeight: '500',
     cursor: 'pointer',
-    transition: 'all 0.3s ease'
+    transition: 'all 0.3s ease',
+    width: '48px',
+    height: '48px',
+    minWidth: '48px'
   },
   actionIcon: {
     fontSize: '1rem',
-    marginRight: '0.5rem'
+    marginRight: '0.5rem',
+    color: 'white',
+    fontFamily: 'Material Symbols Outlined',
+    fontWeight: 'normal',
+    fontStyle: 'normal',
+    lineHeight: 1,
+    letterSpacing: 'normal',
+    textTransform: 'none',
+    display: 'inline-block',
+    whiteSpace: 'nowrap',
+    wordWrap: 'normal',
+    direction: 'ltr',
+    WebkitFontFeatureSettings: '"liga"',
+    WebkitFontSmoothing: 'antialiased'
+  },
+  deleteIcon: {
+    fontSize: '1.2rem',
+    color: 'white',
+    fontFamily: 'Material Symbols Outlined',
+    fontWeight: 'normal',
+    fontStyle: 'normal',
+    lineHeight: 1,
+    letterSpacing: 'normal',
+    textTransform: 'none',
+    display: 'inline-block',
+    whiteSpace: 'nowrap',
+    wordWrap: 'normal',
+    direction: 'ltr',
+    WebkitFontFeatureSettings: '"liga"',
+    WebkitFontSmoothing: 'antialiased'
   },
   emptyState: {
     textAlign: 'center',
@@ -316,7 +392,18 @@ const styles = {
     fontSize: '4rem',
     marginBottom: '1rem',
     display: 'block',
-    color: '#6c757d'
+    color: 'white',
+    fontFamily: 'Material Symbols Outlined',
+    fontWeight: 'normal',
+    fontStyle: 'normal',
+    lineHeight: 1,
+    letterSpacing: 'normal',
+    textTransform: 'none',
+    whiteSpace: 'nowrap',
+    wordWrap: 'normal',
+    direction: 'ltr',
+    WebkitFontFeatureSettings: '"liga"',
+    WebkitFontSmoothing: 'antialiased'
   },
   emptyTitle: {
     fontSize: '1.5rem',
@@ -403,7 +490,7 @@ styleSheet.textContent = `
   }
   
   .admin-edit-button:hover {
-    background: #0056b3;
+    background: #333333;
     transform: translateY(-1px);
   }
   

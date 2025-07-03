@@ -5,6 +5,11 @@ import { getCategories, createCategory } from '../../services/categoryService';
 import uploadService from '../../services/uploadService';
 
 const AdminProductForm = () => {
+  // Step management
+  const [currentStep, setCurrentStep] = useState(1);
+  const [completedSteps, setCompletedSteps] = useState(new Set());
+  const [skippedSteps, setSkippedSteps] = useState(new Set());
+  
   // Basic product information
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -45,41 +50,6 @@ const AdminProductForm = () => {
   // Technical specifications
   const [technicalSpecs, setTechnicalSpecs] = useState([{ key: '', value: '' }]);
   
-  // Product variants
-  const [variants, setVariants] = useState([]);
-  const [showVariantForm, setShowVariantForm] = useState(false);
-  const [currentVariant, setCurrentVariant] = useState({
-    name: '',
-    price: '',
-    stock: 0,
-    specifications: []
-  });
-  
-  // Customization options
-  const [isCustomizable, setIsCustomizable] = useState(false);
-  const [customizationOptions, setCustomizationOptions] = useState([]);
-  const [showCustomizationForm, setShowCustomizationForm] = useState(false);
-  const [currentCustomization, setCurrentCustomization] = useState({
-    name: '',
-    type: 'color',
-    options: [''],
-    required: false,
-    price: 0
-  });
-  
-  // Additional information
-  const [manufacturer, setManufacturer] = useState('');
-  const [modelNumber, setModelNumber] = useState('');
-  const [countryOfOrigin, setCountryOfOrigin] = useState('');
-  const [installationInstructions, setInstallationInstructions] = useState('');
-  const [maintenanceGuide, setMaintenanceGuide] = useState('');
-  const [safetyInformation, setSafetyInformation] = useState('');
-  
-  // SEO and metadata
-  const [metaTitle, setMetaTitle] = useState('');
-  const [metaDescription, setMetaDescription] = useState('');
-  const [keywords, setKeywords] = useState('');
-  
   // Images
   const [imageFiles, setImageFiles] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
@@ -89,7 +59,6 @@ const AdminProductForm = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState('basic');
   
   // New category form state
   const [showNewCategoryForm, setShowNewCategoryForm] = useState(false);
@@ -98,6 +67,44 @@ const AdminProductForm = () => {
 
   const navigate = useNavigate();
   const { id } = useParams();
+  
+  // Touch gesture support
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+
+  // Step definitions
+  const steps = [
+    {
+      id: 1,
+      title: 'Basic Information',
+      description: 'Product name, category, and pricing',
+      required: true
+    },
+    {
+      id: 2,
+      title: 'Description',
+      description: 'Product descriptions and details',
+      required: false
+    },
+    {
+      id: 3,
+      title: 'Specifications',
+      description: 'Technical specs and features',
+      required: false
+    },
+    {
+      id: 4,
+      title: 'Images',
+      description: 'Product photos and media',
+      required: false
+    },
+    {
+      id: 5,
+      title: 'Status & Pricing',
+      description: 'Product status and sale settings',
+      required: false
+    }
+  ];
 
   useEffect(() => {
     getCategories()
@@ -105,11 +112,9 @@ const AdminProductForm = () => {
       .catch(() => setError('Could not load categories.'));
 
     if (id) {
-      console.log('Loading product for editing, ID:', id);
       setLoading(true);
       getProductById(id)
         .then(product => {
-          console.log('Product loaded successfully:', product.name);
           setName(product.name);
           setDescription(product.description || '');
           setShortDescription(product.shortDescription || '');
@@ -125,7 +130,6 @@ const AdminProductForm = () => {
           setSalePrice(product.salePrice || '');
           setSaleEndDate(product.saleEndDate ? new Date(product.saleEndDate).toISOString().split('T')[0] : '');
           
-          // Load specifications
           if (product.specifications) {
             setSpecifications({
               capacity: product.specifications.capacity || '',
@@ -143,47 +147,46 @@ const AdminProductForm = () => {
             });
           }
           
-          // Load features
           setFeatures(product.features && product.features.length > 0 ? product.features : ['']);
           
-          // Load technical specs
           if (product.technicalSpecs) {
             const techSpecsArray = Array.from(product.technicalSpecs.entries()).map(([key, value]) => ({ key, value }));
             setTechnicalSpecs(techSpecsArray.length > 0 ? techSpecsArray : [{ key: '', value: '' }]);
           }
           
-          // Load variants
-          setVariants(product.variants || []);
-          
-          // Load customization options
-          setIsCustomizable(product.isCustomizable);
-          setCustomizationOptions(product.customizationOptions || []);
-          
-          // Load additional info
-          setManufacturer(product.manufacturer || '');
-          setModelNumber(product.modelNumber || '');
-          setCountryOfOrigin(product.countryOfOrigin || '');
-          setInstallationInstructions(product.installationInstructions || '');
-          setMaintenanceGuide(product.maintenanceGuide || '');
-          setSafetyInformation(product.safetyInformation || '');
-          
-          // Load SEO
-          setMetaTitle(product.metaTitle || '');
-          setMetaDescription(product.metaDescription || '');
-          setKeywords(product.keywords ? product.keywords.join(', ') : '');
-          
-          // Load images
-          if (product.images && product.images.length > 0) {
-            setImagePreviews(product.images.map(img => img.url));
-          }
+          setCompletedSteps(new Set([1, 2, 3, 4, 5]));
+          setLoading(false);
         })
-        .catch((err) => {
-          console.error('Error loading product:', err);
-          setError('Could not find the product.');
-        })
-        .finally(() => setLoading(false));
+        .catch(err => {
+          setError('Failed to load product details.');
+          setLoading(false);
+        });
     }
   }, [id]);
+
+  // Touch gesture handlers
+  const onTouchStart = (e) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe && currentStep < steps.length) {
+      handleNext();
+    } else if (isRightSwipe && currentStep > 1) {
+      handlePrevious();
+    }
+  };
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
@@ -198,18 +201,24 @@ const AdminProductForm = () => {
     });
   };
 
+  const removeImage = (index) => {
+    setImageFiles(prev => prev.filter((_, i) => i !== index));
+    setImagePreviews(prev => prev.filter((_, i) => i !== index));
+  };
+
   const handleImageUpload = async () => {
     if (imageFiles.length === 0) return [];
-
+    
     setUploadingImages(true);
+    const uploadPromises = imageFiles.map(file => uploadService.uploadImage(file));
+    
     try {
-      const uploadPromises = imageFiles.map(file => uploadService.uploadImage(file, 'products'));
       const results = await Promise.all(uploadPromises);
       setUploadingImages(false);
-      return results.map(result => result.data);
+      return results;
     } catch (error) {
       setUploadingImages(false);
-      throw new Error('Failed to upload images: ' + error.message);
+      throw new Error('Failed to upload images');
     }
   };
 
@@ -217,85 +226,113 @@ const AdminProductForm = () => {
     const value = e.target.value;
     if (value === 'new') {
       setShowNewCategoryForm(true);
-      setCategory('');
     } else {
       setCategory(value);
-      setShowNewCategoryForm(false);
     }
   };
 
   const handleCreateCategory = async () => {
-    if (!newCategoryName.trim()) {
-      setError('Category name is required');
-      return;
-    }
-
+    if (!newCategoryName.trim()) return;
+    
     setCreatingCategory(true);
-    setError(null);
-
     try {
       const newCategory = await createCategory({ name: newCategoryName.trim() });
-      setCategories([...categories, newCategory]);
+      setCategories(prev => [...prev, newCategory]);
       setCategory(newCategory._id);
-      setNewCategoryName('');
       setShowNewCategoryForm(false);
+      setNewCategoryName('');
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to create category');
+      setError('Failed to create category');
     } finally {
       setCreatingCategory(false);
     }
   };
 
-  // Feature management
   const addFeature = () => {
-    setFeatures([...features, '']);
+    setFeatures(prev => [...prev, '']);
   };
 
   const removeFeature = (index) => {
-    setFeatures(features.filter((_, i) => i !== index));
+    setFeatures(prev => prev.filter((_, i) => i !== index));
   };
 
   const updateFeature = (index, value) => {
-    const newFeatures = [...features];
-    newFeatures[index] = value;
-    setFeatures(newFeatures);
+    setFeatures(prev => prev.map((f, i) => i === index ? value : f));
   };
 
-  // Technical specs management
   const addTechnicalSpec = () => {
-    setTechnicalSpecs([...technicalSpecs, { key: '', value: '' }]);
+    setTechnicalSpecs(prev => [...prev, { key: '', value: '' }]);
   };
 
   const removeTechnicalSpec = (index) => {
-    setTechnicalSpecs(technicalSpecs.filter((_, i) => i !== index));
+    setTechnicalSpecs(prev => prev.filter((_, i) => i !== index));
   };
 
   const updateTechnicalSpec = (index, field, value) => {
-    const newSpecs = [...technicalSpecs];
-    newSpecs[index][field] = value;
-    setTechnicalSpecs(newSpecs);
+    setTechnicalSpecs(prev => prev.map((spec, i) => i === index ? { ...spec, [field]: value } : spec));
   };
 
-  // Variant management
-  const addVariant = () => {
-    setVariants([...variants, currentVariant]);
-    setCurrentVariant({ name: '', price: '', stock: 0, specifications: [] });
-    setShowVariantForm(false);
+  const validateCurrentStep = () => {
+    switch (currentStep) {
+      case 1:
+        return name.trim() && price > 0 && category;
+      case 2:
+        return true; // Optional step
+      case 3:
+        return true; // Optional step
+      case 4:
+        return true; // Optional step
+      case 5:
+        return true; // Optional step
+      default:
+        return false;
+    }
   };
 
-  const removeVariant = (index) => {
-    setVariants(variants.filter((_, i) => i !== index));
+  const handleNext = () => {
+    if (validateCurrentStep()) {
+      setCompletedSteps(prev => new Set([...prev, currentStep]));
+      if (currentStep < steps.length) {
+        setCurrentStep(currentStep + 1);
+        // Auto-scroll to show the next step
+        setTimeout(() => {
+          const progressSteps = document.querySelector('.progress-steps');
+          if (progressSteps) {
+            const stepWidth = 220; // Approximate width of each step
+            const scrollAmount = stepWidth * (currentStep - 1);
+            progressSteps.scrollTo({
+              left: scrollAmount,
+              behavior: 'smooth'
+            });
+          }
+        }, 100);
+      }
+    }
   };
 
-  // Customization management
-  const addCustomization = () => {
-    setCustomizationOptions([...customizationOptions, currentCustomization]);
-    setCurrentCustomization({ name: '', type: 'color', options: [''], required: false, price: 0 });
-    setShowCustomizationForm(false);
+  const handlePrevious = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
   };
 
-  const removeCustomization = (index) => {
-    setCustomizationOptions(customizationOptions.filter((_, i) => i !== index));
+  const handleSkip = () => {
+    setSkippedSteps(prev => new Set([...prev, currentStep]));
+    if (currentStep < steps.length) {
+      setCurrentStep(currentStep + 1);
+      // Auto-scroll to show the next step
+      setTimeout(() => {
+        const progressSteps = document.querySelector('.progress-steps');
+        if (progressSteps) {
+          const stepWidth = 220; // Approximate width of each step
+          const scrollAmount = stepWidth * (currentStep - 1);
+          progressSteps.scrollTo({
+            left: scrollAmount,
+            behavior: 'smooth'
+          });
+        }
+      }, 100);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -303,7 +340,6 @@ const AdminProductForm = () => {
     setLoading(true);
     setError(null);
 
-    // Validation
     if (!name.trim()) {
       setError('Product name is required');
       setLoading(false);
@@ -327,7 +363,6 @@ const AdminProductForm = () => {
         imageData = await handleImageUpload();
       }
 
-      // Convert technical specs to Map
       const techSpecsMap = new Map();
       technicalSpecs.forEach(spec => {
         if (spec.key && spec.value) {
@@ -352,19 +387,7 @@ const AdminProductForm = () => {
         saleEndDate: saleEndDate || null,
         specifications,
         features: features.filter(f => f.trim() !== ''),
-        technicalSpecs: techSpecsMap,
-        variants,
-        isCustomizable,
-        customizationOptions,
-        manufacturer: manufacturer.trim(),
-        modelNumber: modelNumber.trim(),
-        countryOfOrigin: countryOfOrigin.trim(),
-        installationInstructions: installationInstructions.trim(),
-        maintenanceGuide: maintenanceGuide.trim(),
-        safetyInformation: safetyInformation.trim(),
-        metaTitle: metaTitle.trim(),
-        metaDescription: metaDescription.trim(),
-        keywords: keywords.split(',').map(k => k.trim()).filter(k => k !== '')
+        technicalSpecs: techSpecsMap
       };
 
       if (imageData.length > 0) {
@@ -379,660 +402,945 @@ const AdminProductForm = () => {
         navigate('/admin/products');
       }
     } catch (err) {
-      console.error('Operation failed:', err.message);
       setError(err.message || 'The operation failed. Please check the fields.');
       setLoading(false);
     }
   };
-  
-  if (loading && id) return <p>Loading product details...</p>;
 
-  return (
-    <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
-      <h2>{id ? 'Edit Product' : 'Add New Product'}</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      
-      {/* Tab Navigation */}
-      <div style={{ marginBottom: '20px', borderBottom: '1px solid #ddd' }}>
-        {['basic', 'specifications', 'variants', 'customization', 'seo', 'additional'].map(tab => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            style={{
-              padding: '10px 20px',
-              marginRight: '10px',
-              border: 'none',
-              background: activeTab === tab ? '#28a745' : '#f8f9fa',
-              color: activeTab === tab ? 'white' : '#333',
-              cursor: 'pointer',
-              borderRadius: '5px'
-            }}
-          >
-            {tab.charAt(0).toUpperCase() + tab.slice(1)}
-          </button>
-        ))}
-      </div>
+  if (loading && id) return (
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '50vh',
+      fontSize: '1.2rem',
+      color: '#666'
+    }}>
+      Loading product details...
+    </div>
+  );
 
-      <form onSubmit={handleSubmit}>
-        {/* Basic Information Tab */}
-        {activeTab === 'basic' && (
-          <div>
-            <div style={{ marginBottom: '15px' }}>
-              <label>Product Name *:</label>
-              <input 
-                type="text" 
-                value={name} 
-                onChange={e => setName(e.target.value)} 
-                required 
-                style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-              />
-            </div>
+  const renderStepContent = () => {
+    switch (currentStep) {
+      case 1:
+        return (
+          <div className="step-content">
+            <h3>Basic Product Information</h3>
+            <p className="step-description">Let's start with the essential details about your product.</p>
             
-            <div style={{ marginBottom: '15px' }}>
-              <label>Short Description:</label>
-              <textarea 
-                value={shortDescription} 
-                onChange={e => setShortDescription(e.target.value)}
-                placeholder="Brief description for product cards"
-                style={{ width: '100%', padding: '8px', marginTop: '5px', height: '60px' }}
-              />
-            </div>
-            
-            <div style={{ marginBottom: '15px' }}>
-              <label>Detailed Description:</label>
-              <textarea 
-                value={detailedDescription} 
-                onChange={e => setDetailedDescription(e.target.value)}
-                placeholder="Comprehensive description for product detail page"
-                style={{ width: '100%', padding: '8px', marginTop: '5px', height: '120px' }}
-              />
-            </div>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
-              <div>
-                <label>Price *:</label>
-                <input 
-                  type="number" 
-                  value={price} 
-                  onChange={e => setPrice(e.target.value)} 
-                  required 
-                  step="0.01"
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+            <div className="form-grid">
+              <div className="form-group">
+                <label>Product Name *</label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Enter product name"
+                  className="form-input"
                 />
               </div>
-              <div>
-                <label>Stock:</label>
-                <input 
-                  type="number" 
-                  value={stock} 
-                  onChange={e => setStock(e.target.value)} 
-                  min="0"
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
-              </div>
-            </div>
-            
-            <div style={{ marginBottom: '15px' }}>
-              <label>Category *:</label>
-              <select value={category} onChange={handleCategoryChange} required style={{ width: '100%', padding: '8px', marginTop: '5px' }}>
-                <option value="">Select Category</option>
-                {categories.map(cat => (
-                  <option key={cat._id} value={cat._id}>{cat.name}</option>
-                ))}
-                <option value="new">+ Add New Category</option>
-              </select>
-            </div>
-            
-            {showNewCategoryForm && (
-              <div style={{ marginBottom: '15px', padding: '15px', border: '1px solid #ddd', borderRadius: '5px' }}>
-                <label>New Category Name:</label>
-                <input 
-                  type="text" 
-                  value={newCategoryName} 
-                  onChange={e => setNewCategoryName(e.target.value)}
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
-                <button type="button" onClick={handleCreateCategory} disabled={creatingCategory} style={{ marginTop: '10px', padding: '8px 16px', background: '#28a745', color: 'white', border: 'none', borderRadius: '5px' }}>
-                  {creatingCategory ? 'Creating...' : 'Create Category'}
-                </button>
-              </div>
-            )}
-            
-            <div style={{ marginBottom: '15px' }}>
-              <label>SKU:</label>
-              <input 
-                type="text" 
-                value={sku} 
-                onChange={e => setSku(e.target.value)}
-                placeholder="Stock Keeping Unit"
-                style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-              />
-            </div>
-            
-            <div style={{ marginBottom: '15px' }}>
-              <label>Images:</label>
-              <input 
-                type="file" 
-                multiple 
-                accept="image/*"
-                onChange={handleImageChange}
-                style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-              />
-              {imagePreviews.length > 0 && (
-                <div style={{ display: 'flex', gap: '10px', marginTop: '10px', flexWrap: 'wrap' }}>
-                  {imagePreviews.map((preview, index) => (
-                    <img key={index} src={preview} alt={`Preview ${index + 1}`} style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '5px' }} />
+              
+              <div className="form-group">
+                <label>Category *</label>
+                <select value={category} onChange={handleCategoryChange} className="form-input">
+                  <option value="">Select Category</option>
+                  {categories.map(cat => (
+                    <option key={cat._id} value={cat._id}>{cat.name}</option>
                   ))}
-                </div>
-              )}
-            </div>
-            
-            <div style={{ marginBottom: '15px' }}>
-              <label>
-                <input 
-                  type="checkbox" 
-                  checked={isActive} 
-                  onChange={e => setIsActive(e.target.checked)}
-                  style={{ marginRight: '8px' }}
-                />
-                Active
-              </label>
-              <label style={{ marginLeft: '20px' }}>
-                <input 
-                  type="checkbox" 
-                  checked={isFeatured} 
-                  onChange={e => setIsFeatured(e.target.checked)}
-                  style={{ marginRight: '8px' }}
-                />
-                Featured
-              </label>
-              <label style={{ marginLeft: '20px' }}>
-                <input 
-                  type="checkbox" 
-                  checked={isNew} 
-                  onChange={e => setIsNew(e.target.checked)}
-                  style={{ marginRight: '8px' }}
-                />
-                New Product
-              </label>
-            </div>
-            
-            <div style={{ marginBottom: '15px' }}>
-              <label>
-                <input 
-                  type="checkbox" 
-                  checked={isOnSale} 
-                  onChange={e => setIsOnSale(e.target.checked)}
-                  style={{ marginRight: '8px' }}
-                />
-                On Sale
-              </label>
-              {isOnSale && (
-                <div style={{ marginTop: '10px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-                  <div>
-                    <label>Sale Price:</label>
-                    <input 
-                      type="number" 
-                      value={salePrice} 
-                      onChange={e => setSalePrice(e.target.value)}
-                      step="0.01"
-                      style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                    />
-                  </div>
-                  <div>
-                    <label>Sale End Date:</label>
-                    <input 
-                      type="date" 
-                      value={saleEndDate} 
-                      onChange={e => setSaleEndDate(e.target.value)}
-                      style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Specifications Tab */}
-        {activeTab === 'specifications' && (
-          <div>
-            <h3>Product Specifications</h3>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
-              <div>
-                <label>Capacity:</label>
-                <input 
-                  type="text" 
-                  value={specifications.capacity} 
-                  onChange={e => setSpecifications({...specifications, capacity: e.target.value})}
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
-              </div>
-              <div>
-                <label>Dimensions:</label>
-                <input 
-                  type="text" 
-                  value={specifications.dimensions} 
-                  onChange={e => setSpecifications({...specifications, dimensions: e.target.value})}
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
-              </div>
-            </div>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
-              <div>
-                <label>Warranty:</label>
-                <input 
-                  type="text" 
-                  value={specifications.warranty} 
-                  onChange={e => setSpecifications({...specifications, warranty: e.target.value})}
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
-              </div>
-              <div>
-                <label>Efficiency:</label>
-                <input 
-                  type="text" 
-                  value={specifications.efficiency} 
-                  onChange={e => setSpecifications({...specifications, efficiency: e.target.value})}
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
-              </div>
-            </div>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
-              <div>
-                <label>Weight:</label>
-                <input 
-                  type="text" 
-                  value={specifications.weight} 
-                  onChange={e => setSpecifications({...specifications, weight: e.target.value})}
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
-              </div>
-              <div>
-                <label>Material:</label>
-                <input 
-                  type="text" 
-                  value={specifications.material} 
-                  onChange={e => setSpecifications({...specifications, material: e.target.value})}
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
-              </div>
-            </div>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
-              <div>
-                <label>Power Output:</label>
-                <input 
-                  type="text" 
-                  value={specifications.powerOutput} 
-                  onChange={e => setSpecifications({...specifications, powerOutput: e.target.value})}
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
-              </div>
-              <div>
-                <label>Voltage:</label>
-                <input 
-                  type="text" 
-                  value={specifications.voltage} 
-                  onChange={e => setSpecifications({...specifications, voltage: e.target.value})}
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
-              </div>
-            </div>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
-              <div>
-                <label>Current:</label>
-                <input 
-                  type="text" 
-                  value={specifications.current} 
-                  onChange={e => setSpecifications({...specifications, current: e.target.value})}
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
-              </div>
-              <div>
-                <label>Operating Temperature:</label>
-                <input 
-                  type="text" 
-                  value={specifications.operatingTemperature} 
-                  onChange={e => setSpecifications({...specifications, operatingTemperature: e.target.value})}
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
-              </div>
-            </div>
-            
-            <h4>Product Features</h4>
-            {features.map((feature, index) => (
-              <div key={index} style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
-                <input 
-                  type="text" 
-                  value={feature} 
-                  onChange={e => updateFeature(index, e.target.value)}
-                  placeholder="Enter feature"
-                  style={{ flex: 1, padding: '8px' }}
-                />
-                <button type="button" onClick={() => removeFeature(index)} style={{ padding: '8px 16px', background: '#dc3545', color: 'white', border: 'none', borderRadius: '5px' }}>
-                  Remove
-                </button>
-              </div>
-            ))}
-            <button type="button" onClick={addFeature} style={{ padding: '8px 16px', background: '#28a745', color: 'white', border: 'none', borderRadius: '5px' }}>
-              Add Feature
-            </button>
-            
-            <h4>Technical Specifications</h4>
-            {technicalSpecs.map((spec, index) => (
-              <div key={index} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '10px', marginBottom: '10px' }}>
-                <input 
-                  type="text" 
-                  value={spec.key} 
-                  onChange={e => updateTechnicalSpec(index, 'key', e.target.value)}
-                  placeholder="Specification name"
-                  style={{ padding: '8px' }}
-                />
-                <input 
-                  type="text" 
-                  value={spec.value} 
-                  onChange={e => updateTechnicalSpec(index, 'value', e.target.value)}
-                  placeholder="Specification value"
-                  style={{ padding: '8px' }}
-                />
-                <button type="button" onClick={() => removeTechnicalSpec(index)} style={{ padding: '8px 16px', background: '#dc3545', color: 'white', border: 'none', borderRadius: '5px' }}>
-                  Remove
-                </button>
-              </div>
-            ))}
-            <button type="button" onClick={addTechnicalSpec} style={{ padding: '8px 16px', background: '#28a745', color: 'white', border: 'none', borderRadius: '5px' }}>
-              Add Technical Spec
-            </button>
-          </div>
-        )}
-
-        {/* Variants Tab */}
-        {activeTab === 'variants' && (
-          <div>
-            <h3>Product Variants</h3>
-            {variants.map((variant, index) => (
-              <div key={index} style={{ border: '1px solid #ddd', padding: '15px', marginBottom: '15px', borderRadius: '5px' }}>
-                <h4>{variant.name}</h4>
-                <p>Price: ${variant.price}</p>
-                <p>Stock: {variant.stock}</p>
-                <button type="button" onClick={() => removeVariant(index)} style={{ padding: '8px 16px', background: '#dc3545', color: 'white', border: 'none', borderRadius: '5px' }}>
-                  Remove Variant
-                </button>
-              </div>
-            ))}
-            
-            {showVariantForm ? (
-              <div style={{ border: '1px solid #ddd', padding: '15px', borderRadius: '5px' }}>
-                <h4>Add New Variant</h4>
-                <div style={{ marginBottom: '10px' }}>
-                  <label>Variant Name:</label>
-                  <input 
-                    type="text" 
-                    value={currentVariant.name} 
-                    onChange={e => setCurrentVariant({...currentVariant, name: e.target.value})}
-                    style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                  />
-                </div>
-                <div style={{ marginBottom: '10px' }}>
-                  <label>Price:</label>
-                  <input 
-                    type="number" 
-                    value={currentVariant.price} 
-                    onChange={e => setCurrentVariant({...currentVariant, price: e.target.value})}
-                    step="0.01"
-                    style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                  />
-                </div>
-                <div style={{ marginBottom: '10px' }}>
-                  <label>Stock:</label>
-                  <input 
-                    type="number" 
-                    value={currentVariant.stock} 
-                    onChange={e => setCurrentVariant({...currentVariant, stock: e.target.value})}
-                    min="0"
-                    style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                  />
-                </div>
-                <button type="button" onClick={addVariant} style={{ padding: '8px 16px', background: '#28a745', color: 'white', border: 'none', borderRadius: '5px', marginRight: '10px' }}>
-                  Add Variant
-                </button>
-                <button type="button" onClick={() => setShowVariantForm(false)} style={{ padding: '8px 16px', background: '#6c757d', color: 'white', border: 'none', borderRadius: '5px' }}>
-                  Cancel
-                </button>
-              </div>
-            ) : (
-              <button type="button" onClick={() => setShowVariantForm(true)} style={{ padding: '8px 16px', background: '#28a745', color: 'white', border: 'none', borderRadius: '5px' }}>
-                Add Variant
-              </button>
-            )}
-          </div>
-        )}
-
-        {/* Customization Tab */}
-        {activeTab === 'customization' && (
-          <div>
-            <h3>Customization Options</h3>
-            <div style={{ marginBottom: '15px' }}>
-              <label>
-                <input 
-                  type="checkbox" 
-                  checked={isCustomizable} 
-                  onChange={e => setIsCustomizable(e.target.checked)}
-                  style={{ marginRight: '8px' }}
-                />
-                Product is Customizable
-              </label>
-            </div>
-            
-            {isCustomizable && (
-              <div>
-                {customizationOptions.map((option, index) => (
-                  <div key={index} style={{ border: '1px solid #ddd', padding: '15px', marginBottom: '15px', borderRadius: '5px' }}>
-                    <h4>{option.name}</h4>
-                    <p>Type: {option.type}</p>
-                    <p>Required: {option.required ? 'Yes' : 'No'}</p>
-                    <p>Price: ${option.price}</p>
-                    <button type="button" onClick={() => removeCustomization(index)} style={{ padding: '8px 16px', background: '#dc3545', color: 'white', border: 'none', borderRadius: '5px' }}>
-                      Remove Option
-                    </button>
-                  </div>
-                ))}
+                  <option value="new">+ Add New Category</option>
+                </select>
                 
-                {showCustomizationForm ? (
-                  <div style={{ border: '1px solid #ddd', padding: '15px', borderRadius: '5px' }}>
-                    <h4>Add Customization Option</h4>
-                    <div style={{ marginBottom: '10px' }}>
-                      <label>Option Name:</label>
-                      <input 
-                        type="text" 
-                        value={currentCustomization.name} 
-                        onChange={e => setCurrentCustomization({...currentCustomization, name: e.target.value})}
-                        style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                      />
-                    </div>
-                    <div style={{ marginBottom: '10px' }}>
-                      <label>Type:</label>
-                      <select 
-                        value={currentCustomization.type} 
-                        onChange={e => setCurrentCustomization({...currentCustomization, type: e.target.value})}
-                        style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                      >
-                        <option value="color">Color</option>
-                        <option value="size">Size</option>
-                        <option value="material">Material</option>
-                        <option value="text">Text</option>
-                        <option value="logo">Logo</option>
-                      </select>
-                    </div>
-                    <div style={{ marginBottom: '10px' }}>
-                      <label>
-                        <input 
-                          type="checkbox" 
-                          checked={currentCustomization.required} 
-                          onChange={e => setCurrentCustomization({...currentCustomization, required: e.target.checked})}
-                          style={{ marginRight: '8px' }}
-                        />
-                        Required
-                      </label>
-                    </div>
-                    <div style={{ marginBottom: '10px' }}>
-                      <label>Additional Price:</label>
-                      <input 
-                        type="number" 
-                        value={currentCustomization.price} 
-                        onChange={e => setCurrentCustomization({...currentCustomization, price: e.target.value})}
-                        step="0.01"
-                        style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                      />
-                    </div>
-                    <button type="button" onClick={addCustomization} style={{ padding: '8px 16px', background: '#28a745', color: 'white', border: 'none', borderRadius: '5px', marginRight: '10px' }}>
-                      Add Option
-                    </button>
-                    <button type="button" onClick={() => setShowCustomizationForm(false)} style={{ padding: '8px 16px', background: '#6c757d', color: 'white', border: 'none', borderRadius: '5px' }}>
-                      Cancel
+                {showNewCategoryForm && (
+                  <div className="new-category-form">
+                    <input
+                      type="text"
+                      value={newCategoryName}
+                      onChange={(e) => setNewCategoryName(e.target.value)}
+                      placeholder="Enter category name"
+                      className="form-input"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleCreateCategory}
+                      disabled={creatingCategory}
+                      className="btn-secondary"
+                    >
+                      {creatingCategory ? 'Creating...' : 'Create Category'}
                     </button>
                   </div>
-                ) : (
-                  <button type="button" onClick={() => setShowCustomizationForm(true)} style={{ padding: '8px 16px', background: '#28a745', color: 'white', border: 'none', borderRadius: '5px' }}>
-                    Add Customization Option
-                  </button>
                 )}
               </div>
+              
+              <div className="form-group">
+                <label>Price *</label>
+                <input
+                  type="number"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  placeholder="0.00"
+                  step="0.01"
+                  min="0"
+                  className="form-input"
+                />
+              </div>
+              
+              <div className="form-group">
+                <label>Stock Quantity</label>
+                <input
+                  type="number"
+                  value={stock}
+                  onChange={(e) => setStock(e.target.value)}
+                  placeholder="0"
+                  min="0"
+                  className="form-input"
+                />
+              </div>
+              
+              <div className="form-group">
+                <label>SKU (Stock Keeping Unit)</label>
+                <input
+                  type="text"
+                  value={sku}
+                  onChange={(e) => setSku(e.target.value)}
+                  placeholder="Enter SKU"
+                  className="form-input"
+                />
+              </div>
+            </div>
+          </div>
+        );
+        
+      case 2:
+        return (
+          <div className="step-content">
+            <h3>Product Descriptions</h3>
+            <p className="step-description">Help customers understand your product with clear descriptions.</p>
+            
+            <div className="form-group">
+              <label>Short Description</label>
+              <textarea
+                value={shortDescription}
+                onChange={(e) => setShortDescription(e.target.value)}
+                placeholder="Brief description for product listings"
+                rows="3"
+                className="form-input"
+              />
+            </div>
+            
+            <div className="form-group">
+              <label>Full Description</label>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Detailed product description"
+                rows="4"
+                className="form-input"
+              />
+            </div>
+            
+            <div className="form-group">
+              <label>Detailed Description</label>
+              <textarea
+                value={detailedDescription}
+                onChange={(e) => setDetailedDescription(e.target.value)}
+                placeholder="Comprehensive product information"
+                rows="6"
+                className="form-input"
+              />
+            </div>
+          </div>
+        );
+        
+      case 3:
+        return (
+          <div className="step-content">
+            <h3>Product Specifications</h3>
+            <p className="step-description">Add technical specifications and features to help customers make informed decisions.</p>
+            
+            <div className="form-grid">
+              <div className="form-group">
+                <label>Capacity</label>
+                <input
+                  type="text"
+                  value={specifications.capacity}
+                  onChange={(e) => setSpecifications(s => ({...s, capacity: e.target.value}))}
+                  placeholder="e.g., 1000W"
+                  className="form-input"
+                />
+              </div>
+              
+              <div className="form-group">
+                <label>Dimensions</label>
+                <input
+                  type="text"
+                  value={specifications.dimensions}
+                  onChange={(e) => setSpecifications(s => ({...s, dimensions: e.target.value}))}
+                  placeholder="e.g., 50cm x 30cm x 20cm"
+                  className="form-input"
+                />
+              </div>
+              
+              <div className="form-group">
+                <label>Weight</label>
+                <input
+                  type="text"
+                  value={specifications.weight}
+                  onChange={(e) => setSpecifications(s => ({...s, weight: e.target.value}))}
+                  placeholder="e.g., 5kg"
+                  className="form-input"
+                />
+              </div>
+              
+              <div className="form-group">
+                <label>Material</label>
+                <input
+                  type="text"
+                  value={specifications.material}
+                  onChange={(e) => setSpecifications(s => ({...s, material: e.target.value}))}
+                  placeholder="e.g., Stainless Steel"
+                  className="form-input"
+                />
+              </div>
+              
+              <div className="form-group">
+                <label>Warranty</label>
+                <input
+                  type="text"
+                  value={specifications.warranty}
+                  onChange={(e) => setSpecifications(s => ({...s, warranty: e.target.value}))}
+                  placeholder="e.g., 2 years"
+                  className="form-input"
+                />
+              </div>
+              
+              <div className="form-group">
+                <label>Efficiency</label>
+                <input
+                  type="text"
+                  value={specifications.efficiency}
+                  onChange={(e) => setSpecifications(s => ({...s, efficiency: e.target.value}))}
+                  placeholder="e.g., 95%"
+                  className="form-input"
+                />
+              </div>
+            </div>
+            
+            <div className="form-group">
+              <label>Product Features</label>
+              {features.map((feature, idx) => (
+                <div key={idx} className="feature-item">
+                  <input
+                    type="text"
+                    value={feature}
+                    onChange={(e) => updateFeature(idx, e.target.value)}
+                    placeholder="Enter a feature"
+                    className="form-input"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeFeature(idx)}
+                    className="btn-remove"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+              <button type="button" onClick={addFeature} className="btn-add">
+                + Add Feature
+              </button>
+            </div>
+            
+            <div className="form-group">
+              <label>Technical Specifications</label>
+              {technicalSpecs.map((spec, idx) => (
+                <div key={idx} className="tech-spec-item">
+                  <input
+                    type="text"
+                    placeholder="Specification name"
+                    value={spec.key}
+                    onChange={(e) => updateTechnicalSpec(idx, 'key', e.target.value)}
+                    className="form-input"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Value"
+                    value={spec.value}
+                    onChange={(e) => updateTechnicalSpec(idx, 'value', e.target.value)}
+                    className="form-input"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeTechnicalSpec(idx)}
+                    className="btn-remove"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+              <button type="button" onClick={addTechnicalSpec} className="btn-add">
+                + Add Technical Spec
+              </button>
+            </div>
+          </div>
+        );
+        
+      case 4:
+        return (
+          <div className="step-content">
+            <h3>Product Images</h3>
+            <p className="step-description">Upload high-quality images to showcase your product.</p>
+            
+            <div className="image-upload-area">
+              <div className="upload-zone">
+                <span className="upload-icon">📷</span>
+                <p>Drag & drop images here or click to browse</p>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="file-input"
+                />
+              </div>
+            </div>
+            
+            {imagePreviews.length > 0 && (
+              <div className="image-previews">
+                <h4>Uploaded Images</h4>
+                <div className="preview-grid">
+                  {imagePreviews.map((src, i) => (
+                    <div key={i} className="image-preview">
+                      <img src={src} alt="" />
+                      <button
+                        type="button"
+                        onClick={() => removeImage(i)}
+                        className="remove-image"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
             )}
           </div>
-        )}
-
-        {/* SEO Tab */}
-        {activeTab === 'seo' && (
-          <div>
-            <h3>SEO & Metadata</h3>
+        );
+        
+      case 5:
+        return (
+          <div className="step-content">
+            <h3>Product Status & Pricing</h3>
+            <p className="step-description">Configure product visibility and pricing options.</p>
             
-            <div style={{ marginBottom: '15px' }}>
-              <label>Meta Title:</label>
-              <input 
-                type="text" 
-                value={metaTitle} 
-                onChange={e => setMetaTitle(e.target.value)}
-                placeholder="SEO title for search engines"
-                style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-              />
-            </div>
-            
-            <div style={{ marginBottom: '15px' }}>
-              <label>Meta Description:</label>
-              <textarea 
-                value={metaDescription} 
-                onChange={e => setMetaDescription(e.target.value)}
-                placeholder="SEO description for search engines"
-                style={{ width: '100%', padding: '8px', marginTop: '5px', height: '80px' }}
-              />
-            </div>
-            
-            <div style={{ marginBottom: '15px' }}>
-              <label>Keywords:</label>
-              <input 
-                type="text" 
-                value={keywords} 
-                onChange={e => setKeywords(e.target.value)}
-                placeholder="Comma-separated keywords"
-                style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Additional Information Tab */}
-        {activeTab === 'additional' && (
-          <div>
-            <h3>Additional Information</h3>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
-              <div>
-                <label>Manufacturer:</label>
-                <input 
-                  type="text" 
-                  value={manufacturer} 
-                  onChange={e => setManufacturer(e.target.value)}
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
+            <div className="form-grid">
+              <div className="form-group">
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={isActive}
+                    onChange={(e) => setIsActive(e.target.checked)}
+                  />
+                  Active Product
+                </label>
               </div>
-              <div>
-                <label>Model Number:</label>
-                <input 
-                  type="text" 
-                  value={modelNumber} 
-                  onChange={e => setModelNumber(e.target.value)}
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
+              
+              <div className="form-group">
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={isFeatured}
+                    onChange={(e) => setIsFeatured(e.target.checked)}
+                  />
+                  Featured Product
+                </label>
+              </div>
+              
+              <div className="form-group">
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={isNew}
+                    onChange={(e) => setIsNew(e.target.checked)}
+                  />
+                  New Product
+                </label>
+              </div>
+              
+              <div className="form-group">
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={isOnSale}
+                    onChange={(e) => setIsOnSale(e.target.checked)}
+                  />
+                  On Sale
+                </label>
               </div>
             </div>
             
-            <div style={{ marginBottom: '15px' }}>
-              <label>Country of Origin:</label>
-              <input 
-                type="text" 
-                value={countryOfOrigin} 
-                onChange={e => setCountryOfOrigin(e.target.value)}
-                style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-              />
-            </div>
-            
-            <div style={{ marginBottom: '15px' }}>
-              <label>Installation Instructions:</label>
-              <textarea 
-                value={installationInstructions} 
-                onChange={e => setInstallationInstructions(e.target.value)}
-                placeholder="Step-by-step installation guide"
-                style={{ width: '100%', padding: '8px', marginTop: '5px', height: '100px' }}
-              />
-            </div>
-            
-            <div style={{ marginBottom: '15px' }}>
-              <label>Maintenance Guide:</label>
-              <textarea 
-                value={maintenanceGuide} 
-                onChange={e => setMaintenanceGuide(e.target.value)}
-                placeholder="Maintenance and care instructions"
-                style={{ width: '100%', padding: '8px', marginTop: '5px', height: '100px' }}
-              />
-            </div>
-            
-            <div style={{ marginBottom: '15px' }}>
-              <label>Safety Information:</label>
-              <textarea 
-                value={safetyInformation} 
-                onChange={e => setSafetyInformation(e.target.value)}
-                placeholder="Important safety warnings and precautions"
-                style={{ width: '100%', padding: '8px', marginTop: '5px', height: '100px' }}
-              />
-            </div>
+            {isOnSale && (
+              <div className="sale-settings">
+                <div className="form-grid">
+                  <div className="form-group">
+                    <label>Sale Price</label>
+                    <input
+                      type="number"
+                      value={salePrice}
+                      onChange={(e) => setSalePrice(e.target.value)}
+                      placeholder="0.00"
+                      step="0.01"
+                      min="0"
+                      className="form-input"
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>Sale End Date</label>
+                    <input
+                      type="date"
+                      value={saleEndDate}
+                      onChange={(e) => setSaleEndDate(e.target.value)}
+                      className="form-input"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
-        )}
+        );
+        
+      default:
+        return null;
+    }
+  };
 
-        <div style={{ marginTop: '30px', textAlign: 'center' }}>
-          <button 
-            type="submit" 
-            disabled={loading || uploadingImages}
-            style={{ 
-              padding: '12px 30px', 
-              background: '#28a745', 
-              color: 'white', 
-              border: 'none', 
-              borderRadius: '5px',
-              fontSize: '16px',
-              cursor: loading || uploadingImages ? 'not-allowed' : 'pointer',
-              opacity: loading || uploadingImages ? 0.6 : 1
-            }}
+  return (
+    <div className="product-form-container">
+      <div className="form-header">
+        <h2>{id ? 'Edit Product' : 'Add New Product'}</h2>
+        {error && <div className="error-message">{error}</div>}
+      </div>
+      
+      {/* Progress Steps */}
+      <div className="progress-steps">
+        {steps.map((step, index) => (
+          <div
+            key={step.id}
+            className={`step ${currentStep === step.id ? 'active' : ''} ${
+              completedSteps.has(step.id) ? 'completed' : ''
+            } ${skippedSteps.has(step.id) ? 'skipped' : ''}`}
           >
-            {loading ? 'Saving...' : uploadingImages ? 'Uploading Images...' : (id ? 'Update Product' : 'Create Product')}
-          </button>
+            <div className="step-number">
+              {completedSteps.has(step.id) ? '✓' : step.id}
+            </div>
+            <div className="step-info">
+              <div className="step-title">{step.title}</div>
+              <div className="step-description">{step.description}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      {/* Step Content */}
+      <div 
+        className="step-content-wrapper"
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
+        {renderStepContent()}
+      </div>
+      
+      {/* Navigation */}
+      <div className="step-navigation">
+        <div className="nav-left">
+          {currentStep > 1 && (
+            <button
+              type="button"
+              onClick={handlePrevious}
+              className="btn-secondary"
+            >
+              ← Previous
+            </button>
+          )}
         </div>
-      </form>
+        
+        <div className="nav-right">
+          {currentStep < steps.length && (
+            <>
+              {!steps[currentStep - 1].required && (
+                <button
+                  type="button"
+                  onClick={handleSkip}
+                  className="btn-skip"
+                >
+                  Skip
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={handleNext}
+                disabled={!validateCurrentStep()}
+                className="btn-primary"
+              >
+                Next →
+              </button>
+            </>
+          )}
+          
+          {currentStep === steps.length && (
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={loading || uploadingImages}
+              className="btn-submit"
+            >
+              {loading ? 'Saving...' : uploadingImages ? 'Uploading...' : (id ? 'Update Product' : 'Create Product')}
+            </button>
+          )}
+        </div>
+      </div>
+      
+      <style jsx>{`
+        .product-form-container {
+          max-width: 1000px;
+          margin: 40px auto;
+          background: white;
+          border-radius: 16px;
+          box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+          padding: 2.5rem;
+          font-family: 'Poppins', sans-serif;
+        }
+        
+        .form-header {
+          margin-bottom: 2rem;
+        }
+        
+        .form-header h2 {
+          font-weight: 700;
+          font-size: 2rem;
+          margin-bottom: 1rem;
+          color: #1a1a1a;
+        }
+        
+        .error-message {
+          color: #dc3545;
+          background: #f8d7da;
+          border: 1px solid #f5c6cb;
+          border-radius: 8px;
+          padding: 12px;
+          margin-bottom: 1rem;
+        }
+        
+        .progress-steps {
+          display: flex;
+          margin-bottom: 3rem;
+          overflow: hidden;
+          padding-bottom: 1rem;
+          position: relative;
+          width: 100%;
+        }
+        
+        .step {
+          display: flex;
+          align-items: center;
+          margin-right: 2rem;
+          min-width: 200px;
+          opacity: 0.6;
+          transition: all 0.3s ease;
+          flex-shrink: 0;
+        }
+        
+        .step.active {
+          opacity: 1;
+        }
+        
+        .step.completed {
+          opacity: 1;
+        }
+        
+        .step-number {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: #e9ecef;
+          color: #6c757d;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 600;
+          margin-right: 12px;
+          transition: all 0.3s ease;
+        }
+        
+        .step.active .step-number {
+          background: #007bff;
+          color: white;
+        }
+        
+        .step.completed .step-number {
+          background: #28a745;
+          color: white;
+        }
+        
+        .step.skipped .step-number {
+          background: #ffc107;
+          color: #212529;
+        }
+        
+        .step-info {
+          flex: 1;
+        }
+        
+        .step-title {
+          font-weight: 600;
+          color: #1a1a1a;
+          margin-bottom: 4px;
+        }
+        
+        .step-description {
+          font-size: 0.875rem;
+          color: #495057;
+        }
+        
+        .step-content-wrapper {
+          margin-bottom: 3rem;
+          touch-action: pan-y;
+          user-select: none;
+        }
+        
+        .step-content h3 {
+          font-weight: 600;
+          font-size: 1.5rem;
+          margin-bottom: 0.5rem;
+          color: #1a1a1a;
+        }
+        
+        .step-content h3::after {
+          content: ' ← Swipe to navigate →';
+          font-size: 0.8rem;
+          color: #6c757d;
+          font-weight: 400;
+          display: none;
+        }
+        
+        @media (max-width: 768px) {
+          .step-content h3::after {
+            display: inline;
+          }
+        }
+        
+        .step-content .step-description {
+          color: #6c757d;
+          margin-bottom: 2rem;
+          font-size: 1rem;
+        }
+        
+        .form-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 1.5rem;
+          margin-bottom: 2rem;
+        }
+        
+        .form-group {
+          margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+          display: block;
+          font-weight: 600;
+          color: #1a1a1a;
+          margin-bottom: 0.5rem;
+          font-size: 0.9rem;
+        }
+        
+        .form-input {
+          width: 100%;
+          padding: 12px 16px;
+          border: 2px solid #e9ecef;
+          border-radius: 8px;
+          font-size: 1rem;
+          background: #f8f9fa;
+          color: #1a1a1a;
+          transition: all 0.2s ease;
+          box-sizing: border-box;
+        }
+        
+        .form-input:focus {
+          outline: none;
+          border-color: #007bff;
+          background: white;
+          color: #1a1a1a;
+          box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+        }
+        
+        .form-input::placeholder {
+          color: #6c757d;
+        }
+        
+        .checkbox-label {
+          display: flex !important;
+          align-items: center;
+          cursor: pointer;
+          font-weight: 500;
+        }
+        
+        .checkbox-label input[type="checkbox"] {
+          margin-right: 8px;
+          width: 18px;
+          height: 18px;
+        }
+        
+        textarea.form-input,
+        select.form-input {
+          color: #1a1a1a;
+          background: #f8f9fa;
+        }
+        
+        textarea.form-input:focus,
+        select.form-input:focus {
+          background: white;
+          color: #1a1a1a;
+        }
+        
+        .new-category-form {
+          margin-top: 1rem;
+          display: flex;
+          gap: 1rem;
+        }
+        
+        .feature-item,
+        .tech-spec-item {
+          display: flex;
+          gap: 0.5rem;
+          margin-bottom: 0.5rem;
+          align-items: center;
+        }
+        
+        .btn-add {
+          background: #28a745;
+          color: white;
+          border: none;
+          border-radius: 6px;
+          padding: 8px 16px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: background 0.2s ease;
+        }
+        
+        .btn-add:hover {
+          background: #218838;
+        }
+        
+        .btn-remove {
+          background: #dc3545;
+          color: white;
+          border: none;
+          border-radius: 50%;
+          width: 32px;
+          height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          font-size: 18px;
+          transition: background 0.2s ease;
+        }
+        
+        .btn-remove:hover {
+          background: #c82333;
+        }
+        
+        .image-upload-area {
+          margin-bottom: 2rem;
+        }
+        
+        .upload-zone {
+          border: 2px dashed #e9ecef;
+          border-radius: 12px;
+          padding: 3rem;
+          text-align: center;
+          background: #f8f9fa;
+          position: relative;
+          transition: all 0.2s ease;
+        }
+        
+        .upload-zone:hover {
+          border-color: #007bff;
+          background: #f0f8ff;
+        }
+        
+        .upload-icon {
+          font-size: 3rem;
+          margin-bottom: 1rem;
+          display: block;
+        }
+        
+        .file-input {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          opacity: 0;
+          cursor: pointer;
+        }
+        
+        .image-previews {
+          margin-top: 2rem;
+        }
+        
+        .preview-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+          gap: 1rem;
+          margin-top: 1rem;
+        }
+        
+        .image-preview {
+          position: relative;
+          border-radius: 8px;
+          overflow: hidden;
+          aspect-ratio: 1;
+        }
+        
+        .image-preview img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        
+        .remove-image {
+          position: absolute;
+          top: 4px;
+          right: 4px;
+          background: rgba(0,0,0,0.6);
+          color: white;
+          border: none;
+          border-radius: 50%;
+          width: 24px;
+          height: 24px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          font-size: 14px;
+        }
+        
+        .sale-settings {
+          margin-top: 2rem;
+          padding: 1.5rem;
+          background: #f8f9fa;
+          border-radius: 8px;
+        }
+        
+        .step-navigation {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding-top: 2rem;
+          border-top: 1px solid #e9ecef;
+        }
+        
+        .nav-left,
+        .nav-right {
+          display: flex;
+          gap: 1rem;
+        }
+        
+        .btn-primary,
+        .btn-secondary,
+        .btn-skip,
+        .btn-submit {
+          padding: 12px 24px;
+          border-radius: 8px;
+          font-weight: 600;
+          font-size: 1rem;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          border: none;
+        }
+        
+        .btn-primary {
+          background: #007bff;
+          color: white;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+          background: #0056b3;
+        }
+        
+        .btn-primary:disabled {
+          background: #6c757d;
+          cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+          background: #6c757d;
+          color: white;
+        }
+        
+        .btn-secondary:hover {
+          background: #545b62;
+        }
+        
+        .btn-skip {
+          background: transparent;
+          color: #6c757d;
+          border: 1px solid #6c757d;
+        }
+        
+        .btn-skip:hover {
+          background: #6c757d;
+          color: white;
+        }
+        
+        .btn-submit {
+          background: #28a745;
+          color: white;
+        }
+        
+        .btn-submit:hover:not(:disabled) {
+          background: #218838;
+        }
+        
+        .btn-submit:disabled {
+          background: #6c757d;
+          cursor: not-allowed;
+        }
+        
+        @media (max-width: 768px) {
+          .product-form-container {
+            margin: 20px;
+            padding: 1.5rem;
+          }
+          
+          .form-grid {
+            grid-template-columns: 1fr;
+          }
+          
+          .progress-steps {
+            flex-direction: column;
+            gap: 1rem;
+          }
+          
+          .step {
+            margin-right: 0;
+          }
+          
+          .step-navigation {
+            flex-direction: column;
+            gap: 1rem;
+          }
+          
+          .nav-left,
+          .nav-right {
+            width: 100%;
+            justify-content: center;
+          }
+        }
+      `}</style>
     </div>
   );
 };
