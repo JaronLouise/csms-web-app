@@ -560,7 +560,7 @@ const Home = () => {
               height: 40px;
               width: 100%;
               display: block;
-              background: red;
+              background: transparent;
             }
             .stat-number.huge {
               font-size: 4.5rem !important;
