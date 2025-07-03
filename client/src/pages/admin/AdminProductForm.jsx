@@ -107,12 +107,23 @@ const AdminProductForm = () => {
   ];
 
   useEffect(() => {
+    console.log('=== ADMIN PRODUCT FORM: LOADING ===');
+    console.log('Product ID from params:', id);
+    
     getCategories()
       .then(setCategories)
       .catch(() => setError('Could not load categories.'));
 
     if (id) {
       setLoading(true);
+      
+      // Validate product ID format
+      if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+        setError('Invalid product ID format.');
+        setLoading(false);
+        return;
+      }
+      
       getProductById(id)
         .then(product => {
           setName(product.name);
@@ -150,7 +161,30 @@ const AdminProductForm = () => {
           setFeatures(product.features && product.features.length > 0 ? product.features : ['']);
           
           if (product.technicalSpecs) {
-            const techSpecsArray = Array.from(product.technicalSpecs.entries()).map(([key, value]) => ({ key, value }));
+            console.log('=== TECHNICAL SPECS DEBUG ===');
+            console.log('Type:', typeof product.technicalSpecs);
+            console.log('Is Map:', product.technicalSpecs instanceof Map);
+            console.log('Is Array:', Array.isArray(product.technicalSpecs));
+            console.log('Value:', product.technicalSpecs);
+            
+            let techSpecsArray = [];
+            
+            // Handle different types of technicalSpecs
+            if (product.technicalSpecs instanceof Map) {
+              // If it's a Map object
+              techSpecsArray = Array.from(product.technicalSpecs.entries()).map(([key, value]) => ({ key, value }));
+            } else if (Array.isArray(product.technicalSpecs)) {
+              // If it's an array
+              techSpecsArray = product.technicalSpecs.map(spec => ({
+                key: spec.key || '',
+                value: spec.value || ''
+              }));
+            } else if (typeof product.technicalSpecs === 'object' && product.technicalSpecs !== null) {
+              // If it's a plain object
+              techSpecsArray = Object.entries(product.technicalSpecs).map(([key, value]) => ({ key, value }));
+            }
+            
+            console.log('Processed tech specs:', techSpecsArray);
             setTechnicalSpecs(techSpecsArray.length > 0 ? techSpecsArray : [{ key: '', value: '' }]);
           }
           
@@ -158,7 +192,21 @@ const AdminProductForm = () => {
           setLoading(false);
         })
         .catch(err => {
-          setError('Failed to load product details.');
+          console.error('Error loading product details:', err);
+          console.error('Error response:', err.response);
+          console.error('Error message:', err.message);
+          
+          if (err.response?.status === 404) {
+            setError('Product not found. It may have been deleted.');
+          } else if (err.response?.status === 401) {
+            setError('Authentication required. Please log in again.');
+          } else if (err.response?.status === 403) {
+            setError('Access denied. Admin privileges required.');
+          } else if (err.response?.status === 429) {
+            setError('Too many requests. Please wait a moment and try again.');
+          } else {
+            setError(`Failed to load product details: ${err.message}`);
+          }
           setLoading(false);
         });
     }
@@ -854,6 +902,13 @@ const AdminProductForm = () => {
       {/* Navigation */}
       <div className="step-navigation">
         <div className="nav-left">
+          <button
+            type="button"
+            onClick={() => navigate('/admin/products')}
+            className="btn-cancel"
+          >
+            Cancel
+          </button>
           {currentStep > 1 && (
             <button
               type="button"
@@ -1308,6 +1363,15 @@ const AdminProductForm = () => {
         .btn-submit:disabled {
           background: #6c757d;
           cursor: not-allowed;
+        }
+        
+        .btn-cancel {
+          background: #dc3545;
+          color: white;
+        }
+        
+        .btn-cancel:hover {
+          background: #c82333;
         }
         
         @media (max-width: 768px) {

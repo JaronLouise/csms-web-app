@@ -38,8 +38,23 @@ export const deleteProduct = async (productId) => {
 };
 
 export const getProductById = async (productId) => {
-  const res = await api.get(`/products/${productId}`);
-  return res.data;
+  console.log('=== ADMIN SERVICE: GET PRODUCT BY ID ===');
+  console.log('Product ID:', productId);
+  console.log('Request URL:', `/products/${productId}`);
+  
+  try {
+    const res = await api.get(`/products/${productId}`);
+    console.log('=== ADMIN SERVICE: REQUEST SUCCESSFUL ===');
+    console.log('Response status:', res.status);
+    console.log('Product name:', res.data.name);
+    return res.data;
+  } catch (error) {
+    console.error('=== ADMIN SERVICE: REQUEST FAILED ===');
+    console.error('Error:', error);
+    console.error('Error message:', error.message);
+    console.error('Error response:', error.response);
+    throw error;
+  }
 };
 
 export const getAllOrders = async () => {

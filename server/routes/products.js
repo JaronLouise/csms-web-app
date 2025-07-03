@@ -5,7 +5,8 @@ const {
   getProductById,
   createProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  testConnection
 } = require('../controllers/productController');
 
 const { protect, admin } = require('../middleware/auth');
@@ -13,6 +14,7 @@ const { upload, handleUploadError } = require('../config/upload');
 
 console.log('=== PRODUCTS ROUTES LOADED - UPDATED CODE VERSION ===');
 
+router.get('/test', testConnection);
 router.get('/', getAllProducts);
 router.get('/:id', getProductById);
 router.post('/', protect, admin, upload.single('image'), handleUploadError, createProduct);
