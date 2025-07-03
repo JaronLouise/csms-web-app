@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { getProducts } from '../services/productService';
@@ -59,6 +60,7 @@ const styles = {
 const placeholderImage = '/placeholder.png';
 
 const Product = () => {
+  const navigate = useNavigate();
   const { addToCart, cart } = useCart();
   const { user } = useAuth();
 
@@ -438,35 +440,60 @@ const Product = () => {
                 <h3 style={{ fontSize: '1rem', fontWeight: '600', margin: '0.5rem 0', color: '#000' }}>{product.name}</h3>
                 <p style={{ color: '#10b981', fontWeight: 'bold', margin: '0.25rem 0' }}>₱{product.price.toLocaleString()}</p>
                 <p style={{ fontSize: '0.875rem', color: '#555' }}>{product.description || 'No description available.'}</p>
-                {user?.role !== 'admin' && (
+                <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                   <button 
-                    onClick={() => handleAddToCart(product)} 
+                    onClick={() => navigate(`/product/${product._id}`)}
                     style={{ 
-                      marginTop: 'auto', 
                       width: '100%',
-                      fontSize: '1rem',
+                      fontSize: '0.9rem',
                       fontWeight: '600',
-                      padding: '0.75rem 1.5rem',
+                      padding: '0.6rem 1rem',
                       background: '#000',
                       color: '#fff',
                       border: 'none',
-                      borderRadius: '32px',
+                      borderRadius: '8px',
                       cursor: 'pointer',
-                      transition: 'all 0.2s',
-                      boxShadow: '0 4px 20px rgba(40,167,69,0.13)'
+                      transition: 'all 0.2s'
                     }}
                     onMouseEnter={e => {
                       e.target.style.background = '#222';
-                      e.target.style.transform = 'translateY(-2px)';
+                      e.target.style.transform = 'translateY(-1px)';
                     }}
                     onMouseLeave={e => {
                       e.target.style.background = '#000';
                       e.target.style.transform = 'translateY(0)';
                     }}
                   >
-                    Add to Cart{getProductQuantity(product._id) > 0 ? ` (${getProductQuantity(product._id)})` : ''}
+                    View Details
                   </button>
-                )}
+                  {user?.role !== 'admin' && (
+                    <button 
+                      onClick={() => handleAddToCart(product)} 
+                      style={{ 
+                        width: '100%',
+                        fontSize: '0.9rem',
+                        fontWeight: '600',
+                        padding: '0.6rem 1rem',
+                        background: '#28a745',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s'
+                      }}
+                      onMouseEnter={e => {
+                        e.target.style.background = '#218838';
+                        e.target.style.transform = 'translateY(-1px)';
+                      }}
+                      onMouseLeave={e => {
+                        e.target.style.background = '#28a745';
+                        e.target.style.transform = 'translateY(0)';
+                      }}
+                    >
+                      Add to Cart{getProductQuantity(product._id) > 0 ? ` (${getProductQuantity(product._id)})` : ''}
+                    </button>
+                  )}
+                </div>
               </div>
             ))}
           </div>

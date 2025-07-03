@@ -4,7 +4,7 @@ import { createProduct, updateProduct, getProductById } from '../../services/adm
 import { getCategories, createCategory } from '../../services/categoryService';
 import uploadService from '../../services/uploadService';
 
-const AdminProductForm = () => {
+const AdminProductFormEnhanced = () => {
   // Basic product information
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -45,41 +45,6 @@ const AdminProductForm = () => {
   // Technical specifications
   const [technicalSpecs, setTechnicalSpecs] = useState([{ key: '', value: '' }]);
   
-  // Product variants
-  const [variants, setVariants] = useState([]);
-  const [showVariantForm, setShowVariantForm] = useState(false);
-  const [currentVariant, setCurrentVariant] = useState({
-    name: '',
-    price: '',
-    stock: 0,
-    specifications: []
-  });
-  
-  // Customization options
-  const [isCustomizable, setIsCustomizable] = useState(false);
-  const [customizationOptions, setCustomizationOptions] = useState([]);
-  const [showCustomizationForm, setShowCustomizationForm] = useState(false);
-  const [currentCustomization, setCurrentCustomization] = useState({
-    name: '',
-    type: 'color',
-    options: [''],
-    required: false,
-    price: 0
-  });
-  
-  // Additional information
-  const [manufacturer, setManufacturer] = useState('');
-  const [modelNumber, setModelNumber] = useState('');
-  const [countryOfOrigin, setCountryOfOrigin] = useState('');
-  const [installationInstructions, setInstallationInstructions] = useState('');
-  const [maintenanceGuide, setMaintenanceGuide] = useState('');
-  const [safetyInformation, setSafetyInformation] = useState('');
-  
-  // SEO and metadata
-  const [metaTitle, setMetaTitle] = useState('');
-  const [metaDescription, setMetaDescription] = useState('');
-  const [keywords, setKeywords] = useState('');
-  
   // Images
   const [imageFiles, setImageFiles] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
@@ -105,11 +70,9 @@ const AdminProductForm = () => {
       .catch(() => setError('Could not load categories.'));
 
     if (id) {
-      console.log('Loading product for editing, ID:', id);
       setLoading(true);
       getProductById(id)
         .then(product => {
-          console.log('Product loaded successfully:', product.name);
           setName(product.name);
           setDescription(product.description || '');
           setShortDescription(product.shortDescription || '');
@@ -125,7 +88,6 @@ const AdminProductForm = () => {
           setSalePrice(product.salePrice || '');
           setSaleEndDate(product.saleEndDate ? new Date(product.saleEndDate).toISOString().split('T')[0] : '');
           
-          // Load specifications
           if (product.specifications) {
             setSpecifications({
               capacity: product.specifications.capacity || '',
@@ -143,36 +105,13 @@ const AdminProductForm = () => {
             });
           }
           
-          // Load features
           setFeatures(product.features && product.features.length > 0 ? product.features : ['']);
           
-          // Load technical specs
           if (product.technicalSpecs) {
             const techSpecsArray = Array.from(product.technicalSpecs.entries()).map(([key, value]) => ({ key, value }));
             setTechnicalSpecs(techSpecsArray.length > 0 ? techSpecsArray : [{ key: '', value: '' }]);
           }
           
-          // Load variants
-          setVariants(product.variants || []);
-          
-          // Load customization options
-          setIsCustomizable(product.isCustomizable);
-          setCustomizationOptions(product.customizationOptions || []);
-          
-          // Load additional info
-          setManufacturer(product.manufacturer || '');
-          setModelNumber(product.modelNumber || '');
-          setCountryOfOrigin(product.countryOfOrigin || '');
-          setInstallationInstructions(product.installationInstructions || '');
-          setMaintenanceGuide(product.maintenanceGuide || '');
-          setSafetyInformation(product.safetyInformation || '');
-          
-          // Load SEO
-          setMetaTitle(product.metaTitle || '');
-          setMetaDescription(product.metaDescription || '');
-          setKeywords(product.keywords ? product.keywords.join(', ') : '');
-          
-          // Load images
           if (product.images && product.images.length > 0) {
             setImagePreviews(product.images.map(img => img.url));
           }
@@ -276,34 +215,11 @@ const AdminProductForm = () => {
     setTechnicalSpecs(newSpecs);
   };
 
-  // Variant management
-  const addVariant = () => {
-    setVariants([...variants, currentVariant]);
-    setCurrentVariant({ name: '', price: '', stock: 0, specifications: [] });
-    setShowVariantForm(false);
-  };
-
-  const removeVariant = (index) => {
-    setVariants(variants.filter((_, i) => i !== index));
-  };
-
-  // Customization management
-  const addCustomization = () => {
-    setCustomizationOptions([...customizationOptions, currentCustomization]);
-    setCurrentCustomization({ name: '', type: 'color', options: [''], required: false, price: 0 });
-    setShowCustomizationForm(false);
-  };
-
-  const removeCustomization = (index) => {
-    setCustomizationOptions(customizationOptions.filter((_, i) => i !== index));
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
-    // Validation
     if (!name.trim()) {
       setError('Product name is required');
       setLoading(false);
@@ -352,19 +268,7 @@ const AdminProductForm = () => {
         saleEndDate: saleEndDate || null,
         specifications,
         features: features.filter(f => f.trim() !== ''),
-        technicalSpecs: techSpecsMap,
-        variants,
-        isCustomizable,
-        customizationOptions,
-        manufacturer: manufacturer.trim(),
-        modelNumber: modelNumber.trim(),
-        countryOfOrigin: countryOfOrigin.trim(),
-        installationInstructions: installationInstructions.trim(),
-        maintenanceGuide: maintenanceGuide.trim(),
-        safetyInformation: safetyInformation.trim(),
-        metaTitle: metaTitle.trim(),
-        metaDescription: metaDescription.trim(),
-        keywords: keywords.split(',').map(k => k.trim()).filter(k => k !== '')
+        technicalSpecs: techSpecsMap
       };
 
       if (imageData.length > 0) {
@@ -394,7 +298,7 @@ const AdminProductForm = () => {
       
       {/* Tab Navigation */}
       <div style={{ marginBottom: '20px', borderBottom: '1px solid #ddd' }}>
-        {['basic', 'specifications', 'variants', 'customization', 'seo', 'additional'].map(tab => (
+        {['basic', 'specifications'].map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -751,269 +655,6 @@ const AdminProductForm = () => {
           </div>
         )}
 
-        {/* Variants Tab */}
-        {activeTab === 'variants' && (
-          <div>
-            <h3>Product Variants</h3>
-            {variants.map((variant, index) => (
-              <div key={index} style={{ border: '1px solid #ddd', padding: '15px', marginBottom: '15px', borderRadius: '5px' }}>
-                <h4>{variant.name}</h4>
-                <p>Price: ${variant.price}</p>
-                <p>Stock: {variant.stock}</p>
-                <button type="button" onClick={() => removeVariant(index)} style={{ padding: '8px 16px', background: '#dc3545', color: 'white', border: 'none', borderRadius: '5px' }}>
-                  Remove Variant
-                </button>
-              </div>
-            ))}
-            
-            {showVariantForm ? (
-              <div style={{ border: '1px solid #ddd', padding: '15px', borderRadius: '5px' }}>
-                <h4>Add New Variant</h4>
-                <div style={{ marginBottom: '10px' }}>
-                  <label>Variant Name:</label>
-                  <input 
-                    type="text" 
-                    value={currentVariant.name} 
-                    onChange={e => setCurrentVariant({...currentVariant, name: e.target.value})}
-                    style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                  />
-                </div>
-                <div style={{ marginBottom: '10px' }}>
-                  <label>Price:</label>
-                  <input 
-                    type="number" 
-                    value={currentVariant.price} 
-                    onChange={e => setCurrentVariant({...currentVariant, price: e.target.value})}
-                    step="0.01"
-                    style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                  />
-                </div>
-                <div style={{ marginBottom: '10px' }}>
-                  <label>Stock:</label>
-                  <input 
-                    type="number" 
-                    value={currentVariant.stock} 
-                    onChange={e => setCurrentVariant({...currentVariant, stock: e.target.value})}
-                    min="0"
-                    style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                  />
-                </div>
-                <button type="button" onClick={addVariant} style={{ padding: '8px 16px', background: '#28a745', color: 'white', border: 'none', borderRadius: '5px', marginRight: '10px' }}>
-                  Add Variant
-                </button>
-                <button type="button" onClick={() => setShowVariantForm(false)} style={{ padding: '8px 16px', background: '#6c757d', color: 'white', border: 'none', borderRadius: '5px' }}>
-                  Cancel
-                </button>
-              </div>
-            ) : (
-              <button type="button" onClick={() => setShowVariantForm(true)} style={{ padding: '8px 16px', background: '#28a745', color: 'white', border: 'none', borderRadius: '5px' }}>
-                Add Variant
-              </button>
-            )}
-          </div>
-        )}
-
-        {/* Customization Tab */}
-        {activeTab === 'customization' && (
-          <div>
-            <h3>Customization Options</h3>
-            <div style={{ marginBottom: '15px' }}>
-              <label>
-                <input 
-                  type="checkbox" 
-                  checked={isCustomizable} 
-                  onChange={e => setIsCustomizable(e.target.checked)}
-                  style={{ marginRight: '8px' }}
-                />
-                Product is Customizable
-              </label>
-            </div>
-            
-            {isCustomizable && (
-              <div>
-                {customizationOptions.map((option, index) => (
-                  <div key={index} style={{ border: '1px solid #ddd', padding: '15px', marginBottom: '15px', borderRadius: '5px' }}>
-                    <h4>{option.name}</h4>
-                    <p>Type: {option.type}</p>
-                    <p>Required: {option.required ? 'Yes' : 'No'}</p>
-                    <p>Price: ${option.price}</p>
-                    <button type="button" onClick={() => removeCustomization(index)} style={{ padding: '8px 16px', background: '#dc3545', color: 'white', border: 'none', borderRadius: '5px' }}>
-                      Remove Option
-                    </button>
-                  </div>
-                ))}
-                
-                {showCustomizationForm ? (
-                  <div style={{ border: '1px solid #ddd', padding: '15px', borderRadius: '5px' }}>
-                    <h4>Add Customization Option</h4>
-                    <div style={{ marginBottom: '10px' }}>
-                      <label>Option Name:</label>
-                      <input 
-                        type="text" 
-                        value={currentCustomization.name} 
-                        onChange={e => setCurrentCustomization({...currentCustomization, name: e.target.value})}
-                        style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                      />
-                    </div>
-                    <div style={{ marginBottom: '10px' }}>
-                      <label>Type:</label>
-                      <select 
-                        value={currentCustomization.type} 
-                        onChange={e => setCurrentCustomization({...currentCustomization, type: e.target.value})}
-                        style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                      >
-                        <option value="color">Color</option>
-                        <option value="size">Size</option>
-                        <option value="material">Material</option>
-                        <option value="text">Text</option>
-                        <option value="logo">Logo</option>
-                      </select>
-                    </div>
-                    <div style={{ marginBottom: '10px' }}>
-                      <label>
-                        <input 
-                          type="checkbox" 
-                          checked={currentCustomization.required} 
-                          onChange={e => setCurrentCustomization({...currentCustomization, required: e.target.checked})}
-                          style={{ marginRight: '8px' }}
-                        />
-                        Required
-                      </label>
-                    </div>
-                    <div style={{ marginBottom: '10px' }}>
-                      <label>Additional Price:</label>
-                      <input 
-                        type="number" 
-                        value={currentCustomization.price} 
-                        onChange={e => setCurrentCustomization({...currentCustomization, price: e.target.value})}
-                        step="0.01"
-                        style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                      />
-                    </div>
-                    <button type="button" onClick={addCustomization} style={{ padding: '8px 16px', background: '#28a745', color: 'white', border: 'none', borderRadius: '5px', marginRight: '10px' }}>
-                      Add Option
-                    </button>
-                    <button type="button" onClick={() => setShowCustomizationForm(false)} style={{ padding: '8px 16px', background: '#6c757d', color: 'white', border: 'none', borderRadius: '5px' }}>
-                      Cancel
-                    </button>
-                  </div>
-                ) : (
-                  <button type="button" onClick={() => setShowCustomizationForm(true)} style={{ padding: '8px 16px', background: '#28a745', color: 'white', border: 'none', borderRadius: '5px' }}>
-                    Add Customization Option
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* SEO Tab */}
-        {activeTab === 'seo' && (
-          <div>
-            <h3>SEO & Metadata</h3>
-            
-            <div style={{ marginBottom: '15px' }}>
-              <label>Meta Title:</label>
-              <input 
-                type="text" 
-                value={metaTitle} 
-                onChange={e => setMetaTitle(e.target.value)}
-                placeholder="SEO title for search engines"
-                style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-              />
-            </div>
-            
-            <div style={{ marginBottom: '15px' }}>
-              <label>Meta Description:</label>
-              <textarea 
-                value={metaDescription} 
-                onChange={e => setMetaDescription(e.target.value)}
-                placeholder="SEO description for search engines"
-                style={{ width: '100%', padding: '8px', marginTop: '5px', height: '80px' }}
-              />
-            </div>
-            
-            <div style={{ marginBottom: '15px' }}>
-              <label>Keywords:</label>
-              <input 
-                type="text" 
-                value={keywords} 
-                onChange={e => setKeywords(e.target.value)}
-                placeholder="Comma-separated keywords"
-                style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Additional Information Tab */}
-        {activeTab === 'additional' && (
-          <div>
-            <h3>Additional Information</h3>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
-              <div>
-                <label>Manufacturer:</label>
-                <input 
-                  type="text" 
-                  value={manufacturer} 
-                  onChange={e => setManufacturer(e.target.value)}
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
-              </div>
-              <div>
-                <label>Model Number:</label>
-                <input 
-                  type="text" 
-                  value={modelNumber} 
-                  onChange={e => setModelNumber(e.target.value)}
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
-              </div>
-            </div>
-            
-            <div style={{ marginBottom: '15px' }}>
-              <label>Country of Origin:</label>
-              <input 
-                type="text" 
-                value={countryOfOrigin} 
-                onChange={e => setCountryOfOrigin(e.target.value)}
-                style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-              />
-            </div>
-            
-            <div style={{ marginBottom: '15px' }}>
-              <label>Installation Instructions:</label>
-              <textarea 
-                value={installationInstructions} 
-                onChange={e => setInstallationInstructions(e.target.value)}
-                placeholder="Step-by-step installation guide"
-                style={{ width: '100%', padding: '8px', marginTop: '5px', height: '100px' }}
-              />
-            </div>
-            
-            <div style={{ marginBottom: '15px' }}>
-              <label>Maintenance Guide:</label>
-              <textarea 
-                value={maintenanceGuide} 
-                onChange={e => setMaintenanceGuide(e.target.value)}
-                placeholder="Maintenance and care instructions"
-                style={{ width: '100%', padding: '8px', marginTop: '5px', height: '100px' }}
-              />
-            </div>
-            
-            <div style={{ marginBottom: '15px' }}>
-              <label>Safety Information:</label>
-              <textarea 
-                value={safetyInformation} 
-                onChange={e => setSafetyInformation(e.target.value)}
-                placeholder="Important safety warnings and precautions"
-                style={{ width: '100%', padding: '8px', marginTop: '5px', height: '100px' }}
-              />
-            </div>
-          </div>
-        )}
-
         <div style={{ marginTop: '30px', textAlign: 'center' }}>
           <button 
             type="submit" 
@@ -1037,4 +678,4 @@ const AdminProductForm = () => {
   );
 };
 
-export default AdminProductForm; 
+export default AdminProductFormEnhanced; 

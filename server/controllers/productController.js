@@ -68,7 +68,34 @@ exports.createProduct = async (req, res) => {
     console.log('Request body:', req.body);
     console.log('File uploaded:', req.file);
 
-    const { name, description, price, category, stock } = req.body;
+    const { 
+      name, 
+      description, 
+      shortDescription,
+      detailedDescription,
+      price, 
+      category, 
+      stock,
+      sku,
+      isActive,
+      isFeatured,
+      isNew,
+      isOnSale,
+      salePrice,
+      saleEndDate,
+      specifications,
+      features,
+      technicalSpecs,
+      manufacturer,
+      modelNumber,
+      countryOfOrigin,
+      installationInstructions,
+      maintenanceGuide,
+      safetyInformation,
+      metaTitle,
+      metaDescription,
+      keywords
+    } = req.body;
 
     // Basic validation
     if (!name || !price || !category || !stock) {
@@ -79,9 +106,30 @@ exports.createProduct = async (req, res) => {
     const newProduct = {
       name,
       description,
+      shortDescription,
+      detailedDescription,
       price: Number(price), // Explicit casting
       category,
       stock: Number(stock), // Explicit casting
+      sku,
+      isActive: isActive !== undefined ? isActive : true,
+      isFeatured: isFeatured !== undefined ? isFeatured : false,
+      isNew: isNew !== undefined ? isNew : false,
+      isOnSale: isOnSale !== undefined ? isOnSale : false,
+      salePrice: salePrice ? Number(salePrice) : null,
+      saleEndDate: saleEndDate || null,
+      specifications: specifications || {},
+      features: features || [],
+      technicalSpecs: technicalSpecs || new Map(),
+      manufacturer,
+      modelNumber,
+      countryOfOrigin,
+      installationInstructions,
+      maintenanceGuide,
+      safetyInformation,
+      metaTitle,
+      metaDescription,
+      keywords: keywords ? (Array.isArray(keywords) ? keywords : keywords.split(',').map(k => k.trim())) : [],
       images: []
     };
 
@@ -124,7 +172,34 @@ exports.updateProduct = async (req, res) => {
     console.log('Request body:', req.body);
     console.log('File uploaded:', req.file);
 
-    const { name, description, price, category, stock } = req.body;
+    const { 
+      name, 
+      description, 
+      shortDescription,
+      detailedDescription,
+      price, 
+      category, 
+      stock,
+      sku,
+      isActive,
+      isFeatured,
+      isNew,
+      isOnSale,
+      salePrice,
+      saleEndDate,
+      specifications,
+      features,
+      technicalSpecs,
+      manufacturer,
+      modelNumber,
+      countryOfOrigin,
+      installationInstructions,
+      maintenanceGuide,
+      safetyInformation,
+      metaTitle,
+      metaDescription,
+      keywords
+    } = req.body;
     
     // Add validation for update
     if (!name || !price || !category || !stock) {
@@ -135,9 +210,30 @@ exports.updateProduct = async (req, res) => {
     const updateData = { 
       name, 
       description, 
+      shortDescription,
+      detailedDescription,
       price: Number(price), // Explicit casting
       category, 
-      stock: Number(stock)  // Explicit casting
+      stock: Number(stock),  // Explicit casting
+      sku,
+      isActive: isActive !== undefined ? isActive : true,
+      isFeatured: isFeatured !== undefined ? isFeatured : false,
+      isNew: isNew !== undefined ? isNew : false,
+      isOnSale: isOnSale !== undefined ? isOnSale : false,
+      salePrice: salePrice ? Number(salePrice) : null,
+      saleEndDate: saleEndDate || null,
+      specifications: specifications || {},
+      features: features || [],
+      technicalSpecs: technicalSpecs || new Map(),
+      manufacturer,
+      modelNumber,
+      countryOfOrigin,
+      installationInstructions,
+      maintenanceGuide,
+      safetyInformation,
+      metaTitle,
+      metaDescription,
+      keywords: keywords ? (Array.isArray(keywords) ? keywords : keywords.split(',').map(k => k.trim())) : []
     };
     
     // Handle image updates
