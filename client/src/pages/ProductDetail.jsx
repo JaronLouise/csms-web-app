@@ -78,7 +78,8 @@ const ProductDetail = () => {
         justifyContent: 'center', 
         alignItems: 'center', 
         minHeight: '60vh',
-        fontSize: '18px'
+        fontSize: '18px',
+        color: '#333'
       }}>
         Loading product details...
       </div>
@@ -93,7 +94,8 @@ const ProductDetail = () => {
         justifyContent: 'center', 
         alignItems: 'center', 
         minHeight: '60vh',
-        fontSize: '18px'
+        fontSize: '18px',
+        color: '#333'
       }}>
         <p>{error || 'Product not found'}</p>
         <button 
@@ -285,7 +287,7 @@ const ProductDetail = () => {
             {/* Quantity and Add to Cart */}
             <div style={{ marginBottom: '30px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '15px' }}>
-                <label style={{ fontWeight: '600' }}>Quantity:</label>
+                <label style={{ fontWeight: '600', color: '#333' }}>Quantity:</label>
                 <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #ddd', borderRadius: '5px' }}>
                   <button 
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -294,12 +296,13 @@ const ProductDetail = () => {
                       border: 'none',
                       background: '#f8f9fa',
                       cursor: 'pointer',
-                      fontSize: '18px'
+                      fontSize: '18px',
+                      color: '#333'
                     }}
                   >
                     -
                   </button>
-                  <span style={{ padding: '10px 20px', minWidth: '50px', textAlign: 'center' }}>
+                  <span style={{ padding: '10px 20px', minWidth: '50px', textAlign: 'center', color: '#333' }}>
                     {quantity}
                   </span>
                   <button 
@@ -309,7 +312,8 @@ const ProductDetail = () => {
                       border: 'none',
                       background: '#f8f9fa',
                       cursor: 'pointer',
-                      fontSize: '18px'
+                      fontSize: '18px',
+                      color: '#333'
                     }}
                   >
                     +
@@ -344,25 +348,25 @@ const ProductDetail = () => {
                 borderRadius: '10px',
                 marginBottom: '20px'
               }}>
-                <h3 style={{ marginBottom: '15px', fontSize: '1.2rem' }}>Quick Specifications</h3>
+                <h3 style={{ marginBottom: '15px', fontSize: '1.2rem', color: '#333' }}>Quick Specifications</h3>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                   {product.specifications.capacity && (
-                    <div>
+                    <div style={{ color: '#333' }}>
                       <strong>Capacity:</strong> {product.specifications.capacity}
                     </div>
                   )}
                   {product.specifications.dimensions && (
-                    <div>
+                    <div style={{ color: '#333' }}>
                       <strong>Dimensions:</strong> {product.specifications.dimensions}
                     </div>
                   )}
                   {product.specifications.warranty && (
-                    <div>
+                    <div style={{ color: '#333' }}>
                       <strong>Warranty:</strong> {product.specifications.warranty}
                     </div>
                   )}
                   {product.specifications.efficiency && (
-                    <div>
+                    <div style={{ color: '#333' }}>
                       <strong>Efficiency:</strong> {product.specifications.efficiency}
                     </div>
                   )}
@@ -402,7 +406,7 @@ const ProductDetail = () => {
           <div style={{ minHeight: '200px' }}>
             {activeTab === 'description' && (
               <div>
-                <h3 style={{ marginBottom: '15px' }}>Product Description</h3>
+                <h3 style={{ marginBottom: '15px', color: '#333' }}>Product Description</h3>
                 <div style={{ lineHeight: '1.8', color: '#555' }}>
                   {product.detailedDescription || product.description || 'No description available.'}
                 </div>
@@ -411,7 +415,7 @@ const ProductDetail = () => {
 
             {activeTab === 'specifications' && (
               <div>
-                <h3 style={{ marginBottom: '15px' }}>Technical Specifications</h3>
+                <h3 style={{ marginBottom: '15px', color: '#333' }}>Technical Specifications</h3>
                 
                 {/* Debug Info - Shows what specifications are available */}
                 {process.env.NODE_ENV === 'development' && (
@@ -439,12 +443,13 @@ const ProductDetail = () => {
                         <div key={key} style={{ 
                           padding: '15px', 
                           background: '#f8f9fa', 
-                          borderRadius: '5px' 
+                          borderRadius: '5px',
+                          color: '#333'
                         }}>
-                          <strong style={{ textTransform: 'capitalize' }}>
+                          <strong style={{ textTransform: 'capitalize', color: '#333' }}>
                             {key.replace(/([A-Z])/g, ' $1').trim()}:
                           </strong>
-                          <span style={{ marginLeft: '10px' }}>{value}</span>
+                          <span style={{ marginLeft: '10px', color: '#555' }}>{value}</span>
                         </div>
                       );
                     }
@@ -459,10 +464,11 @@ const ProductDetail = () => {
                           <div key={index} style={{ 
                             padding: '15px', 
                             background: '#f8f9fa', 
-                            borderRadius: '5px' 
+                            borderRadius: '5px',
+                            color: '#333'
                           }}>
-                            <strong>{spec.key || `Spec ${index + 1}`}:</strong>
-                            <span style={{ marginLeft: '10px' }}>{spec.value || ''}</span>
+                            <strong style={{ color: '#333' }}>{spec.key || `Spec ${index + 1}`}:</strong>
+                            <span style={{ marginLeft: '10px', color: '#555' }}>{spec.value || ''}</span>
                           </div>
                         ))
                       ) : (
@@ -471,10 +477,11 @@ const ProductDetail = () => {
                           <div key={key} style={{ 
                             padding: '15px', 
                             background: '#f8f9fa', 
-                            borderRadius: '5px' 
+                            borderRadius: '5px',
+                            color: '#333'
                           }}>
-                            <strong>{key}:</strong>
-                            <span style={{ marginLeft: '10px' }}>{value}</span>
+                            <strong style={{ color: '#333' }}>{key}:</strong>
+                            <span style={{ marginLeft: '10px', color: '#555' }}>{value}</span>
                           </div>
                         ))
                       )}
@@ -504,7 +511,7 @@ const ProductDetail = () => {
 
             {activeTab === 'features' && (
               <div>
-                <h3 style={{ marginBottom: '15px' }}>Product Features</h3>
+                <h3 style={{ marginBottom: '15px', color: '#333' }}>Product Features</h3>
                 {product.features && product.features.length > 0 ? (
                   <ul style={{ listStyle: 'none', padding: 0 }}>
                     {product.features.map((feature, index) => (
@@ -512,7 +519,8 @@ const ProductDetail = () => {
                         padding: '10px 0', 
                         borderBottom: '1px solid #eee',
                         display: 'flex',
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        color: '#333'
                       }}>
                         <span style={{ 
                           color: '#28a745', 
@@ -539,25 +547,25 @@ const ProductDetail = () => {
             borderRadius: '10px',
             marginBottom: '20px'
           }}>
-            <h3 style={{ marginBottom: '15px' }}>Additional Information</h3>
+            <h3 style={{ marginBottom: '15px', color: '#333' }}>Additional Information</h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
               {product.manufacturer && (
-                <div>
+                <div style={{ color: '#333' }}>
                   <strong>Manufacturer:</strong> {product.manufacturer}
                 </div>
               )}
               {product.modelNumber && (
-                <div>
+                <div style={{ color: '#333' }}>
                   <strong>Model Number:</strong> {product.modelNumber}
                 </div>
               )}
               {product.countryOfOrigin && (
-                <div>
+                <div style={{ color: '#333' }}>
                   <strong>Country of Origin:</strong> {product.countryOfOrigin}
                 </div>
               )}
               {product.sku && (
-                <div>
+                <div style={{ color: '#333' }}>
                   <strong>SKU:</strong> {product.sku}
                 </div>
               )}
@@ -568,7 +576,7 @@ const ProductDetail = () => {
         {/* Installation and Safety Info */}
         {(product.installationInstructions || product.maintenanceGuide || product.safetyInformation) && (
           <div style={{ marginBottom: '20px' }}>
-            <h3 style={{ marginBottom: '15px' }}>Product Information</h3>
+            <h3 style={{ marginBottom: '15px', color: '#333' }}>Product Information</h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '15px' }}>
               {product.installationInstructions && (
                 <div style={{ 
@@ -577,7 +585,7 @@ const ProductDetail = () => {
                   borderRadius: '10px' 
                 }}>
                   <h4 style={{ marginBottom: '10px', color: '#28a745' }}>Installation Instructions</h4>
-                  <div style={{ whiteSpace: 'pre-line' }}>{product.installationInstructions}</div>
+                  <div style={{ whiteSpace: 'pre-line', color: '#333' }}>{product.installationInstructions}</div>
                 </div>
               )}
               
@@ -588,7 +596,7 @@ const ProductDetail = () => {
                   borderRadius: '10px' 
                 }}>
                   <h4 style={{ marginBottom: '10px', color: '#28a745' }}>Maintenance Guide</h4>
-                  <div style={{ whiteSpace: 'pre-line' }}>{product.maintenanceGuide}</div>
+                  <div style={{ whiteSpace: 'pre-line', color: '#333' }}>{product.maintenanceGuide}</div>
                 </div>
               )}
               
