@@ -108,7 +108,30 @@ const AdminProductFormEnhanced = () => {
           setFeatures(product.features && product.features.length > 0 ? product.features : ['']);
           
           if (product.technicalSpecs) {
-            const techSpecsArray = Array.from(product.technicalSpecs.entries()).map(([key, value]) => ({ key, value }));
+            console.log('=== TECHNICAL SPECS DEBUG ===');
+            console.log('Type:', typeof product.technicalSpecs);
+            console.log('Is Map:', product.technicalSpecs instanceof Map);
+            console.log('Is Array:', Array.isArray(product.technicalSpecs));
+            console.log('Value:', product.technicalSpecs);
+            
+            let techSpecsArray = [];
+            
+            // Handle different types of technicalSpecs
+            if (product.technicalSpecs instanceof Map) {
+              // If it's a Map object
+              techSpecsArray = Array.from(product.technicalSpecs.entries()).map(([key, value]) => ({ key, value }));
+            } else if (Array.isArray(product.technicalSpecs)) {
+              // If it's an array
+              techSpecsArray = product.technicalSpecs.map(spec => ({
+                key: spec.key || '',
+                value: spec.value || ''
+              }));
+            } else if (typeof product.technicalSpecs === 'object' && product.technicalSpecs !== null) {
+              // If it's a plain object
+              techSpecsArray = Object.entries(product.technicalSpecs).map(([key, value]) => ({ key, value }));
+            }
+            
+            console.log('Processed tech specs:', techSpecsArray);
             setTechnicalSpecs(techSpecsArray.length > 0 ? techSpecsArray : [{ key: '', value: '' }]);
           }
           
@@ -655,7 +678,22 @@ const AdminProductFormEnhanced = () => {
           </div>
         )}
 
-        <div style={{ marginTop: '30px', textAlign: 'center' }}>
+        <div style={{ marginTop: '30px', textAlign: 'center', display: 'flex', gap: '15px', justifyContent: 'center' }}>
+          <button 
+            type="button"
+            onClick={() => navigate('/admin/products')}
+            style={{ 
+              padding: '12px 30px', 
+              background: '#dc3545', 
+              color: 'white', 
+              border: 'none', 
+              borderRadius: '5px',
+              fontSize: '16px',
+              cursor: 'pointer'
+            }}
+          >
+            Cancel
+          </button>
           <button 
             type="submit" 
             disabled={loading || uploadingImages}

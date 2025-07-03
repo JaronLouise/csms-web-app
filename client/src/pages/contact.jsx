@@ -114,7 +114,9 @@ const Contact = () => {
           <div className="contact-header-title">Get in Touch</div>
           <div className="contact-header-sub">Ready to start your project? Contact us today for consultation</div>
           <div className="contact-header-btn-row">
-            <button className="contact-header-btn" onClick={handleContactUs}><span role="img" aria-label="chat">🗨️</span> Send Us a Message</button>
+            {(!user || user.role !== 'admin') && (
+              <button className="contact-header-btn" onClick={handleContactUs}><span role="img" aria-label="chat">🗨️</span> Send Us a Message</button>
+            )}
           </div>
         </div>
         <div className="contact-cards-row">

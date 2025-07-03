@@ -417,24 +417,7 @@ const ProductDetail = () => {
               <div>
                 <h3 style={{ marginBottom: '15px', color: '#333' }}>Technical Specifications</h3>
                 
-                {/* Debug Info - Shows what specifications are available */}
-                {process.env.NODE_ENV === 'development' && (
-                  <div style={{ 
-                    background: '#fff3cd', 
-                    padding: '15px', 
-                    borderRadius: '5px', 
-                    marginBottom: '20px',
-                    border: '1px solid #ffeaa7'
-                  }}>
-                    <h4 style={{ marginBottom: '10px', color: '#856404' }}>Debug Info (Development Only)</h4>
-                    <div style={{ fontSize: '12px', color: '#856404' }}>
-                      <strong>Basic Specs Available:</strong> {product.specifications ? Object.keys(product.specifications).filter(key => product.specifications[key] && product.specifications[key] !== '').join(', ') || 'None' : 'None'}<br/>
-                      <strong>Technical Specs Type:</strong> {product.technicalSpecs ? typeof product.technicalSpecs : 'None'}<br/>
-                      <strong>Technical Specs Count:</strong> {product.technicalSpecs ? (Array.isArray(product.technicalSpecs) ? product.technicalSpecs.length : Object.keys(product.technicalSpecs).length) : 0}<br/>
-                      <strong>Features Count:</strong> {product.features ? product.features.length : 0}
-                    </div>
-                  </div>
-                )}
+
                 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                   {product.specifications && Object.entries(product.specifications).map(([key, value]) => {

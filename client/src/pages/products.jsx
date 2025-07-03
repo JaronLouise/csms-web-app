@@ -82,6 +82,7 @@ const Product = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
+        setError(null);
         const [productsData, categoriesData] = await Promise.all([
           getProducts(),
           getCategories()
@@ -89,7 +90,12 @@ const Product = () => {
         setProducts(productsData);
         setCategories(categoriesData);
       } catch (err) {
-        setError('Failed to load products.');
+        console.error('Error fetching data:', err);
+        if (err.response?.status === 429) {
+          setError('Too many requests. Please wait a moment and try again.');
+        } else {
+          setError('Failed to load products. Please refresh the page.');
+        }
       } finally {
         setLoading(false);
       }
