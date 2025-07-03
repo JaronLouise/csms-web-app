@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
+import { getMyOrders, cancelOrder } from '../services/orderService';
 
 const styles = {
   bgGreen: {
@@ -47,9 +48,30 @@ const Profile = () => {
   const [uploading, setUploading] = useState(false);
   const [profilePic, setProfilePic] = useState(user?.profilePicture || '/placeholder.png');
 
+  const [orders, setOrders] = useState([]);
+  const [ordersLoading, setOrdersLoading] = useState(true);
+  const [ordersError, setOrdersError] = useState(null);
+  const [showOrders, setShowOrders] = useState(false);
+  const [cancelingOrderId, setCancelingOrderId] = useState(null);
+
   useEffect(() => {
     setProfilePic(user?.profilePicture || '/placeholder.png');
   }, [user]);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      setOrdersLoading(true);
+      try {
+        const data = await getMyOrders();
+        setOrders(data);
+      } catch (err) {
+        setOrdersError('Failed to load orders.');
+      } finally {
+        setOrdersLoading(false);
+      }
+    };
+    fetchOrders();
+  }, []);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -194,6 +216,19 @@ const Profile = () => {
     setIsEditing(false);
     setError(null);
     setSuccess(null);
+  };
+
+  const handleCancelOrder = async (orderId) => {
+    if (!window.confirm('Are you sure you want to cancel this order?')) return;
+    setCancelingOrderId(orderId);
+    try {
+      await cancelOrder(orderId);
+      setOrders(orders => orders.map(o => o._id === orderId ? { ...o, status: 'cancelled' } : o));
+    } catch (err) {
+      alert('Failed to cancel order.');
+    } finally {
+      setCancelingOrderId(null);
+    }
   };
 
   return (
@@ -676,16 +711,82 @@ const Profile = () => {
                 {success && <p className="profile-feedback-success">{success}</p>}
               </div>
             )}
-            {/* My Orders Card at the bottom */}
+            {/* My Orders Section at the bottom */}
             <div className="profile-orders-card">
               <div className="profile-orders-title">My Orders</div>
               <div className="profile-orders-desc">View and manage your order history.</div>
-              <Link
-                to="/orders"
+              <button
                 className="profile-orders-btn"
+                style={{ marginBottom: '1.5rem' }}
+                onClick={() => setShowOrders(v => !v)}
               >
-                View Orders
-              </Link>
+                {showOrders ? 'Hide Orders' : 'View Orders'}
+              </button>
+              {showOrders && (
+                ordersLoading ? (
+                  <div style={{ color: '#28a745', fontWeight: 500, margin: '1.5rem 0' }}>Loading orders...</div>
+                ) : ordersError ? (
+                  <div style={{ color: '#dc3545', fontWeight: 500, margin: '1.5rem 0' }}>{ordersError}</div>
+                ) : orders.length === 0 ? (
+                  <div style={{ color: '#888', fontWeight: 500, margin: '1.5rem 0' }}>You have not placed any orders yet.</div>
+                ) : (
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
+                    gap: '1.5rem',
+                    marginTop: '1rem',
+                  }}>
+                    {orders.map(order => (
+                      <div key={order._id} style={{
+                        background: '#fff',
+                        borderRadius: '1rem',
+                        boxShadow: '0 4px 20px rgba(40,167,69,0.08)',
+                        padding: '1.5rem',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        position: 'relative',
+                      }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                          <div style={{ fontWeight: 700, color: '#222', fontSize: 18 }}>Order #{order._id.slice(-6)}</div>
+                          <div style={{
+                            background: order.status === 'pending' ? '#fffbe8' : order.status === 'completed' ? '#e8fbe8' : order.status === 'cancelled' ? '#ffe8e8' : '#e8f4fd',
+                            color: order.status === 'pending' ? '#ffc107' : order.status === 'completed' ? '#28a745' : order.status === 'cancelled' ? '#dc3545' : '#17a2b8',
+                            borderRadius: 16,
+                            padding: '0.25rem 1rem',
+                            fontWeight: 600,
+                            fontSize: 14,
+                            textTransform: 'capitalize',
+                          }}>{order.status.replace('_', ' ')}</div>
+                        </div>
+                        <div style={{ color: '#666', fontSize: 14, marginBottom: 4 }}>
+                          Placed on: {new Date(order.createdAt).toLocaleDateString()}
+                        </div>
+                        <div style={{ color: '#222', fontWeight: 500, marginBottom: 4 }}>
+                          Total: ₱{order.totalAmount?.toLocaleString()}
+                        </div>
+                        <div style={{ color: '#888', fontSize: 13, marginBottom: 8 }}>
+                          {order.items?.slice(0, 3).map((item, idx) => (
+                            <span key={idx}>{item.product?.name || 'Product'} x{item.quantity}{idx < order.items.length - 1 ? ', ' : ''}</span>
+                          ))}
+                          {order.items?.length > 3 && (
+                            <span> +{order.items.length - 3} more</span>
+                          )}
+                        </div>
+                        {order.status === 'pending' && (
+                          <button
+                            className="profile-orders-btn"
+                            style={{ background: '#dc3545', marginTop: 8, fontSize: 14, padding: '0.4rem 1.2rem' }}
+                            onClick={() => handleCancelOrder(order._id)}
+                            disabled={cancelingOrderId === order._id}
+                          >
+                            {cancelingOrderId === order._id ? 'Cancelling...' : 'Cancel Order'}
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )
+              )}
             </div>
           </div>
         </div>
