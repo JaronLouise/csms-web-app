@@ -46,7 +46,7 @@ const Profile = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const [profilePic, setProfilePic] = useState(user?.profilePicture || '/placeholder.png');
+  const [profilePic, setProfilePic] = useState(user?.profilePicture ? user.profilePicture + '?t=' + Date.now() : '/placeholder.png');
 
   const [orders, setOrders] = useState([]);
   const [ordersLoading, setOrdersLoading] = useState(true);
@@ -55,7 +55,11 @@ const Profile = () => {
   const [cancelingOrderId, setCancelingOrderId] = useState(null);
 
   useEffect(() => {
-    setProfilePic(user?.profilePicture || '/placeholder.png');
+    if (user?.profilePicture) {
+      setProfilePic(user.profilePicture + '?t=' + Date.now());
+    } else {
+      setProfilePic('/placeholder.png');
+    }
   }, [user]);
 
   useEffect(() => {
@@ -100,12 +104,13 @@ const Profile = () => {
       setSuccess('Profile picture updated!');
       setSelectedImage(null);
       setPreviewUrl(null);
-      setProfilePic(data.profilePicture); // Update the displayed image immediately
-      
-      // Refresh user data from the backend to get the latest profile picture
-      console.log('🔄 Refreshing user data after profile picture upload...');
-      await refreshUser();
-      console.log('✅ User data refreshed successfully');
+      setProfilePic(data.profilePicture + '?t=' + Date.now());
+      console.log('Profile picture URL from upload response:', data.profilePicture);
+      // Wait 1 second before refreshing user data
+      setTimeout(async () => {
+        await refreshUser();
+        console.log('Profile picture URL from refreshed user:', user?.profilePicture);
+      }, 1000);
       
     } catch (err) {
       console.error('Upload error:', err);

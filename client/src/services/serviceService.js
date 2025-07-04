@@ -4,7 +4,7 @@ export const serviceService = {
   // Get all services
   getServices: async () => {
     try {
-      const response = await fetch(`${API_URL}/services`);
+      const response = await fetch(`${API_URL}/services?t=${Date.now()}`);
       if (!response.ok) {
         throw new Error('Failed to fetch services');
       }
@@ -18,7 +18,7 @@ export const serviceService = {
   // Get single service by ID
   getServiceById: async (id) => {
     try {
-      const response = await fetch(`${API_URL}/services/${id}`);
+      const response = await fetch(`${API_URL}/services/${id}?t=${Date.now()}`);
       if (!response.ok) {
         throw new Error('Failed to fetch service');
       }

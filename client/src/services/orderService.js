@@ -6,12 +6,12 @@ export const createOrder = async (orderData) => {
 };
 
 export const getMyOrders = async () => {
-  const res = await api.get('/orders');
+  const res = await api.get('/orders?t=' + Date.now());
   return res.data;
 };
 
 export const getOrderById = async (orderId) => {
-  const res = await api.get(`/orders/${orderId}`);
+  const res = await api.get(`/orders/${orderId}?t=${Date.now()}`);
   return res.data;
 };
 
