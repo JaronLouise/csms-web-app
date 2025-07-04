@@ -2,6 +2,39 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getAllProducts, deleteProduct } from '../../services/adminService';
 
+// Inject hover effect styles
+if (typeof document !== 'undefined' && !document.getElementById('admin-product-list-hover-effects')) {
+  const style = document.createElement('style');
+  style.id = 'admin-product-list-hover-effects';
+  style.textContent = `
+    .admin-product-card {
+      transition: box-shadow 0.3s cubic-bezier(.4,0,.2,1), transform 0.3s cubic-bezier(.4,0,.2,1);
+    }
+    .admin-product-card:hover {
+      box-shadow: 0 8px 32px rgba(40,167,69,0.13);
+      transform: translateY(-6px) scale(1.01);
+      z-index: 2;
+    }
+    .admin-edit-button, .admin-delete-button, .admin-add-button, .admin-empty-btn {
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+    }
+    .admin-edit-button:hover {
+      transform: scale(1.02) !important;
+      background: #000000 !important;
+      color: white !important;
+    } 
+    .admin-delete-button:hover {
+      transform: scale(1.02);
+    }
+    .admin-add-button:hover, .admin-empty-btn:hover {
+      transform: translateY(-2px) scale(1.02);
+      background: #222 !important;
+      color: #fff !important;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
 const AdminProductList = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -77,7 +110,7 @@ const AdminProductList = () => {
       </div>
       {/* Add New Product Button - upper right above products grid */}
       <div style={styles.addButtonRight}>
-        <Link to="new" style={styles.addButton}>
+        <Link to="new" style={styles.addButton} className="admin-add-button">
           <span style={styles.addIcon} className="material-symbols-outlined">add</span>
           Add New Product
         </Link>
@@ -85,7 +118,7 @@ const AdminProductList = () => {
       {/* Products Grid */}
       <div style={styles.productsGrid}>
         {products.map(product => (
-          <div key={product._id} style={styles.productCard}>
+          <div key={product._id} style={styles.productCard} className="admin-product-card">
             <div style={styles.productImage}>
               {getProductImage(product) ? (
                 <img 
@@ -133,6 +166,7 @@ const AdminProductList = () => {
               <Link 
                 to={`/admin/products/edit/${product._id}`} 
                 style={styles.editButton}
+                className="admin-edit-button"
               >
                 <span style={styles.actionIcon} className="material-symbols-outlined">edit</span>
                 Edit
@@ -141,6 +175,7 @@ const AdminProductList = () => {
                 onClick={() => handleDelete(product._id)} 
                 style={styles.deleteButton}
                 title="Delete Product"
+                className="admin-delete-button"
               >
                 <span style={styles.deleteIcon} className="material-symbols-outlined">delete</span>
               </button>
@@ -155,7 +190,7 @@ const AdminProductList = () => {
           <span style={styles.emptyIcon} className="material-symbols-outlined">inventory_2</span>
           <h3 style={styles.emptyTitle}>No Products Yet</h3>
           <p style={styles.emptyText}>Get started by adding your first product to the catalog.</p>
-          <Link to="new" style={styles.emptyButton}>
+          <Link to="new" style={styles.emptyButton} className="admin-empty-btn">
             Add Your First Product
           </Link>
         </div>
@@ -473,36 +508,5 @@ const styles = {
     textAlign: 'center'
   }
 };
-
-// Add CSS animations
-const styleSheet = document.createElement('style');
-styleSheet.textContent = `
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  
-  .admin-product-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-  }
-  
-  .admin-add-button:hover {
-    background: #218838;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
-  }
-  
-  .admin-edit-button:hover {
-    background: #333333;
-    transform: translateY(-1px);
-  }
-  
-  .admin-delete-button:hover {
-    background: #c82333;
-    transform: translateY(-1px);
-  }
-`;
-document.head.appendChild(styleSheet);
 
 export default AdminProductList; 

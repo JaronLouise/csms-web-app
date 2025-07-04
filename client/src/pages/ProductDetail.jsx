@@ -4,6 +4,76 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { getProductById } from '../services/productService';
 
+// Add hover effects styles
+if (typeof document !== 'undefined' && !document.getElementById('product-detail-hover-effects')) {
+  const style = document.createElement('style');
+  style.id = 'product-detail-hover-effects';
+  style.textContent = `
+    .product-thumbnail {
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+    .product-thumbnail:hover {
+      transform: scale(1.05);
+      border-color: #28a745 !important;
+      box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+    }
+    .product-qty-btn {
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+    }
+    .product-qty-btn:hover {
+      background: #28a745 !important;
+      color: #fff !important;
+      transform: scale(1.1);
+    }
+    .product-add-cart-btn {
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+    .product-add-cart-btn:hover:not(:disabled) {
+      background: #218838 !important;
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+    }
+    .product-tab-btn {
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+    }
+    .product-tab-btn:hover {
+      background: #e8fbe8 !important;
+      color: #28a745 !important;
+      transform: translateY(-1px);
+    }
+    .product-breadcrumb-link {
+      transition: color 0.2s, text-decoration 0.2s;
+    }
+    .product-breadcrumb-link:hover {
+      color: #218838 !important;
+      text-decoration: underline;
+    }
+    .product-spec-card {
+      transition: box-shadow 0.2s, transform 0.2s, background 0.2s;
+    }
+    .product-spec-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+      background: #fff !important;
+    }
+    .product-feature-item {
+      transition: background 0.2s, transform 0.2s;
+    }
+    .product-feature-item:hover {
+      background: #f8f9fa !important;
+      transform: translateX(5px);
+    }
+    .product-info-card {
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .product-info-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+  `;
+  document.head.appendChild(style);
+}
+
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -132,7 +202,7 @@ const ProductDetail = () => {
       }}>
         {/* Breadcrumb */}
         <div style={{ marginBottom: '20px', fontSize: '14px', color: '#666' }}>
-          <span onClick={() => navigate('/products')} style={{ cursor: 'pointer', color: '#28a745' }}>
+          <span onClick={() => navigate('/products')} style={{ cursor: 'pointer', color: '#28a745' }} className="product-breadcrumb-link">
             Products
           </span>
           {' > '}
@@ -180,6 +250,7 @@ const ProductDetail = () => {
                       cursor: 'pointer',
                       background: '#f8f9fa'
                     }}
+                    className="product-thumbnail"
                   >
                     <img 
                       src={getProductImage(index)}
@@ -299,6 +370,7 @@ const ProductDetail = () => {
                       fontSize: '18px',
                       color: '#333'
                     }}
+                    className="product-qty-btn"
                   >
                     -
                   </button>
@@ -315,6 +387,7 @@ const ProductDetail = () => {
                       fontSize: '18px',
                       color: '#333'
                     }}
+                    className="product-qty-btn"
                   >
                     +
                   </button>
@@ -335,6 +408,7 @@ const ProductDetail = () => {
                   fontWeight: '600',
                   cursor: product.stock > 0 ? 'pointer' : 'not-allowed'
                 }}
+                className="product-add-cart-btn"
               >
                 {product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
               </button>
@@ -347,7 +421,7 @@ const ProductDetail = () => {
                 padding: '20px', 
                 borderRadius: '10px',
                 marginBottom: '20px'
-              }}>
+              }} className="product-info-card">
                 <h3 style={{ marginBottom: '15px', fontSize: '1.2rem', color: '#333' }}>Quick Specifications</h3>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                   {product.specifications.capacity && (
@@ -396,6 +470,7 @@ const ProductDetail = () => {
                   fontWeight: '600',
                   borderBottom: activeTab === tab ? '3px solid #28a745' : 'none'
                 }}
+                className="product-tab-btn"
               >
                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
               </button>
@@ -428,7 +503,7 @@ const ProductDetail = () => {
                           background: '#f8f9fa', 
                           borderRadius: '5px',
                           color: '#333'
-                        }}>
+                        }} className="product-spec-card">
                           <strong style={{ textTransform: 'capitalize', color: '#333' }}>
                             {key.replace(/([A-Z])/g, ' $1').trim()}:
                           </strong>
@@ -449,7 +524,7 @@ const ProductDetail = () => {
                             background: '#f8f9fa', 
                             borderRadius: '5px',
                             color: '#333'
-                          }}>
+                          }} className="product-spec-card">
                             <strong style={{ color: '#333' }}>{spec.key || `Spec ${index + 1}`}:</strong>
                             <span style={{ marginLeft: '10px', color: '#555' }}>{spec.value || ''}</span>
                           </div>
@@ -462,7 +537,7 @@ const ProductDetail = () => {
                             background: '#f8f9fa', 
                             borderRadius: '5px',
                             color: '#333'
-                          }}>
+                          }} className="product-spec-card">
                             <strong style={{ color: '#333' }}>{key}:</strong>
                             <span style={{ marginLeft: '10px', color: '#555' }}>{value}</span>
                           </div>
@@ -504,7 +579,7 @@ const ProductDetail = () => {
                         display: 'flex',
                         alignItems: 'center',
                         color: '#333'
-                      }}>
+                      }} className="product-feature-item">
                         <span style={{ 
                           color: '#28a745', 
                           marginRight: '10px',
@@ -529,7 +604,7 @@ const ProductDetail = () => {
             padding: '20px', 
             borderRadius: '10px',
             marginBottom: '20px'
-          }}>
+          }} className="product-info-card">
             <h3 style={{ marginBottom: '15px', color: '#333' }}>Additional Information</h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
               {product.manufacturer && (
@@ -566,7 +641,7 @@ const ProductDetail = () => {
                   background: '#f8f9fa', 
                   padding: '20px', 
                   borderRadius: '10px' 
-                }}>
+                }} className="product-info-card">
                   <h4 style={{ marginBottom: '10px', color: '#28a745' }}>Installation Instructions</h4>
                   <div style={{ whiteSpace: 'pre-line', color: '#333' }}>{product.installationInstructions}</div>
                 </div>
@@ -577,7 +652,7 @@ const ProductDetail = () => {
                   background: '#f8f9fa', 
                   padding: '20px', 
                   borderRadius: '10px' 
-                }}>
+                }} className="product-info-card">
                   <h4 style={{ marginBottom: '10px', color: '#28a745' }}>Maintenance Guide</h4>
                   <div style={{ whiteSpace: 'pre-line', color: '#333' }}>{product.maintenanceGuide}</div>
                 </div>

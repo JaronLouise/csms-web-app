@@ -863,7 +863,13 @@ const AdminProductForm = () => {
   };
 
   return (
-    <div className="product-form-container">
+    <div style={{ 
+      minHeight: '100vh',
+      background: 'linear-gradient(180deg, #b2f0e6 0%, #d0f7c6 70%)',
+      padding: '2rem',
+      fontFamily: 'Poppins, sans-serif'
+    }}>
+      <div className="product-form-container">
       <div className="form-header">
         <h2>{id ? 'Edit Product' : 'Add New Product'}</h2>
         {error && <div className="error-message">{error}</div>}
@@ -955,6 +961,7 @@ const AdminProductForm = () => {
           )}
         </div>
       </div>
+    </div>
       
       <style jsx>{`
         .product-form-container {

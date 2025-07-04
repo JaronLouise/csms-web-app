@@ -11,6 +11,85 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!document.getElementById('admin-dashboard-hover-effects')) {
+      const styleSheet = document.createElement('style');
+      styleSheet.id = 'admin-dashboard-hover-effects';
+      styleSheet.textContent = `
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        @keyframes fadeInUp {
+          0% { opacity: 0; transform: translateY(20px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+        .admin-card {
+          animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+        .admin-card:hover {
+          transform: translateY(-8px) scale(1.02) !important;
+          box-shadow: 0 12px 40px rgba(0,0,0,0.15) !important;
+          border-color: rgba(40, 167, 69, 0.2) !important;
+        }
+        .admin-card:hover .card-icon {
+          transform: scale(1.1) !important;
+          color: #28a745 !important;
+        }
+        .admin-card:hover .card-title {
+          color: #28a745 !important;
+        }
+        .admin-card:hover .card-count {
+          transform: scale(1.05) !important;
+        }
+        .admin-card:hover .card-action {
+          color: #1e7e34 !important;
+          transform: translateX(4px) !important;
+        }
+        .admin-action-button {
+          position: relative;
+          overflow: hidden;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+        .admin-action-button:hover {
+          background: #218838 !important;
+          color: #fff !important;
+          transform: translateY(-3px) scale(1.02) !important;
+          box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3) !important;
+          border-color: #218838 !important;
+        }
+        .admin-action-button .action-icon {
+          color: #fff !important;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+        .admin-action-button:hover .action-icon {
+          transform: scale(1.2) rotate(5deg) !important;
+          color: #fff !important;
+        }
+        .admin-section {
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+        .admin-section:hover {
+          transform: translateY(-2px) !important;
+          box-shadow: 0 8px 30px rgba(0,0,0,0.12) !important;
+        }
+        .admin-card:nth-child(1) { animation-delay: 0.1s; }
+        .admin-card:nth-child(2) { animation-delay: 0.2s; }
+        .admin-card:nth-child(3) { animation-delay: 0.3s; }
+        @media (max-width: 768px) {
+          .admin-card:hover {
+            transform: translateY(-4px) scale(1.01) !important;
+          }
+          .admin-action-button:hover {
+            transform: translateY(-2px) scale(1.01) !important;
+          }
+        }
+      `;
+      document.head.appendChild(styleSheet);
+    }
+  }, []);
+
+  useEffect(() => {
     fetchStats();
   }, []);
 
@@ -83,21 +162,21 @@ const AdminDashboard = () => {
       <div style={styles.statsGrid}>
         {dashboardCards.map((card, index) => (
           <Link key={index} to={card.link} style={styles.cardLink}>
-            <div style={styles.card}>
+            <div style={styles.card} className="admin-card">
               <div style={styles.cardHeader}>
-                <span style={styles.cardIcon} className="material-symbols-outlined">
+                <span style={styles.cardIcon} className="material-symbols-outlined card-icon">
                   {card.icon}
                 </span>
                 <div style={styles.cardInfo}>
-                  <h3 style={styles.cardTitle}>{card.title}</h3>
+                  <h3 style={styles.cardTitle} className="card-title">{card.title}</h3>
                   <p style={styles.cardDescription}>{card.description}</p>
                 </div>
               </div>
               <div style={styles.cardFooter}>
-                <span style={{ ...styles.cardCount, color: card.color }}>
+                <span style={{ ...styles.cardCount, color: card.color }} className="card-count">
                   {card.count}
                 </span>
-                <span style={styles.cardAction}>Manage →</span>
+                <span style={styles.cardAction} className="card-action">Manage →</span>
               </div>
             </div>
           </Link>
@@ -105,19 +184,19 @@ const AdminDashboard = () => {
       </div>
 
       {/* Quick Actions */}
-      <div style={styles.section}>
+      <div style={styles.section} className="admin-section">
         <h2 style={styles.sectionTitle}>Quick Actions</h2>
         <div style={styles.quickActions}>
-          <Link to="/admin/products/new" style={styles.actionButton}>
-            <span style={styles.actionIcon} className="material-symbols-outlined">add</span>
+          <Link to="/admin/products/new" style={styles.actionButton} className="admin-action-button">
+            <span style={styles.actionIcon} className="material-symbols-outlined action-icon">add</span>
             Add New Product
           </Link>
-          <Link to="/admin/orders" style={styles.actionButton}>
-            <span style={styles.actionIcon} className="material-symbols-outlined">analytics</span>
+          <Link to="/admin/orders" style={styles.actionButton} className="admin-action-button">
+            <span style={styles.actionIcon} className="material-symbols-outlined action-icon">analytics</span>
             View Orders
           </Link>
-          <Link to="/admin/users" style={styles.actionButton}>
-            <span style={styles.actionIcon} className="material-symbols-outlined">person</span>
+          <Link to="/admin/users" style={styles.actionButton} className="admin-action-button">
+            <span style={styles.actionIcon} className="material-symbols-outlined action-icon">person</span>
             Manage Users
           </Link>
         </div>
@@ -164,9 +243,11 @@ const styles = {
     borderRadius: '16px',
     padding: '2rem',
     boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-    transition: 'all 0.3s ease',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     border: '1px solid rgba(0,0,0,0.05)',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    position: 'relative',
+    overflow: 'hidden'
   },
   cardHeader: {
     display: 'flex',
@@ -176,7 +257,8 @@ const styles = {
   cardIcon: {
     fontSize: '2.5rem',
     marginRight: '1rem',
-    color: '#6c757d'
+    color: '#6c757d',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
   },
   cardInfo: {
     flex: 1
@@ -185,13 +267,15 @@ const styles = {
     fontSize: '1.5rem',
     fontWeight: '600',
     color: '#2c3e50',
-    margin: '0 0 0.5rem 0'
+    margin: '0 0 0.5rem 0',
+    transition: 'color 0.3s ease'
   },
   cardDescription: {
     fontSize: '0.95rem',
     color: '#6c757d',
     margin: 0,
-    lineHeight: '1.4'
+    lineHeight: '1.4',
+    transition: 'color 0.3s ease'
   },
   cardFooter: {
     display: 'flex',
@@ -202,19 +286,22 @@ const styles = {
   },
   cardCount: {
     fontSize: '2rem',
-    fontWeight: '700'
+    fontWeight: '700',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
   },
   cardAction: {
     fontSize: '0.9rem',
     color: '#28a745',
-    fontWeight: '500'
+    fontWeight: '500',
+    transition: 'all 0.3s ease'
   },
   section: {
     background: 'white',
     borderRadius: '16px',
     padding: '2rem',
     boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-    border: '1px solid rgba(0,0,0,0.05)'
+    border: '1px solid rgba(0,0,0,0.05)',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
   },
   sectionTitle: {
     fontSize: '1.5rem',
@@ -231,17 +318,21 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     padding: '1rem 1.5rem',
-    background: '#f8f9fa',
+    background: '#28a745',
     borderRadius: '12px',
     textDecoration: 'none',
-    color: '#2c3e50',
+    color: '#fff',
     fontWeight: '500',
-    transition: 'all 0.3s ease',
-    border: '1px solid #e9ecef'
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    border: '1px solid #28a745',
+    position: 'relative',
+    overflow: 'hidden'
   },
   actionIcon: {
     fontSize: '1.2rem',
-    marginRight: '0.75rem'
+    marginRight: '0.75rem',
+    color: '#fff',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
   },
   loadingContainer: {
     display: 'flex',
@@ -264,25 +355,5 @@ const styles = {
     fontSize: '1.1rem'
   }
 };
-
-// Add CSS animation for loading spinner
-const styleSheet = document.createElement('style');
-styleSheet.textContent = `
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  
-  .admin-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-  }
-  
-  .admin-action-button:hover {
-    background: #e9ecef;
-    transform: translateY(-2px);
-  }
-`;
-document.head.appendChild(styleSheet);
 
 export default AdminDashboard; 

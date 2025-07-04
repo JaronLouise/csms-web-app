@@ -315,403 +315,417 @@ const AdminProductFormEnhanced = () => {
   if (loading && id) return <p>Loading product details...</p>;
 
   return (
-    <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
-      <h2>{id ? 'Edit Product' : 'Add New Product'}</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      
-      {/* Tab Navigation */}
-      <div style={{ marginBottom: '20px', borderBottom: '1px solid #ddd' }}>
-        {['basic', 'specifications'].map(tab => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            style={{
-              padding: '10px 20px',
-              marginRight: '10px',
-              border: 'none',
-              background: activeTab === tab ? '#28a745' : '#f8f9fa',
-              color: activeTab === tab ? 'white' : '#333',
-              cursor: 'pointer',
-              borderRadius: '5px'
-            }}
-          >
-            {tab.charAt(0).toUpperCase() + tab.slice(1)}
-          </button>
-        ))}
-      </div>
-
-      <form onSubmit={handleSubmit}>
-        {/* Basic Information Tab */}
-        {activeTab === 'basic' && (
-          <div>
-            <div style={{ marginBottom: '15px' }}>
-              <label>Product Name *:</label>
-              <input 
-                type="text" 
-                value={name} 
-                onChange={e => setName(e.target.value)} 
-                required 
-                style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-              />
-            </div>
-            
-            <div style={{ marginBottom: '15px' }}>
-              <label>Short Description:</label>
-              <textarea 
-                value={shortDescription} 
-                onChange={e => setShortDescription(e.target.value)}
-                placeholder="Brief description for product cards"
-                style={{ width: '100%', padding: '8px', marginTop: '5px', height: '60px' }}
-              />
-            </div>
-            
-            <div style={{ marginBottom: '15px' }}>
-              <label>Detailed Description:</label>
-              <textarea 
-                value={detailedDescription} 
-                onChange={e => setDetailedDescription(e.target.value)}
-                placeholder="Comprehensive description for product detail page"
-                style={{ width: '100%', padding: '8px', marginTop: '5px', height: '120px' }}
-              />
-            </div>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
-              <div>
-                <label>Price *:</label>
-                <input 
-                  type="number" 
-                  value={price} 
-                  onChange={e => setPrice(e.target.value)} 
-                  required 
-                  step="0.01"
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
-              </div>
-              <div>
-                <label>Stock:</label>
-                <input 
-                  type="number" 
-                  value={stock} 
-                  onChange={e => setStock(e.target.value)} 
-                  min="0"
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
-              </div>
-            </div>
-            
-            <div style={{ marginBottom: '15px' }}>
-              <label>Category *:</label>
-              <select value={category} onChange={handleCategoryChange} required style={{ width: '100%', padding: '8px', marginTop: '5px' }}>
-                <option value="">Select Category</option>
-                {categories.map(cat => (
-                  <option key={cat._id} value={cat._id}>{cat.name}</option>
-                ))}
-                <option value="new">+ Add New Category</option>
-              </select>
-            </div>
-            
-            {showNewCategoryForm && (
-              <div style={{ marginBottom: '15px', padding: '15px', border: '1px solid #ddd', borderRadius: '5px' }}>
-                <label>New Category Name:</label>
-                <input 
-                  type="text" 
-                  value={newCategoryName} 
-                  onChange={e => setNewCategoryName(e.target.value)}
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
-                <button type="button" onClick={handleCreateCategory} disabled={creatingCategory} style={{ marginTop: '10px', padding: '8px 16px', background: '#28a745', color: 'white', border: 'none', borderRadius: '5px' }}>
-                  {creatingCategory ? 'Creating...' : 'Create Category'}
-                </button>
-              </div>
-            )}
-            
-            <div style={{ marginBottom: '15px' }}>
-              <label>SKU:</label>
-              <input 
-                type="text" 
-                value={sku} 
-                onChange={e => setSku(e.target.value)}
-                placeholder="Stock Keeping Unit"
-                style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-              />
-            </div>
-            
-            <div style={{ marginBottom: '15px' }}>
-              <label>Images:</label>
-              <input 
-                type="file" 
-                multiple 
-                accept="image/*"
-                onChange={handleImageChange}
-                style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-              />
-              {imagePreviews.length > 0 && (
-                <div style={{ display: 'flex', gap: '10px', marginTop: '10px', flexWrap: 'wrap' }}>
-                  {imagePreviews.map((preview, index) => (
-                    <img key={index} src={preview} alt={`Preview ${index + 1}`} style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '5px' }} />
-                  ))}
-                </div>
-              )}
-            </div>
-            
-            <div style={{ marginBottom: '15px' }}>
-              <label>
-                <input 
-                  type="checkbox" 
-                  checked={isActive} 
-                  onChange={e => setIsActive(e.target.checked)}
-                  style={{ marginRight: '8px' }}
-                />
-                Active
-              </label>
-              <label style={{ marginLeft: '20px' }}>
-                <input 
-                  type="checkbox" 
-                  checked={isFeatured} 
-                  onChange={e => setIsFeatured(e.target.checked)}
-                  style={{ marginRight: '8px' }}
-                />
-                Featured
-              </label>
-              <label style={{ marginLeft: '20px' }}>
-                <input 
-                  type="checkbox" 
-                  checked={isNew} 
-                  onChange={e => setIsNew(e.target.checked)}
-                  style={{ marginRight: '8px' }}
-                />
-                New Product
-              </label>
-            </div>
-            
-            <div style={{ marginBottom: '15px' }}>
-              <label>
-                <input 
-                  type="checkbox" 
-                  checked={isOnSale} 
-                  onChange={e => setIsOnSale(e.target.checked)}
-                  style={{ marginRight: '8px' }}
-                />
-                On Sale
-              </label>
-              {isOnSale && (
-                <div style={{ marginTop: '10px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-                  <div>
-                    <label>Sale Price:</label>
-                    <input 
-                      type="number" 
-                      value={salePrice} 
-                      onChange={e => setSalePrice(e.target.value)}
-                      step="0.01"
-                      style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                    />
-                  </div>
-                  <div>
-                    <label>Sale End Date:</label>
-                    <input 
-                      type="date" 
-                      value={saleEndDate} 
-                      onChange={e => setSaleEndDate(e.target.value)}
-                      style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Specifications Tab */}
-        {activeTab === 'specifications' && (
-          <div>
-            <h3>Product Specifications</h3>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
-              <div>
-                <label>Capacity:</label>
-                <input 
-                  type="text" 
-                  value={specifications.capacity} 
-                  onChange={e => setSpecifications({...specifications, capacity: e.target.value})}
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
-              </div>
-              <div>
-                <label>Dimensions:</label>
-                <input 
-                  type="text" 
-                  value={specifications.dimensions} 
-                  onChange={e => setSpecifications({...specifications, dimensions: e.target.value})}
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
-              </div>
-            </div>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
-              <div>
-                <label>Warranty:</label>
-                <input 
-                  type="text" 
-                  value={specifications.warranty} 
-                  onChange={e => setSpecifications({...specifications, warranty: e.target.value})}
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
-              </div>
-              <div>
-                <label>Efficiency:</label>
-                <input 
-                  type="text" 
-                  value={specifications.efficiency} 
-                  onChange={e => setSpecifications({...specifications, efficiency: e.target.value})}
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
-              </div>
-            </div>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
-              <div>
-                <label>Weight:</label>
-                <input 
-                  type="text" 
-                  value={specifications.weight} 
-                  onChange={e => setSpecifications({...specifications, weight: e.target.value})}
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
-              </div>
-              <div>
-                <label>Material:</label>
-                <input 
-                  type="text" 
-                  value={specifications.material} 
-                  onChange={e => setSpecifications({...specifications, material: e.target.value})}
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
-              </div>
-            </div>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
-              <div>
-                <label>Power Output:</label>
-                <input 
-                  type="text" 
-                  value={specifications.powerOutput} 
-                  onChange={e => setSpecifications({...specifications, powerOutput: e.target.value})}
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
-              </div>
-              <div>
-                <label>Voltage:</label>
-                <input 
-                  type="text" 
-                  value={specifications.voltage} 
-                  onChange={e => setSpecifications({...specifications, voltage: e.target.value})}
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
-              </div>
-            </div>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
-              <div>
-                <label>Current:</label>
-                <input 
-                  type="text" 
-                  value={specifications.current} 
-                  onChange={e => setSpecifications({...specifications, current: e.target.value})}
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
-              </div>
-              <div>
-                <label>Operating Temperature:</label>
-                <input 
-                  type="text" 
-                  value={specifications.operatingTemperature} 
-                  onChange={e => setSpecifications({...specifications, operatingTemperature: e.target.value})}
-                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-                />
-              </div>
-            </div>
-            
-            <h4>Product Features</h4>
-            {features.map((feature, index) => (
-              <div key={index} style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
-                <input 
-                  type="text" 
-                  value={feature} 
-                  onChange={e => updateFeature(index, e.target.value)}
-                  placeholder="Enter feature"
-                  style={{ flex: 1, padding: '8px' }}
-                />
-                <button type="button" onClick={() => removeFeature(index)} style={{ padding: '8px 16px', background: '#dc3545', color: 'white', border: 'none', borderRadius: '5px' }}>
-                  Remove
-                </button>
-              </div>
-            ))}
-            <button type="button" onClick={addFeature} style={{ padding: '8px 16px', background: '#28a745', color: 'white', border: 'none', borderRadius: '5px' }}>
-              Add Feature
+    <div style={{ 
+      minHeight: '100vh',
+      background: 'linear-gradient(180deg, #b2f0e6 0%, #d0f7c6 70%)',
+      padding: '2rem',
+      fontFamily: 'Poppins, sans-serif'
+    }}>
+      <div style={{ 
+        maxWidth: '1200px', 
+        margin: '0 auto',
+        background: 'white',
+        borderRadius: '16px',
+        boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
+        padding: '2rem'
+      }}>
+        <h2>{id ? 'Edit Product' : 'Add New Product'}</h2>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        
+        {/* Tab Navigation */}
+        <div style={{ marginBottom: '20px', borderBottom: '1px solid #ddd' }}>
+          {['basic', 'specifications'].map(tab => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              style={{
+                padding: '10px 20px',
+                marginRight: '10px',
+                border: 'none',
+                background: activeTab === tab ? '#28a745' : '#f8f9fa',
+                color: activeTab === tab ? 'white' : '#333',
+                cursor: 'pointer',
+                borderRadius: '5px'
+              }}
+            >
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
             </button>
-            
-            <h4>Technical Specifications</h4>
-            {technicalSpecs.map((spec, index) => (
-              <div key={index} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '10px', marginBottom: '10px' }}>
-                <input 
-                  type="text" 
-                  value={spec.key} 
-                  onChange={e => updateTechnicalSpec(index, 'key', e.target.value)}
-                  placeholder="Specification name"
-                  style={{ padding: '8px' }}
-                />
-                <input 
-                  type="text" 
-                  value={spec.value} 
-                  onChange={e => updateTechnicalSpec(index, 'value', e.target.value)}
-                  placeholder="Specification value"
-                  style={{ padding: '8px' }}
-                />
-                <button type="button" onClick={() => removeTechnicalSpec(index)} style={{ padding: '8px 16px', background: '#dc3545', color: 'white', border: 'none', borderRadius: '5px' }}>
-                  Remove
-                </button>
-              </div>
-            ))}
-            <button type="button" onClick={addTechnicalSpec} style={{ padding: '8px 16px', background: '#28a745', color: 'white', border: 'none', borderRadius: '5px' }}>
-              Add Technical Spec
-            </button>
-          </div>
-        )}
-
-        <div style={{ marginTop: '30px', textAlign: 'center', display: 'flex', gap: '15px', justifyContent: 'center' }}>
-          <button 
-            type="button"
-            onClick={() => navigate('/admin/products')}
-            style={{ 
-              padding: '12px 30px', 
-              background: '#dc3545', 
-              color: 'white', 
-              border: 'none', 
-              borderRadius: '5px',
-              fontSize: '16px',
-              cursor: 'pointer'
-            }}
-          >
-            Cancel
-          </button>
-          <button 
-            type="submit" 
-            disabled={loading || uploadingImages}
-            style={{ 
-              padding: '12px 30px', 
-              background: '#28a745', 
-              color: 'white', 
-              border: 'none', 
-              borderRadius: '5px',
-              fontSize: '16px',
-              cursor: loading || uploadingImages ? 'not-allowed' : 'pointer',
-              opacity: loading || uploadingImages ? 0.6 : 1
-            }}
-          >
-            {loading ? 'Saving...' : uploadingImages ? 'Uploading Images...' : (id ? 'Update Product' : 'Create Product')}
-          </button>
+          ))}
         </div>
-      </form>
+
+        <form onSubmit={handleSubmit}>
+          {/* Basic Information Tab */}
+          {activeTab === 'basic' && (
+            <div>
+              <div style={{ marginBottom: '15px' }}>
+                <label>Product Name *:</label>
+                <input 
+                  type="text" 
+                  value={name} 
+                  onChange={e => setName(e.target.value)} 
+                  required 
+                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+                />
+              </div>
+              
+              <div style={{ marginBottom: '15px' }}>
+                <label>Short Description:</label>
+                <textarea 
+                  value={shortDescription} 
+                  onChange={e => setShortDescription(e.target.value)}
+                  placeholder="Brief description for product cards"
+                  style={{ width: '100%', padding: '8px', marginTop: '5px', height: '60px' }}
+                />
+              </div>
+              
+              <div style={{ marginBottom: '15px' }}>
+                <label>Detailed Description:</label>
+                <textarea 
+                  value={detailedDescription} 
+                  onChange={e => setDetailedDescription(e.target.value)}
+                  placeholder="Comprehensive description for product detail page"
+                  style={{ width: '100%', padding: '8px', marginTop: '5px', height: '120px' }}
+                />
+              </div>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
+                <div>
+                  <label>Price *:</label>
+                  <input 
+                    type="number" 
+                    value={price} 
+                    onChange={e => setPrice(e.target.value)} 
+                    required 
+                    step="0.01"
+                    style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+                  />
+                </div>
+                <div>
+                  <label>Stock:</label>
+                  <input 
+                    type="number" 
+                    value={stock} 
+                    onChange={e => setStock(e.target.value)} 
+                    min="0"
+                    style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+                  />
+                </div>
+              </div>
+              
+              <div style={{ marginBottom: '15px' }}>
+                <label>Category *:</label>
+                <select value={category} onChange={handleCategoryChange} required style={{ width: '100%', padding: '8px', marginTop: '5px' }}>
+                  <option value="">Select Category</option>
+                  {categories.map(cat => (
+                    <option key={cat._id} value={cat._id}>{cat.name}</option>
+                  ))}
+                  <option value="new">+ Add New Category</option>
+                </select>
+              </div>
+              
+              {showNewCategoryForm && (
+                <div style={{ marginBottom: '15px', padding: '15px', border: '1px solid #ddd', borderRadius: '5px' }}>
+                  <label>New Category Name:</label>
+                  <input 
+                    type="text" 
+                    value={newCategoryName} 
+                    onChange={e => setNewCategoryName(e.target.value)}
+                    style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+                  />
+                  <button type="button" onClick={handleCreateCategory} disabled={creatingCategory} style={{ marginTop: '10px', padding: '8px 16px', background: '#28a745', color: 'white', border: 'none', borderRadius: '5px' }}>
+                    {creatingCategory ? 'Creating...' : 'Create Category'}
+                  </button>
+                </div>
+              )}
+              
+              <div style={{ marginBottom: '15px' }}>
+                <label>SKU:</label>
+                <input 
+                  type="text" 
+                  value={sku} 
+                  onChange={e => setSku(e.target.value)}
+                  placeholder="Stock Keeping Unit"
+                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+                />
+              </div>
+              
+              <div style={{ marginBottom: '15px' }}>
+                <label>Images:</label>
+                <input 
+                  type="file" 
+                  multiple 
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+                />
+                {imagePreviews.length > 0 && (
+                  <div style={{ display: 'flex', gap: '10px', marginTop: '10px', flexWrap: 'wrap' }}>
+                    {imagePreviews.map((preview, index) => (
+                      <img key={index} src={preview} alt={`Preview ${index + 1}`} style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '5px' }} />
+                    ))}
+                  </div>
+                )}
+              </div>
+              
+              <div style={{ marginBottom: '15px' }}>
+                <label>
+                  <input 
+                    type="checkbox" 
+                    checked={isActive} 
+                    onChange={e => setIsActive(e.target.checked)}
+                    style={{ marginRight: '8px' }}
+                  />
+                  Active
+                </label>
+                <label style={{ marginLeft: '20px' }}>
+                  <input 
+                    type="checkbox" 
+                    checked={isFeatured} 
+                    onChange={e => setIsFeatured(e.target.checked)}
+                    style={{ marginRight: '8px' }}
+                  />
+                  Featured
+                </label>
+                <label style={{ marginLeft: '20px' }}>
+                  <input 
+                    type="checkbox" 
+                    checked={isNew} 
+                    onChange={e => setIsNew(e.target.checked)}
+                    style={{ marginRight: '8px' }}
+                  />
+                  New Product
+                </label>
+              </div>
+              
+              <div style={{ marginBottom: '15px' }}>
+                <label>
+                  <input 
+                    type="checkbox" 
+                    checked={isOnSale} 
+                    onChange={e => setIsOnSale(e.target.checked)}
+                    style={{ marginRight: '8px' }}
+                  />
+                  On Sale
+                </label>
+                {isOnSale && (
+                  <div style={{ marginTop: '10px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                    <div>
+                      <label>Sale Price:</label>
+                      <input 
+                        type="number" 
+                        value={salePrice} 
+                        onChange={e => setSalePrice(e.target.value)}
+                        step="0.01"
+                        style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+                      />
+                    </div>
+                    <div>
+                      <label>Sale End Date:</label>
+                      <input 
+                        type="date" 
+                        value={saleEndDate} 
+                        onChange={e => setSaleEndDate(e.target.value)}
+                        style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Specifications Tab */}
+          {activeTab === 'specifications' && (
+            <div>
+              <h3>Product Specifications</h3>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
+                <div>
+                  <label>Capacity:</label>
+                  <input 
+                    type="text" 
+                    value={specifications.capacity} 
+                    onChange={e => setSpecifications({...specifications, capacity: e.target.value})}
+                    style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+                  />
+                </div>
+                <div>
+                  <label>Dimensions:</label>
+                  <input 
+                    type="text" 
+                    value={specifications.dimensions} 
+                    onChange={e => setSpecifications({...specifications, dimensions: e.target.value})}
+                    style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+                  />
+                </div>
+              </div>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
+                <div>
+                  <label>Warranty:</label>
+                  <input 
+                    type="text" 
+                    value={specifications.warranty} 
+                    onChange={e => setSpecifications({...specifications, warranty: e.target.value})}
+                    style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+                  />
+                </div>
+                <div>
+                  <label>Efficiency:</label>
+                  <input 
+                    type="text" 
+                    value={specifications.efficiency} 
+                    onChange={e => setSpecifications({...specifications, efficiency: e.target.value})}
+                    style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+                  />
+                </div>
+              </div>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
+                <div>
+                  <label>Weight:</label>
+                  <input 
+                    type="text" 
+                    value={specifications.weight} 
+                    onChange={e => setSpecifications({...specifications, weight: e.target.value})}
+                    style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+                  />
+                </div>
+                <div>
+                  <label>Material:</label>
+                  <input 
+                    type="text" 
+                    value={specifications.material} 
+                    onChange={e => setSpecifications({...specifications, material: e.target.value})}
+                    style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+                  />
+                </div>
+              </div>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
+                <div>
+                  <label>Power Output:</label>
+                  <input 
+                    type="text" 
+                    value={specifications.powerOutput} 
+                    onChange={e => setSpecifications({...specifications, powerOutput: e.target.value})}
+                    style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+                  />
+                </div>
+                <div>
+                  <label>Voltage:</label>
+                  <input 
+                    type="text" 
+                    value={specifications.voltage} 
+                    onChange={e => setSpecifications({...specifications, voltage: e.target.value})}
+                    style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+                  />
+                </div>
+              </div>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
+                <div>
+                  <label>Current:</label>
+                  <input 
+                    type="text" 
+                    value={specifications.current} 
+                    onChange={e => setSpecifications({...specifications, current: e.target.value})}
+                    style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+                  />
+                </div>
+                <div>
+                  <label>Operating Temperature:</label>
+                  <input 
+                    type="text" 
+                    value={specifications.operatingTemperature} 
+                    onChange={e => setSpecifications({...specifications, operatingTemperature: e.target.value})}
+                    style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+                  />
+                </div>
+              </div>
+              
+              <h4>Product Features</h4>
+              {features.map((feature, index) => (
+                <div key={index} style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+                  <input 
+                    type="text" 
+                    value={feature} 
+                    onChange={e => updateFeature(index, e.target.value)}
+                    placeholder="Enter feature"
+                    style={{ flex: 1, padding: '8px' }}
+                  />
+                  <button type="button" onClick={() => removeFeature(index)} style={{ padding: '8px 16px', background: '#dc3545', color: 'white', border: 'none', borderRadius: '5px' }}>
+                    Remove
+                  </button>
+                </div>
+              ))}
+              <button type="button" onClick={addFeature} style={{ padding: '8px 16px', background: '#28a745', color: 'white', border: 'none', borderRadius: '5px' }}>
+                Add Feature
+              </button>
+              
+              <h4>Technical Specifications</h4>
+              {technicalSpecs.map((spec, index) => (
+                <div key={index} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '10px', marginBottom: '10px' }}>
+                  <input 
+                    type="text" 
+                    value={spec.key} 
+                    onChange={e => updateTechnicalSpec(index, 'key', e.target.value)}
+                    placeholder="Specification name"
+                    style={{ padding: '8px' }}
+                  />
+                  <input 
+                    type="text" 
+                    value={spec.value} 
+                    onChange={e => updateTechnicalSpec(index, 'value', e.target.value)}
+                    placeholder="Specification value"
+                    style={{ padding: '8px' }}
+                  />
+                  <button type="button" onClick={() => removeTechnicalSpec(index)} style={{ padding: '8px 16px', background: '#dc3545', color: 'white', border: 'none', borderRadius: '5px' }}>
+                    Remove
+                  </button>
+                </div>
+              ))}
+              <button type="button" onClick={addTechnicalSpec} style={{ padding: '8px 16px', background: '#28a745', color: 'white', border: 'none', borderRadius: '5px' }}>
+                Add Technical Spec
+              </button>
+            </div>
+          )}
+
+          <div style={{ marginTop: '30px', textAlign: 'center', display: 'flex', gap: '15px', justifyContent: 'center' }}>
+            <button 
+              type="button"
+              onClick={() => navigate('/admin/products')}
+              style={{ 
+                padding: '12px 30px', 
+                background: '#dc3545', 
+                color: 'white', 
+                border: 'none', 
+                borderRadius: '5px',
+                fontSize: '16px',
+                cursor: 'pointer'
+              }}
+            >
+              Cancel
+            </button>
+            <button 
+              type="submit" 
+              disabled={loading || uploadingImages}
+              style={{ 
+                padding: '12px 30px', 
+                background: '#28a745', 
+                color: 'white', 
+                border: 'none', 
+                borderRadius: '5px',
+                fontSize: '16px',
+                cursor: loading || uploadingImages ? 'not-allowed' : 'pointer',
+                opacity: loading || uploadingImages ? 0.6 : 1
+              }}
+            >
+              {loading ? 'Saving...' : uploadingImages ? 'Uploading Images...' : (id ? 'Update Product' : 'Create Product')}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
