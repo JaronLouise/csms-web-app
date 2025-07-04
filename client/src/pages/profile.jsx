@@ -618,8 +618,8 @@ const Profile = () => {
                   onClick={handleUpload}
                   disabled={uploading}
                   style={{
-                    background: 'linear-gradient(90deg, #e8fbe8 0%, #28a745 100%)',
-                    color: '#222',
+                    background: '#22c55e',
+                    color: '#fff',
                     border: 'none',
                     borderRadius: '32px',
                     padding: '0.75rem 1.5rem',
@@ -628,15 +628,7 @@ const Profile = () => {
                     marginBottom: '0.5rem',
                     marginTop: '-0.5rem',
                     boxShadow: '0 4px 20px rgba(40,167,69,0.13)',
-                    transition: 'all 0.3s ease',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.transform = 'translateY(-2px)';
-                    e.target.style.boxShadow = '0 8px 32px rgba(40,167,69,0.25)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.transform = 'translateY(0)';
-                    e.target.style.boxShadow = '0 4px 20px rgba(40,167,69,0.13)';
+                    transition: 'background 0.2s',
                   }}
                 >
                   {uploading ? 'Uploading...' : 'Upload'}

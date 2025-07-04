@@ -45,6 +45,7 @@ const AdminUserList = () => {
   const getRoleIcon = (role) => {
     switch (role) {
       case 'admin': return 'admin_panel_settings';
+      case 'customer': return 'person';
       case 'user': return 'person';
       default: return 'help';
     }
@@ -61,9 +62,9 @@ const AdminUserList = () => {
   if (loading) {
     return (
       <div style={styles.container}>
-        <div style={styles.loadingContainer}>
-          <div style={styles.loadingSpinner}></div>
-          <p style={styles.loadingText}>Loading users...</p>
+        <div style={styles.loadingContainerUser}>
+          <div style={styles.loadingSpinnerUser}></div>
+          <p style={styles.loadingTextUser}>Loading users...</p>
         </div>
       </div>
     );
@@ -72,9 +73,9 @@ const AdminUserList = () => {
   if (error) {
     return (
       <div style={styles.container}>
-        <div style={styles.errorContainer}>
-          <span style={styles.errorIcon} className="material-symbols-outlined">warning</span>
-          <p style={styles.errorText}>{error}</p>
+        <div style={styles.errorContainerUser}>
+          <span style={styles.errorIconUser} className="material-symbols-outlined">warning</span>
+          <p style={styles.errorTextUser}>{error}</p>
         </div>
       </div>
     );
@@ -83,87 +84,75 @@ const AdminUserList = () => {
   return (
     <div style={styles.container}>
       {/* Header */}
-      <div style={styles.header}>
-        <div style={styles.headerContent}>
-          <h1 style={styles.title}>User Management</h1>
-          <p style={styles.subtitle}>Manage user accounts and permissions</p>
+      <div style={styles.headerOMatchTextBlock}>
+        <h1 style={styles.headerTitleOMatch}>User Management</h1>
+        <p style={styles.headerSubtitleOMatch}>Manage user accounts and roles</p>
+      </div>
+      <div style={styles.headerStatsOMatchBoxRight}>
+        <div style={styles.headerStatBoxOMatch}>
+          <span style={styles.headerStatNumberOMatch}>{users.filter(u => u.role === 'customer').length}</span>
+          <span style={styles.headerStatLabelOMatch}>Total Users</span>
         </div>
-        <div style={styles.stats}>
-          <div style={styles.statCard}>
-            <span style={styles.statNumber}>{users.length}</span>
-            <span style={styles.statLabel}>Total Users</span>
-          </div>
-          <div style={styles.statCard}>
-            <span style={styles.statNumber}>
-              {users.filter(user => user.role === 'admin').length}
-            </span>
-            <span style={styles.statLabel}>Admins</span>
-          </div>
+        <div style={styles.headerStatBoxOMatch}>
+          <span style={styles.headerStatNumberOMatch}>{users.filter(u => u.role === 'admin').length}</span>
+          <span style={styles.headerStatLabelOMatch}>Admins</span>
         </div>
       </div>
 
       {/* Users Grid */}
-      <div style={styles.usersGrid}>
+      <div style={styles.usersGridUser}>
         {users.map((user) => (
-          <div key={user._id} style={styles.userCard}>
-            <div style={styles.userHeader}>
-              <div style={styles.userAvatar}>
-                <span style={styles.avatarText}>
-                  {user.name?.charAt(0).toUpperCase() || 'U'}
-                </span>
+          <div key={user._id} style={styles.userCardUser} className="admin-product-card">
+            <div style={styles.userCardTopUser}>
+              <div style={styles.userAvatarUser}>
+                {user.profilePicture ? (
+                  <img
+                    src={`${user.profilePicture}${user.profilePicture.includes('?') ? '&' : '?'}t=${Date.now()}`}
+                    alt={user.name || 'User'}
+                    style={styles.avatarImgUser}
+                  />
+                ) : (
+                  <span style={styles.avatarTextUser}>
+                    {user.name?.charAt(0).toUpperCase() || 'U'}
+                  </span>
+                )}
               </div>
-              <div style={styles.userInfo}>
-                <h3 style={styles.userName}>{user.name}</h3>
-                <p style={styles.userEmail}>{user.email}</p>
-              </div>
-              <div style={{
-                ...styles.roleBadge,
-                backgroundColor: getRoleColor(user.role)
-              }}>
-                <span style={styles.roleIcon} className="material-symbols-outlined">
-                  {getRoleIcon(user.role)}
-                </span>
-                <span style={styles.roleText}>{user.role.toUpperCase()}</span>
-              </div>
-            </div>
-
-            <div style={styles.userDetails}>
-              <div style={styles.detailRow}>
-                <span style={styles.detailLabel}>User ID:</span>
-                <span style={styles.detailValue}>{user._id.slice(-8)}</span>
-              </div>
-              <div style={styles.detailRow}>
-                <span style={styles.detailLabel}>Joined:</span>
-                <span style={styles.detailValue}>
-                  {user.createdAt ? formatDate(user.createdAt) : 'N/A'}
-                </span>
-              </div>
-              <div style={styles.detailRow}>
-                <span style={styles.detailLabel}>Status:</span>
+              <div style={styles.userCardInfoUser}>
+                <h3 style={styles.userNameUser}>{user.name}</h3>
+                <p style={styles.userEmailUser}>{user.email}</p>
                 <span style={{
-                  ...styles.statusIndicator,
-                  color: user.isActive !== false ? '#28a745' : '#dc3545'
+                  ...styles.roleBadgeUser,
+                  background: user.role === 'admin' ? '#16a34a' : '#22c55e',
+                  color: '#fff',
                 }}>
-                  {user.isActive !== false ? 'Active' : 'Inactive'}
+                  <span style={styles.roleIconUser} className="material-symbols-outlined">
+                    {getRoleIcon(user.role)}
+                  </span>
+                  {user.role === 'customer' ? 'Customer' : user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                 </span>
               </div>
             </div>
-
-            <div style={styles.userActions}>
+            <div style={styles.userStatsUser}>
+              <div style={styles.statUser}><span style={styles.statLabelUser}>User ID:</span><span style={styles.statValueUser}>{user._id.slice(-8)}</span></div>
+              <div style={styles.statUser}><span style={styles.statLabelUser}>Joined:</span><span style={styles.statValueUser}>{user.createdAt ? formatDate(user.createdAt) : 'N/A'}</span></div>
+              <div style={styles.statUser}><span style={styles.statLabelUser}>Status:</span><span style={{...styles.statValueUser, color: user.isActive !== false ? '#28a745' : '#6c757d'}}>{user.isActive !== false ? 'Active' : 'Inactive'}</span></div>
+            </div>
+            <div style={styles.userActionsUser}>
               <Link 
                 to={`/admin/users/edit/${user._id}`} 
-                style={styles.editButton}
+                style={styles.editButtonUser}
+                className="admin-edit-button"
               >
-                <span style={styles.actionIcon} className="material-symbols-outlined">edit</span>
+                <span style={styles.actionIconUser} className="material-symbols-outlined">edit</span>
                 Edit
               </Link>
               <button 
                 onClick={() => handleDelete(user._id)} 
-                style={styles.deleteButton}
+                style={styles.deleteButtonUser}
+                className="admin-delete-button"
                 disabled={user.role === 'admin'}
               >
-                <span style={styles.actionIcon} className="material-symbols-outlined">delete</span>
-                Delete
+                <span style={styles.deleteIconUser} className="material-symbols-outlined">delete</span>
               </button>
             </div>
           </div>
@@ -172,10 +161,13 @@ const AdminUserList = () => {
 
       {/* Empty State */}
       {users.length === 0 && (
-        <div style={styles.emptyState}>
-          <span style={styles.emptyIcon} className="material-symbols-outlined">group</span>
-          <h3 style={styles.emptyTitle}>No Users Found</h3>
-          <p style={styles.emptyText}>User accounts will appear here once they register.</p>
+        <div style={styles.emptyStateUser}>
+          <span style={styles.emptyIconUser} className="material-symbols-outlined">group</span>
+          <h3 style={styles.emptyTitleUser}>No Users Yet</h3>
+          <p style={styles.emptyTextUser}>Get started by adding your first user.</p>
+          <Link to="new" style={styles.emptyButtonUser}>
+            Add Your First User
+          </Link>
         </div>
       )}
     </div>
@@ -189,159 +181,244 @@ const styles = {
     padding: '2rem',
     fontFamily: 'Poppins, sans-serif'
   },
-  header: {
+  headerOMatchWrap: {
+    position: 'relative',
+    width: '100%',
+    marginBottom: '3.5rem',
+    minHeight: '110px',
+  },
+  headerOMatchTextBlock: {
     display: 'flex',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
     alignItems: 'center',
-    marginBottom: '2rem',
-    flexWrap: 'wrap',
-    gap: '1rem'
+    justifyContent: 'center',
+    width: '100%',
+    zIndex: 1,
+    marginBottom: '2.5rem',
   },
-  headerContent: {
-    flex: 1
-  },
-  title: {
-    fontSize: '2.5rem',
-    fontWeight: '700',
-    color: '#2c3e50',
-    marginBottom: '0.5rem',
-    letterSpacing: '-1px'
-  },
-  subtitle: {
-    fontSize: '1.1rem',
-    color: '#6c757d',
-    margin: 0
-  },
-  stats: {
+  headerStatsOMatchBox: {
+    position: 'absolute',
+    top: '100%',
+    right: '0',
     display: 'flex',
-    gap: '1rem'
+    flexDirection: 'row',
+    gap: '1.5rem',
+    marginTop: '0.5rem',
+    zIndex: 2,
   },
-  statCard: {
-    background: 'white',
-    padding: '1rem 1.5rem',
-    borderRadius: '12px',
+  headerTitleOMatch: {
+    fontSize: '2.5rem',
+    fontWeight: 700,
+    color: '#2c3e50',
+    marginBottom: '0.4rem',
+    letterSpacing: '-1px',
     textAlign: 'center',
-    boxShadow: '0 4px 15px rgba(0,0,0,0.08)',
-    border: '1px solid rgba(0,0,0,0.05)'
   },
-  statNumber: {
-    display: 'block',
-    fontSize: '1.5rem',
-    fontWeight: '700',
-    color: '#28a745'
-  },
-  statLabel: {
-    fontSize: '0.9rem',
+  headerSubtitleOMatch: {
+    fontSize: '1rem',
     color: '#6c757d',
-    fontWeight: '500'
+    margin: 0,
+    textAlign: 'center',
+    fontWeight: 400,
+    marginBottom: '1.5rem',
   },
-  usersGrid: {
+  headerStatBoxOMatch: {
+    background: '#fff',
+    borderRadius: '16px',
+    boxShadow: '0 4px 15px rgba(0,0,0,0.08)',
+    border: '1px solid rgba(0,0,0,0.05)',
+    padding: '0.7rem 1.3rem 0.5rem 1.3rem',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    minWidth: '90px',
+    textAlign: 'center',
+  },
+  headerStatNumberOMatch: {
+    fontSize: '1.5rem',
+    fontWeight: 700,
+    color: '#28a745',
+    marginBottom: '0.15rem',
+    letterSpacing: '-1px',
+    lineHeight: 1.1,
+  },
+  headerStatLabelOMatch: {
+    fontSize: '0.95rem',
+    color: '#5a6a85',
+    fontWeight: 500,
+    marginTop: 0,
+    letterSpacing: 0,
+  },
+  '@media (max-width: 700px)': {
+    headerStatsOMatchBox: {
+      position: 'static',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '1rem',
+      marginTop: '2.5rem',
+    },
+    headerOMatchTextBlock: {
+      textAlign: 'center',
+      marginBottom: '2.5rem',
+    },
+    headerOMatchWrap: {
+      marginBottom: '2.5rem',
+    },
+  },
+  usersGridUser: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))',
-    gap: '2rem'
+    gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
+    gap: '2rem',
   },
-  userCard: {
+  userCardUser: {
     background: 'white',
     borderRadius: '16px',
-    padding: '1.5rem',
+    overflow: 'hidden',
     boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-    transition: 'all 0.3s ease',
-    border: '1px solid rgba(0,0,0,0.05)'
-  },
-  userHeader: {
+    border: '1px solid rgba(0,0,0,0.05)',
     display: 'flex',
-    alignItems: 'center',
-    marginBottom: '1.5rem',
-    paddingBottom: '1rem',
-    borderBottom: '1px solid #f1f3f4'
+    flexDirection: 'column',
+    minHeight: '280px',
+    position: 'relative',
+    transition: undefined,
+    animation: undefined,
+    WebkitTransition: undefined,
+    MozTransition: undefined,
+    OTransition: undefined,
+    msTransition: undefined,
   },
-  userAvatar: {
-    width: '60px',
-    height: '60px',
+  userCardTopUser: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '1.2rem',
+    padding: '1.5rem 1.5rem 0.5rem 1.5rem',
+  },
+  userAvatarUser: {
+    width: '56px',
+    height: '56px',
+    minWidth: '56px',
+    minHeight: '56px',
+    maxWidth: '56px',
+    maxHeight: '56px',
     borderRadius: '50%',
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    background: 'linear-gradient(to bottom, #fff 0%, #f3f4f6 100%)',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: '1rem'
-  },
-  avatarText: {
+    overflow: 'hidden',
     fontSize: '1.5rem',
-    fontWeight: '700',
-    color: 'white'
-  },
-  userInfo: {
-    flex: 1
-  },
-  userName: {
-    fontSize: '1.25rem',
-    fontWeight: '600',
+    fontWeight: 700,
     color: '#2c3e50',
-    margin: '0 0 0.25rem 0'
   },
-  userEmail: {
-    fontSize: '0.9rem',
-    color: '#6c757d',
-    margin: 0
+  avatarImgUser: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    display: 'block',
   },
-  roleBadge: {
+  avatarTextUser: {
+    fontSize: '1.5rem',
+    fontWeight: 700,
+    color: '#2c3e50',
+    textAlign: 'center',
+    width: '100%',
+    height: '100%',
     display: 'flex',
     alignItems: 'center',
-    padding: '0.5rem 1rem',
-    borderRadius: '20px',
-    color: 'white',
-    fontWeight: '600',
-    fontSize: '0.85rem'
+    justifyContent: 'center',
   },
-  roleIcon: {
-    marginRight: '0.5rem',
-    fontSize: '1rem'
+  userCardInfoUser: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.3rem',
+    flex: 1,
+    minWidth: 0,
+    alignItems: 'flex-start',
   },
-  roleText: {
-    textTransform: 'capitalize'
+  userNameUser: {
+    fontSize: '1.15rem',
+    fontWeight: 600,
+    color: '#2c3e50',
+    margin: 0,
+    lineHeight: 1.3,
+    wordBreak: 'break-word',
+    textAlign: 'left',
   },
-  userDetails: {
-    marginBottom: '1.5rem'
+  userEmailUser: {
+    fontSize: '0.95rem',
+    color: '#6c757d',
+    margin: 0,
+    wordBreak: 'break-all',
+    textAlign: 'left',
   },
-  detailRow: {
+  roleBadgeUser: {
+    fontSize: '0.85rem',
+    margin: '0.5rem 0 0 0',
+    padding: '0.18rem 1.1rem',
+    background: '#22c55e',
+    borderRadius: '999px',
+    display: 'inline-flex',
+    alignItems: 'center',
+    fontWeight: 600,
+    gap: '0.4rem',
+    letterSpacing: 0,
+    justifyContent: 'center',
+    minWidth: 'auto',
+    maxWidth: '100%',
+    alignSelf: 'flex-start',
+  },
+  roleIconUser: {
+    fontSize: '1.1rem',
+    marginRight: '0.3rem',
+  },
+  userStatsUser: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.5rem',
+    padding: '0 1.5rem',
+  },
+  statUser: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: '0.75rem'
   },
-  detailLabel: {
+  statLabelUser: {
     fontSize: '0.9rem',
     color: '#6c757d',
-    fontWeight: '500'
+    fontWeight: 500,
   },
-  detailValue: {
-    fontSize: '0.95rem',
+  statValueUser: {
+    fontSize: '1rem',
+    fontWeight: 600,
     color: '#2c3e50',
-    fontWeight: '600'
   },
-  statusIndicator: {
-    fontSize: '0.9rem',
-    fontWeight: '600'
-  },
-  userActions: {
+  userActionsUser: {
     display: 'flex',
-    gap: '0.5rem'
+    gap: '0.5rem',
+    padding: '0 1.5rem 1.5rem 1.5rem',
+    marginTop: 'auto',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
   },
-  editButton: {
+  editButtonUser: {
     flex: 1,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     padding: '0.75rem',
-    background: '#007bff',
+    background: '#000000',
     color: 'white',
     borderRadius: '8px',
     textDecoration: 'none',
-    fontWeight: '500',
-    transition: 'all 0.3s ease'
+    fontWeight: 500,
+    transition: 'all 0.3s ease',
+    border: 'none',
+    fontSize: '1rem',
+    cursor: 'pointer',
   },
-  deleteButton: {
-    flex: 1,
+  deleteButtonUser: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -350,59 +427,44 @@ const styles = {
     color: 'white',
     borderRadius: '8px',
     border: 'none',
-    fontWeight: '500',
+    fontWeight: 500,
     cursor: 'pointer',
-    transition: 'all 0.3s ease'
+    transition: 'all 0.3s ease',
+    width: '48px',
+    height: '48px',
+    minWidth: '48px',
+    fontSize: '1.2rem',
   },
-  actionIcon: {
+  actionIconUser: {
     fontSize: '1rem',
-    marginRight: '0.5rem'
+    marginRight: '0.5rem',
+    color: 'white',
   },
-  emptyState: {
-    textAlign: 'center',
-    padding: '4rem 2rem',
-    background: 'white',
-    borderRadius: '16px',
-    boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-    border: '1px solid rgba(0,0,0,0.05)'
+  deleteIconUser: {
+    fontSize: '1.2rem',
+    color: 'white',
   },
-  emptyIcon: {
-    fontSize: '4rem',
-    marginBottom: '1rem',
-    display: 'block',
-    color: '#6c757d'
-  },
-  emptyTitle: {
-    fontSize: '1.5rem',
-    fontWeight: '600',
-    color: '#2c3e50',
-    marginBottom: '0.5rem'
-  },
-  emptyText: {
-    fontSize: '1rem',
-    color: '#6c757d'
-  },
-  loadingContainer: {
+  loadingContainerUser: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: '50vh'
+    minHeight: '50vh',
   },
-  loadingSpinner: {
+  loadingSpinnerUser: {
     width: '40px',
     height: '40px',
     border: '4px solid #f3f3f3',
     borderTop: '4px solid #28a745',
     borderRadius: '50%',
     animation: 'spin 1s linear infinite',
-    marginBottom: '1rem'
+    marginBottom: '1rem',
   },
-  loadingText: {
+  loadingTextUser: {
     color: '#6c757d',
-    fontSize: '1.1rem'
+    fontSize: '1.1rem',
   },
-  errorContainer: {
+  errorContainerUser: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -411,18 +473,82 @@ const styles = {
     background: 'white',
     borderRadius: '16px',
     padding: '2rem',
-    boxShadow: '0 4px 20px rgba(0,0,0,0.08)'
+    boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
   },
-  errorIcon: {
+  errorIconUser: {
     fontSize: '3rem',
     marginBottom: '1rem',
-    color: '#dc3545'
+    color: '#dc3545',
   },
-  errorText: {
+  errorTextUser: {
     color: '#dc3545',
     fontSize: '1.1rem',
-    textAlign: 'center'
-  }
+    textAlign: 'center',
+  },
+  emptyStateUser: {
+    textAlign: 'center',
+    padding: '4rem 2rem',
+    background: 'white',
+    borderRadius: '16px',
+    boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+    border: '1px solid rgba(0,0,0,0.05)',
+  },
+  emptyIconUser: {
+    fontSize: '4rem',
+    marginBottom: '1rem',
+    display: 'block',
+    color: '#6c757d',
+  },
+  emptyTitleUser: {
+    fontSize: '1.5rem',
+    fontWeight: 600,
+    color: '#2c3e50',
+    marginBottom: '0.5rem',
+  },
+  emptyTextUser: {
+    fontSize: '1rem',
+    color: '#6c757d',
+  },
+  emptyButtonUser: {
+    marginTop: '1.5rem',
+    padding: '0.75rem 1.5rem',
+    background: '#28a745',
+    color: 'white',
+    borderRadius: '12px',
+    textDecoration: 'none',
+    fontWeight: '600',
+    transition: 'all 0.3s ease',
+    boxShadow: '0 4px 15px rgba(40, 167, 69, 0.3)',
+    display: 'inline-block',
+  },
+  headerStatsOMatchBoxRight: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-start',
+    gap: '1rem',
+    margin: '-2.5rem 0 2.5rem 0',
+    width: '100%',
+    maxWidth: '100vw',
+    position: 'relative',
+    zIndex: 2,
+    paddingRight: '1.2rem',
+  },
+  '@media (max-width: 900px)': {
+    headerStatsOMatchBoxRight: {
+      flexDirection: 'column',
+      alignItems: 'flex-end',
+      justifyContent: 'flex-end',
+      gap: '0.7rem',
+      margin: '0 0 2rem 0',
+      paddingRight: '0.5rem',
+      maxWidth: '100%',
+    },
+    headerStatBoxOMatch: {
+      minWidth: '90px',
+      padding: '0.7rem 1.1rem 0.5rem 1.1rem',
+    },
+  },
 };
 
 // Add CSS animations
@@ -433,21 +559,12 @@ styleSheet.textContent = `
     100% { transform: rotate(360deg); }
   }
   
-  .admin-user-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-  }
-  
   .admin-edit-button:hover {
-    background: #0056b3;
-    transform: translateY(-1px);
+    background: #2563eb;
   }
-  
   .admin-delete-button:hover:not(:disabled) {
-    background: #c82333;
-    transform: translateY(-1px);
+    background: #dc2626;
   }
-  
   .admin-delete-button:disabled {
     background: #6c757d;
     cursor: not-allowed;
