@@ -49,47 +49,54 @@ const AdminUserForm = () => {
   const joined = user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A';
 
   return (
-    <div style={styles.card}>
-      <form onSubmit={handleSubmit} style={styles.form}>
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>Name</label>
-          <input
-            type="text"
-            name="name"
-            value={user.name}
-            onChange={handleInputChange}
-            style={styles.nameInput}
-          />
-        </div>
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>Email</label>
-          <input
-            type="email"
-            name="email"
-            value={user.email}
-            onChange={handleInputChange}
-            style={styles.emailInput}
-          />
-        </div>
-        <div style={styles.inputGroup}>
-          <label style={styles.label}>Role</label>
-          <div style={styles.roleDropdownWrap}>
-            <span style={{...styles.roleIcon, color: '#fff'}} className="material-symbols-outlined">{user.role === 'admin' ? 'admin_panel_settings' : 'person'}</span>
-            <select name="role" value={user.role} onChange={handleInputChange} style={styles.roleDropdown}>
-              <option value="customer">Customer</option>
-              <option value="admin">Admin</option>
-            </select>
+    <div style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(180deg, #b2f0e6 0%, #d0f7c6 70%)',
+      padding: '2rem',
+      fontFamily: 'Poppins, sans-serif'
+    }}>
+      <div style={styles.card}>
+        <form onSubmit={handleSubmit} style={styles.form}>
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>Name</label>
+            <input
+              type="text"
+              name="name"
+              value={user.name}
+              onChange={handleInputChange}
+              style={{ ...styles.nameInput, background: '#fff' }}
+            />
           </div>
-        </div>
-        <div style={styles.extraInfoRow}>
-          <div style={styles.extraInfo}><span style={styles.extraLabel}>User ID:</span> <span style={styles.extraValue}>{userId}</span></div>
-          <div style={styles.extraInfo}><span style={styles.extraLabel}>Joined:</span> <span style={styles.extraValue}>{joined}</span></div>
-        </div>
-        <div style={styles.buttonRow}>
-          <button type="submit" style={styles.updateButton}>Update User</button>
-          <button type="button" style={styles.cancelButton} onClick={() => navigate('/admin/users')}>Cancel</button>
-        </div>
-      </form>
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>Email</label>
+            <input
+              type="email"
+              name="email"
+              value={user.email}
+              onChange={handleInputChange}
+              style={{ ...styles.emailInput, background: '#fff' }}
+            />
+          </div>
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>Role</label>
+            <div style={styles.roleDropdownWrap}>
+              <span style={{...styles.roleIcon, color: '#fff'}} className="material-symbols-outlined">{user.role === 'admin' ? 'admin_panel_settings' : 'person'}</span>
+              <select name="role" value={user.role} onChange={handleInputChange} style={styles.roleDropdown}>
+                <option value="customer">Customer</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+          </div>
+          <div style={styles.extraInfoRow}>
+            <div style={styles.extraInfo}><span style={styles.extraLabel}>User ID:</span> <span style={styles.extraValue}>{userId}</span></div>
+            <div style={styles.extraInfo}><span style={styles.extraLabel}>Joined:</span> <span style={styles.extraValue}>{joined}</span></div>
+          </div>
+          <div style={styles.buttonRow}>
+            <button type="submit" style={styles.updateButton}>Update User</button>
+            <button type="button" style={styles.cancelButton} onClick={() => navigate('/admin/users')}>Cancel</button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
@@ -134,7 +141,6 @@ const styles = {
     color: '#2c3e50',
     border: '1px solid #e0e0e0',
     borderRadius: '8px',
-    background: '#ffffff',
     padding: '0.7rem 1rem',
     outline: 'none',
     boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
@@ -144,7 +150,6 @@ const styles = {
     color: '#2c3e50',
     border: '1px solid #e0e0e0',
     borderRadius: '8px',
-    background: '#ffffff',
     padding: '0.7rem 1rem',
     outline: 'none',
     boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
