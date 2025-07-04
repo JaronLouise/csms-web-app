@@ -91,7 +91,7 @@ const Checkout = () => {
       const newOrder = await createOrder(orderData);
       await loadCart();
       alert('Order placed successfully! You will be redirected to your cart.');
-      
+      console.log('DEBUG: Navigating to /cart after order creation');
       navigate(`/cart`);
 
     } catch (err) {

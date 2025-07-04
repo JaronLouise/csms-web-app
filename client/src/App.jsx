@@ -5,7 +5,6 @@ import Login from './pages/login';
 import Cart from "./pages/cart";
 import Register from './pages/register';
 import Checkout from './pages/checkout';
-import Orders from './pages/orders';
 import Profile from './pages/profile';
 import Services from './pages/services';
 import Contact from './pages/contact';
@@ -42,7 +41,6 @@ function AppContent() {
         <Route path="/register" element={<Register />} />
         <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
         <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
-        <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
 
         {/* Admin Routes */}
