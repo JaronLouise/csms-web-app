@@ -90,9 +90,9 @@ const Checkout = () => {
       
       const newOrder = await createOrder(orderData);
       await loadCart();
-      alert('Order placed successfully! You will be redirected to your orders page.');
+      alert('Order placed successfully! You will be redirected to your cart.');
       
-      navigate(`/orders`);
+      navigate(`/cart`);
 
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to place order. Please try again.');

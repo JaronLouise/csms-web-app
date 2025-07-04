@@ -11,7 +11,7 @@ export const login = async (credentials) => {
 };
 
 export const getProfile = async () => {
-  const res = await api.get('/auth/profile');
+  const res = await api.get('/auth/profile?t=' + Date.now());
   return res.data;
 };
 

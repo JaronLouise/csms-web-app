@@ -1,7 +1,7 @@
 import api from './api';
 
 export const getCategories = async () => {
-  const res = await api.get('/categories');
+  const res = await api.get('/categories?t=' + Date.now());
   return res.data;
 };
 

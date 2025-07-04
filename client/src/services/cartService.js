@@ -4,7 +4,7 @@ const cartService = {
   // Get user's cart
   getCart: async () => {
     try {
-      const response = await api.get('/cart');
+      const response = await api.get('/cart?t=' + Date.now());
       return response.data;
     } catch (error) {
       throw error.response?.data || { message: 'Failed to get cart' };
