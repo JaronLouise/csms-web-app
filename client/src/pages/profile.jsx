@@ -399,11 +399,16 @@ const Profile = () => {
           box-shadow: 0 2px 12px rgba(40,167,69,0.06); 
           font-family: 'Poppins', sans-serif; 
           transition: border 0.2s, box-shadow 0.2s;
+          color: #222;
         }
         .profile-form-input:focus {
           border: 1.5px solid #28a745;
           box-shadow: 0 4px 20px rgba(40,167,69,0.13);
           outline: none;
+        }
+        .profile-form-input:disabled {
+          background: #f8f9fa;
+          color: #888;
         }
         .address-field { 
           display: flex; 
@@ -433,11 +438,16 @@ const Profile = () => {
           box-shadow: 0 2px 12px rgba(40,167,69,0.06); 
           font-family: 'Poppins', sans-serif; 
           transition: border 0.2s, box-shadow 0.2s;
+          color: #222;
         }
         .address-input:focus {
           border: 1.5px solid #28a745;
           box-shadow: 0 4px 20px rgba(40,167,69,0.13);
           outline: none;
+        }
+        .address-input:disabled {
+          background: #f8f9fa;
+          color: #888;
         }
         .profile-btn-row { 
           display: flex; 
@@ -574,6 +584,16 @@ const Profile = () => {
             flex-direction: column !important; 
             gap: 0.75rem !important; 
           }
+        }
+        .profile-form-input,
+        .address-input {
+          color: #222 !important;
+          background: #fff !important;
+        }
+        .profile-form-input:disabled,
+        .address-input:disabled {
+          color: #888 !important;
+          background: #f8f9fa !important;
         }
       `}</style>
       <div style={styles.bgGreen}>

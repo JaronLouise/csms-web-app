@@ -4,6 +4,30 @@ import { useCart } from '../context/CartContext';
 import { createOrder } from '../services/orderService';
 import { useNavigate } from 'react-router-dom';
 
+if (typeof document !== 'undefined' && !document.getElementById('checkout-hover-effects')) {
+  const style = document.createElement('style');
+  style.id = 'checkout-hover-effects';
+  style.textContent = `
+    .checkout-btn {
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+    }
+    .checkout-btn:hover {
+      background: #28a745 !important;
+      color: #fff !important;
+      transform: translateY(-2px) scale(1.03);
+    }
+    .checkout-empty-btn {
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+    }
+    .checkout-empty-btn:hover {
+      background: #28a745 !important;
+      color: #fff !important;
+      transform: translateY(-2px) scale(1.03);
+    }
+  `;
+  document.head.appendChild(style);
+}
+
 const Checkout = () => {
   const { user } = useAuth();
   const { cart, getCartTotal, clearCart, loadCart } = useCart();
@@ -87,6 +111,7 @@ const Checkout = () => {
           <button 
             onClick={() => navigate('/products')} 
             style={styles.emptyButton}
+            className="checkout-empty-btn"
           >
             Continue Shopping
           </button>
@@ -267,6 +292,7 @@ const Checkout = () => {
               form="checkout-form"
               disabled={loading}
               style={loading ? styles.submitButtonDisabled : styles.submitButton}
+              className="checkout-btn"
             >
               {loading ? (
                 <>

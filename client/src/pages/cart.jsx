@@ -1,6 +1,54 @@
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 
+if (typeof document !== 'undefined' && !document.getElementById('cart-hover-effects')) {
+  const style = document.createElement('style');
+  style.id = 'cart-hover-effects';
+  style.textContent = `
+    .cart-item-hover {
+      transition: box-shadow 0.3s cubic-bezier(.4,0,.2,1), transform 0.3s cubic-bezier(.4,0,.2,1);
+    }
+    .cart-item-hover:hover {
+      box-shadow: 0 8px 32px rgba(40,167,69,0.13);
+      transform: translateY(-6px) scale(1.01);
+      z-index: 2;
+    }
+    .cart-remove-btn {
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+    }
+    .cart-remove-btn:hover {
+      background: #dc3545 !important;
+      color: #fff !important;
+      transform: scale(1.1);
+    }
+    .cart-qty-btn {
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+    }
+    .cart-qty-btn:hover:not(:disabled) {
+      background: #28a745 !important;
+      color: #fff !important;
+      transform: scale(1.1);
+    }
+    .cart-checkout-btn {
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+    }
+    .cart-checkout-btn:hover {
+      background: #28a745 !important;
+      color: #fff !important;
+      transform: translateY(-2px) scale(1.03);
+    }
+    .cart-empty-btn {
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+    }
+    .cart-empty-btn:hover {
+      background: #28a745 !important;
+      color: #fff !important;
+      transform: translateY(-2px) scale(1.03);
+    }
+  `;
+  document.head.appendChild(style);
+}
+
 const Cart = () => {
   const { cart, removeFromCart, updateQuantity, loading, getCartTotal } = useCart();
   const navigate = useNavigate();
@@ -43,6 +91,7 @@ const Cart = () => {
           <button 
             onClick={() => navigate('/products')}
             style={styles.emptyButton}
+            className="cart-empty-btn"
           >
             Continue Shopping
           </button>
@@ -52,7 +101,7 @@ const Cart = () => {
           {/* Cart Items */}
           <div style={styles.itemsList}>
             {cart.items.map((item, idx) => (
-              <div key={item._id} style={styles.cartItem}>
+              <div key={item._id} style={styles.cartItem} className="cart-item-hover">
                 {/* Product Image */}
                 <div style={styles.itemImage}>
                   {item.image ? (
@@ -80,6 +129,7 @@ const Cart = () => {
                     onClick={() => handleQuantityChange(item.product, item.quantity - 1)}
                     disabled={item.quantity <= 1}
                     style={item.quantity <= 1 ? styles.quantityBtnDisabled : styles.quantityBtn}
+                    className="cart-qty-btn"
                   >
                     -
                   </button>
@@ -87,6 +137,7 @@ const Cart = () => {
                   <button 
                     onClick={() => handleQuantityChange(item.product, item.quantity + 1)}
                     style={styles.quantityBtn}
+                    className="cart-qty-btn"
                   >
                     +
                   </button>
@@ -102,6 +153,7 @@ const Cart = () => {
                   onClick={() => handleRemoveItem(item.product)}
                   style={styles.removeButton}
                   title="Remove item"
+                  className="cart-remove-btn"
                 >
                   <span style={styles.removeIcon} className="material-symbols-outlined">delete</span>
                 </button>
@@ -119,6 +171,7 @@ const Cart = () => {
             <button 
               onClick={() => navigate('/checkout')}
               style={styles.checkoutButton}
+              className="cart-checkout-btn"
             >
               <span style={styles.checkoutIcon} className="material-symbols-outlined">shopping_cart_checkout</span>
               Proceed to Checkout
